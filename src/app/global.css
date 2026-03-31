@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+@theme {
+  --color-fd-primary: #F06151;
+  --color-fd-primary-foreground: #ffffff;
+  --color-fd-background: #fafbfb;
+  --color-fd-foreground: #183651;
+  --color-fd-accent: rgba(79, 191, 159, 0.15);
+  --color-fd-accent-foreground: #183651;
+  --color-fd-muted: #e8eced;
+  --color-fd-muted-foreground: rgba(24, 54, 81, 0.6);
+  --color-fd-popover: #f0f3f4;
+  --color-fd-popover-foreground: #183651;
+  --color-fd-card: #f0f2f3;
+  --color-fd-card-foreground: #183651;
+  --color-fd-secondary: #e8eced;
+  --color-fd-secondary-foreground: #183651;
+  --color-fd-border: rgba(24, 54, 81, 0.12);
+  --color-fd-ring: #F06151;
+}
+
+.dark {
+  --color-fd-background: #0f1e2e;
+  --color-fd-foreground: #E1E6E7;
+  --color-fd-primary: #F06151;
+  --color-fd-primary-foreground: #ffffff;
+  --color-fd-accent: rgba(79, 191, 159, 0.15);
+  --color-fd-accent-foreground: #E1E6E7;
+  --color-fd-muted: #1a3450;
+  --color-fd-muted-foreground: rgba(225, 230, 231, 0.6);
+  --color-fd-popover: #152d48;
+  --color-fd-popover-foreground: #E1E6E7;
+  --color-fd-card: #132a44;
+  --color-fd-card-foreground: #E1E6E7;
+  --color-fd-secondary: #1a3450;
+  --color-fd-secondary-foreground: #E1E6E7;
+  --color-fd-border: rgba(225, 230, 231, 0.1);
+  --color-fd-ring: #F06151;
+}
