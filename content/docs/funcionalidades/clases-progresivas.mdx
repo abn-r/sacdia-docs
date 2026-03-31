@@ -28,7 +28,7 @@ La culminacion exitosa de una clase lleva a la investidura, que es el acto insti
   - `PATCH /users/:userId/classes/:classId/progress` — actualizar progreso de seccion (module_id, section_id, score, evidences, enrollment_id opcional)
 - **Servicio**: `ClassesService` con spec de tests
 - **DTOs**: EnrollClassDto, UpdateProgressDto
-- **Decoradores**: @RequirePermissions('classes:read'/'classes:update'), @AuthorizationResource({ type: 'user', ownerParam: 'userId' })
+- **Decoradores**: `@RequirePermissions('classes:read'/'classes:update')`, `@AuthorizationResource({ type: 'user', ownerParam: 'userId' })`
 
 ### Admin (sacdia-admin)
 - 1 pagina read-only: listado de clases via ModuleListPage

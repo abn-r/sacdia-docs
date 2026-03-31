@@ -429,7 +429,7 @@ keytool -genkey -v -keystore ~/sacdia-upload-keystore.jks \
 
 **Archivo**: `android/key.properties`
 
-```properties
+```bash
 storePassword=<password>
 keyPassword=<password>
 keyAlias=sacdia-key
@@ -438,7 +438,7 @@ storeFile=/Users/abner/sacdia-upload-keystore.jks
 
 **Actualizar** `android/app/build.gradle`:
 
-```gradle
+```groovy
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
