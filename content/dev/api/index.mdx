@@ -1,0 +1,23 @@
+---
+title: API Reference
+description: Documentación de la API REST de SACDIA
+author: Abner Reyes
+version: "1.0.0"
+---
+
+## API REST de SACDIA
+
+La API de SACDIA está construida con NestJS y expone endpoints RESTful para todas las operaciones del sistema.
+
+### Base URL
+
+- **Desarrollo**: `http://localhost:3000`
+- **Producción**: Configurado en variables de entorno
+
+### Autenticación
+
+Todos los endpoints (excepto `/auth/*`) requieren un JWT válido en el header `Authorization: Bearer <token>`.
+
+### Documentación interactiva
+
+La documentación Swagger está disponible en `/api` cuando el backend está corriendo en desarrollo.

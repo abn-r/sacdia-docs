@@ -1,0 +1,18 @@
+---
+title: Base de Datos
+description: Schema y estructura de la base de datos de SACDIA
+author: Abner Reyes
+version: "1.0.0"
+---
+
+## Base de Datos
+
+SACDIA utiliza PostgreSQL como base de datos, gestionada a través de Prisma ORM y alojada en Neon.
+
+### Schema
+
+El schema de Prisma es la fuente de verdad para la estructura de datos. Se encuentra en `sacdia-backend/prisma/schema.prisma`.
+
+### Migraciones
+
+Las migraciones se gestionan con Prisma Migrate. Cada cambio al schema requiere una nueva migración.
