@@ -1,0 +1,86 @@
+---
+title: "Servicios de Terceros"
+description: "Servicios externos integrados en SACDIA: autenticacion, email, pagos, storage y notificaciones"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Servicios Esenciales
+
+| Servicio | Proposito | Provider | Alternativa |
+| --- | --- | --- | --- |
+| Authentication | Auth de usuarios | Supabase Auth | Auth0, Firebase |
+| Email | Emails transaccionales | Resend | SendGrid, AWS SES |
+| Payments | Procesamiento | Stripe + PayPal + MercadoPago | Otro |
+| Storage | Archivos/imagenes | Supabase Storage | AWS S3, Cloudinary |
+| Push Notifications | Notif. moviles | Firebase Cloud Messaging (FCM) | OneSignal |
+
+## Servicios Opcionales
+
+| Servicio | Proposito | Provider |
+| --- | --- | --- |
+| Analytics | User analytics | Google Analytics 4 |
+| Monitoring | Error tracking | Sentry (NestJS + Next.js + Flutter) |
+| Logs | Log aggregation | Vercel Logs + Better Stack (opcional) |
+| Crash Reports | Flutter crashes | Firebase Crashlytics |
+
+---
+
+## Supabase Auth
+
+**Tipo**: BaaS (Backend as a Service)  
+**Uso**: Autenticacion de usuarios, JWT, OAuth con Google y Apple  
+**SDK**: `supabase_flutter` 2.x (Flutter), cliente JS (Next.js)
+
+**Pros**:
+- PostgreSQL real (no NoSQL limitado como Firebase)
+- Auth built-in (menos codigo custom, mantiene estandares)
+- Storage incluido (S3-compatible)
+- Real-time subscriptions (WebSocket management handled)
+- Free tier generosa para hobby (~500MB DB, 1GB storage, 2GB bandwidth)
+- BaaS pero con SQL completo (queries complejas, joins, triggers)
+
+**Trade-offs**:
+- Vendor lock-in moderado (pero PostgreSQL standard)
+- Menos control que DB self-hosted
+
+---
+
+## Resend (Email)
+
+**Uso**: Emails transaccionales (notificaciones, confirmaciones)
+
+**Por que Resend**:
+- $0/mes para 3,000 emails (vs SendGrid $15/mes)
+- Developer-friendly API (mas simple que SendGrid)
+- React Email integration (templates en React)
+- Delivery reputation excelente
+- Logs y analytics incluidos
+
+Si creces → SendGrid o AWS SES.
+
+---
+
+## Pagos
+
+**Stripe**: Internacional, mejor DX, webhooks robustos  
+**PayPal**: Usuarios sin tarjeta, confianza del brand  
+**MercadoPago**: Latinoamerica (si es tu market)
+
+**Implementacion**: Abstract payment en backend (strategy pattern), frontend elige gateway.
+
+---
+
+## Firebase Cloud Messaging (FCM)
+
+**Uso**: Push notifications en Flutter  
+**Libreria**: `firebase_messaging` ^14.0.0
+
+El backend envia mensajes a traves del Admin SDK de Firebase. Los tokens FCM se almacenan en la tabla `user_fcm_tokens` de la base de datos.
+
+---
+
+## Cloudflare R2
+
+**Uso**: Storage alternativo para archivos especificos (insurance evidence, resources)  
+**Integracion**: Backend genera URLs firmadas con TTL configurable

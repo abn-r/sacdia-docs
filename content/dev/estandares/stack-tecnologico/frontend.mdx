@@ -1,0 +1,151 @@
+---
+title: "Frontend — Admin Panel"
+description: "Stack del panel de administracion web: Next.js 16, shadcn/ui, Tailwind CSS y herramientas asociadas"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Framework Principal
+
+**Framework**: Next.js  
+**Version**: 14+ (App Router)  
+**Por que lo elegimos**: SSR/SSG capabilities, mejor SEO, routing integrado, ideal para panel admin
+
+## Lenguaje
+
+**Lenguaje**: TypeScript  
+**Version**: 5.x  
+**Configuracion**: strict mode enabled
+
+---
+
+## Librerias y Herramientas
+
+### UI Components & Styling
+
+- **UI Library**: shadcn/ui (Radix UI + Tailwind CSS)
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React (viene con shadcn/ui)
+- **Forms**: React Hook Form + Zod validation
+
+### State Management
+
+- **Global State**: Context API / Zustand (si se necesita)
+- **Server State**: TanStack Query (React Query) — para cache y sincronizacion con backend
+- **Form State**: React Hook Form
+
+### Routing
+
+- **Router**: Next.js App Router (built-in)
+- **Version**: Next.js 14+
+
+### Data Fetching
+
+- **HTTP Client**: Axios (con interceptors para auth)
+- **GraphQL Client**: No usamos GraphQL — REST API
+
+### Testing
+
+- **Unit/Integration**: Jest
+- **Component Testing**: React Testing Library
+- **E2E**: Playwright
+- **Coverage objetivo**: >70%
+
+### Build Tools
+
+- **Bundler**: Next.js (built-in Turbopack/Webpack)
+- **Package Manager**: **pnpm** (rapido, eficiente en espacio)
+
+---
+
+## Convenciones del Admin
+
+- Server Components por defecto; `'use client'` solo donde necesario
+- CRUD dialogs: crear/editar → Dialog modal
+- Delete → AlertDialog confirmacion
+- Semantic colors en Tailwind (no hardcoded: `bg-primary/10`, `text-muted-foreground`)
+
+## Utilidades Comunes
+
+**Dates**: date-fns  
+**Validation**: Zod  
+**HTTP**: Axios  
+**Charts**: Recharts  
+**Tables**: TanStack Table (React Table v8)  
+**File Upload**: react-dropzone  
+**Rich Text**: TipTap o Lexical (si necesario)
+
+---
+
+## TypeScript Config
+
+```typescript
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true
+  }
+}
+```
+
+## Linting & Formatting
+
+**Linter**: ESLint + Prettier  
+**Config**: Airbnb base + custom rules para Next.js
+
+**Prettier**:
+```json
+{
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "printWidth": 80
+}
+```
+
+## Git Hooks
+
+**Tool**: Husky + lint-staged
+
+**Pre-commit**:
+- Lint codigo modificado
+- Formatear con Prettier
+- Run type check
+
+**Pre-push**:
+- Run tests
+
+---
+
+## Notas para IA
+
+**SIEMPRE usa estas tecnologias (admin panel)**:
+
+- Next.js 14+ App Router (no Pages Router)
+- shadcn/ui components (no Material-UI, no Chakra)
+- TailwindCSS (no CSS-in-JS)
+- React Hook Form + Zod (no Formik, no Yup)
+- TanStack Query para data fetching
+- NO create-react-app, NO Vite standalone
+
+**Formato de respuesta API estandar**:
+
+```typescript
+// Success
+{
+  "success": true,
+  "data": { ... },
+  "meta": { page: 1, total: 100 }  // Si aplica
+}
+
+// Error
+{
+  "success": false,
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Invalid email format",
+    "details": [...]  // Opcional
+  }
+}
+```

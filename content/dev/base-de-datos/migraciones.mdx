@@ -1,0 +1,219 @@
+---
+title: "Migraciones"
+description: "Scripts SQL para inicializacion y migracion de la base de datos SACDIA — orden de ejecucion y procedimientos"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+> Este documento consolida la guia operativa principal y el contexto de backup/restore.
+> La version historica anterior esta en `docs/history/database/README_BACKUP.md`.
+
+---
+
+## Scripts Disponibles
+
+| Script | Descripcion | Dependencias |
+|---|---|---|
+| `script_01_organizacion.sql` | Setup inicial de paises, uniones, campos locales | Ninguna |
+| `script_02_clubes_clases.sql` | Clubes y clases progresivas | script_01 |
+| `script_03_especialidades.sql` | Honores y especialidades | script_01, script_02 |
+| `script_04_catalogos_medicos.sql` | Alergias y enfermedades | Ninguna |
+| `script_05_roles_permisos.sql` | Sistema RBAC (roles y permisos) | Ninguna |
+| `script_06_admin_permissions.sql` | Permisos del Admin Panel (resource:action) | script_05 |
+| `verificar_catalogos.sql` | Queries de verificacion | Todos los anteriores |
+
+### Scripts de Datos Semilla (Seed Data)
+
+| Script | Descripcion |
+|---|---|
+| `countries.sql` | Lista de paises |
+| `unions.sql` | Uniones por pais |
+| `districts.sql` | Distritos por campo local |
+| `local_fields.sql` | Campos locales por union |
+
+---
+
+## Como Ejecutar
+
+### Orden de Ejecucion Recomendado
+
+**IMPORTANTE**: Ejecutar en este orden para evitar errores de foreign keys:
+
+```bash
+1. script_01_organizacion.sql       # Estructura organizacional basica
+2. script_04_catalogos_medicos.sql  # Catalogos (sin dependencias)
+3. script_05_roles_permisos.sql     # Sistema RBAC
+4. script_02_clubes_clases.sql      # Clubes (depende de organizacion)
+5. script_03_especialidades.sql     # Especialidades (depende de clubes)
+6. verificar_catalogos.sql          # Verificacion (opcional)
+```
+
+---
+
+### Opcion 1: Desde psql
+
+```bash
+# Conectarse a la base de datos
+psql -U postgres -d sacdia
+
+# Ejecutar script
+\i /path/to/migrations/script_01_organizacion.sql
+
+# O directamente
+psql -U postgres -d sacdia -f migrations/script_01_organizacion.sql
+```
+
+---
+
+### Opcion 2: Desde Supabase Dashboard
+
+1. Ir a **SQL Editor** en Supabase Dashboard
+2. Copiar contenido del script
+3. Ejecutar
+4. Verificar resultados en **Table Editor**
+
+---
+
+### Opcion 3: Desde Prisma
+
+```bash
+# Ejecutar un script SQL
+npx prisma db execute --file migrations/script_01_organizacion.sql
+
+# O desde el directorio especifico
+cd sacdia-backend
+npx prisma db execute --file ../docs/03-DATABASE/migrations/script_01_organizacion.sql
+```
+
+---
+
+### Opcion 4: Script Bash Completo
+
+Crear `/scripts/seed-database.sh`:
+
+```bash
+#!/bin/bash
+
+DB_URL="postgresql://user:password@localhost:5432/sacdia"
+
+echo "Seeding database..."
+
+psql $DB_URL -f migrations/script_01_organizacion.sql
+psql $DB_URL -f migrations/script_04_catalogos_medicos.sql
+psql $DB_URL -f migrations/script_05_roles_permisos.sql
+psql $DB_URL -f migrations/script_02_clubes_clases.sql
+psql $DB_URL -f migrations/script_03_especialidades.sql
+
+echo "Database seeded successfully!"
+```
+
+Ejecutar:
+```bash
+chmod +x scripts/seed-database.sh
+./scripts/seed-database.sh
+```
+
+---
+
+## Verificacion
+
+Despues de ejecutar los scripts, verifica que los datos se insertaron correctamente:
+
+```bash
+# Ejecutar queries de verificacion
+psql -U postgres -d sacdia -f migrations/verificar_catalogos.sql
+```
+
+O desde SQL:
+```sql
+-- Verificar paises
+SELECT COUNT(*) FROM countries;
+
+-- Verificar roles
+SELECT role_name, role_category FROM roles;
+
+-- Verificar honores
+SELECT COUNT(*) FROM honors;
+```
+
+---
+
+## Notas Importantes
+
+### Re-ejecucion de Scripts
+
+La mayoria de scripts usan `INSERT` sin verificacion de duplicados. Si necesitas re-ejecutar:
+
+```sql
+-- Opcion 1: Limpiar tabla antes
+TRUNCATE TABLE countries CASCADE;
+
+-- Opcion 2: Usar UPSERT (si el script lo soporta)
+INSERT INTO countries (id, name, abbreviation)
+VALUES ('uuid', 'Mexico', 'MX')
+ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;
+```
+
+### Datos de Produccion
+
+**NO ejecutar estos scripts en produccion** si ya tienes datos reales. Son solo para desarrollo e inicializacion de entornos nuevos.
+
+### Backup y Restore
+
+- Antes de cambios criticos, generar backup logico completo de la base.
+- En restauraciones parciales por tabla, usar scripts versionados y validar FKs antes de aplicar.
+- Mantener pruebas de restore periodicas en entorno de staging.
+- Ver guia historica detallada: `docs/history/database/README_BACKUP.md`.
+
+---
+
+## Crear Nueva Migracion
+
+### Con Prisma (Recomendado)
+
+```bash
+# 1. Editar schema.prisma
+# 2. Crear migracion
+npx prisma migrate dev --name descripcion_del_cambio
+
+# 3. La migracion se crea automaticamente en:
+# sacdia-backend/prisma/migrations/YYYYMMDDHHMMSS_descripcion_del_cambio/
+```
+
+### Manualmente
+
+1. Crear archivo: `YYYYMMDD_descripcion.sql`
+2. Escribir SQL DDL:
+   ```sql
+   -- Migration: Add legal_representatives table
+   CREATE TABLE legal_representatives (
+     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+     user_id UUID NOT NULL REFERENCES users(id),
+     ...
+   );
+   ```
+3. Documentar en este archivo
+4. Ejecutar siguiendo las opciones anteriores
+
+---
+
+## Rollback
+
+Si necesitas revertir una migracion:
+
+```sql
+-- Ejemplo: Eliminar tabla agregada
+DROP TABLE IF EXISTS legal_representatives CASCADE;
+
+-- Ejemplo: Eliminar columna
+ALTER TABLE users DROP COLUMN IF EXISTS new_column;
+```
+
+**Mejor practica**: Crear script `rollback_YYYYMMDD.sql` junto a cada migracion.
+
+---
+
+## Ver Tambien
+
+- [Schema Reference](/dev/base-de-datos/schema-reference) — Referencia completa de tablas
+- [schema.prisma](https://github.com/abn-r/sacdia-backend/blob/main/prisma/schema.prisma) — Schema Prisma definitivo

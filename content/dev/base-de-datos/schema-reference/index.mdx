@@ -1,0 +1,151 @@
+---
+title: "Schema Reference"
+description: "Referencia completa del schema de base de datos PostgreSQL de SACDIA — 83 modelos y 8 enums"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+Referencia completa del schema de base de datos PostgreSQL de SACDIA. Sincronizado contra `schema.prisma` 2026-03-25. Cobertura: 83 modelos + 8 enums documentados.
+
+## Diagrama ER Principal
+
+```mermaid
+graph TB
+    subgraph "Jerarquia Organizacional"
+        COUNTRIES[countries]
+        UNIONS[unions]
+        LF[local_fields]
+        DISTRICTS[districts]
+        CHURCHES[churches]
+        
+        COUNTRIES --> UNIONS
+        UNIONS --> LF
+        LF --> DISTRICTS
+        DISTRICTS --> CHURCHES
+    end
+    
+    subgraph "Clubs"
+        CLUBS[clubs]
+        SECTIONS[club_sections]
+
+        CHURCHES --> CLUBS
+        CLUBS --> SECTIONS
+    end
+    
+    subgraph "Users & Auth"
+        USERS[users]
+        USERS_PR[users_pr]
+        LEGAL_REP[legal_representatives]
+        EMERG[emergency_contacts]
+        
+        USERS --> USERS_PR
+        USERS --> LEGAL_REP
+        USERS --> EMERG
+    end
+    
+    subgraph "RBAC"
+        ROLES[roles]
+        PERMS[permissions]
+        USERS_ROLES[users_roles]
+        ROLE_PERMS[role_permissions]
+        CLUB_ROLES[club_role_assignments]
+        
+        USERS --> USERS_ROLES
+        USERS_ROLES --> ROLES
+        ROLES --> ROLE_PERMS
+        ROLE_PERMS --> PERMS
+        
+        USERS --> CLUB_ROLES
+        CLUB_ROLES --> ROLES
+        CLUB_ROLES --> SECTIONS
+    end
+    
+    subgraph "Classes & Honors"
+        CLASSES[classes]
+        HONORS[honors]
+        ENROLLMENTS[enrollments]
+        USERS_HONORS[users_honors]
+
+        USERS --> ENROLLMENTS
+        ENROLLMENTS --> CLASSES
+        USERS --> USERS_HONORS
+        USERS_HONORS --> HONORS
+    end
+
+    subgraph "Annual Folders & Scoring"
+        CLUB_ENROLL[club_enrollments]
+        FTEMPLATES[folder_templates]
+        FTSECTIONS[folder_template_sections]
+        ANNUAL_F[annual_folders]
+        AF_EVIDENCES[annual_folder_evidences]
+        AF_EVALS[annual_folder_section_evaluations]
+        AWARD_CAT[award_categories]
+        CLUB_RANK[club_annual_rankings]
+
+        SECTIONS --> CLUB_ENROLL
+        CLUB_ENROLL --> ANNUAL_F
+        FTEMPLATES --> FTSECTIONS
+        FTEMPLATES --> ANNUAL_F
+        ANNUAL_F --> AF_EVIDENCES
+        ANNUAL_F --> AF_EVALS
+        AF_EVIDENCES --> FTSECTIONS
+        AF_EVALS --> FTSECTIONS
+        CLUB_ENROLL --> CLUB_RANK
+        AWARD_CAT --> CLUB_RANK
+    end
+```
+
+---
+
+## Modulos
+
+| Modulo | Tablas | Pagina |
+|---|---|---|
+| Users & Auth | users, sessions, accounts, verifications, users_pr, legal_representatives, emergency_contacts | [Ver](/dev/base-de-datos/schema-reference/users-auth) |
+| Jerarquia Organizacional | countries, unions, local_fields, districts, churches | [Ver](/dev/base-de-datos/schema-reference/organizacion) |
+| Clubs | clubs, club_sections, club_role_assignments, club_types, ecclesiastical_years, units, club_ideals | [Ver](/dev/base-de-datos/schema-reference/clubs) |
+| RBAC | roles, permissions, role_permissions, users_roles, users_permissions, relationship_types | [Ver](/dev/base-de-datos/schema-reference/rbac) |
+| Clases y Honores | classes, honors, enrollments, users_honors, honor_requirements, class_modules, class_sections | [Ver](/dev/base-de-datos/schema-reference/clases-honores) |
+| Salud e Insurance | diseases, allergies, medicines, pivotes, member_insurances | [Ver](/dev/base-de-datos/schema-reference/salud-insurance) |
+| Inventario y Finanzas | inventory_categories, club_inventory, finances_categories, finances | [Ver](/dev/base-de-datos/schema-reference/inventario-finanzas) |
+| Actividades y Camporees | activity_types, activities, activity_instances, camporees, inscripciones | [Ver](/dev/base-de-datos/schema-reference/actividades-camporees) |
+| Investidura y Certificaciones | investiture_*, certifications, users_certifications | [Ver](/dev/base-de-datos/schema-reference/investidura-certificaciones) |
+| Carpetas y Evaluacion | folders, folder_templates, annual_folders, evidences, rankings | [Ver](/dev/base-de-datos/schema-reference/carpetas-evaluacion) |
+| Sistema y Recursos | notifications, fcm_tokens, weekly_records, resources, enums | [Ver](/dev/base-de-datos/schema-reference/sistema-recursos) |
+
+---
+
+## Convenciones de Naming
+
+### Estandares Aplicados
+
+**Tablas**:
+- Plural: `users`, `clubs`, `classes`, `permissions`
+- Snake case: `emergency_contacts`, `club_role_assignments`
+- Descriptivo: `legal_representatives` (no `legal_reps`)
+
+**Campos**:
+- Snake case: `paternal_last_name`, `created_at`
+- Descriptivo: `paternal_last_name` (no `p_lastname`)
+- IDs explícitos: `user_id`, `club_type_id` (no `uid`, `ct_id`)
+
+**IDs**:
+- Tablas principales: `{tabla}_id` UUID
+- Tablas pivote: `id` UUID como PK, FKs descriptivos
+- Secciones de club: INT (`club_section_id`)
+
+### Inconsistencias Detectadas (Pendientes)
+
+| Tabla/Campo | Actual | Debería ser | Prioridad |
+|---|---|---|---|
+| `ecclesiastical_year` | Singular | `ecclesiastical_years` | ALTA |
+| `club_types.ct_id` | Abreviado | `club_type_id` | ALTA |
+| `inventory_categories.inventory_categoty_id` | Typo | `inventory_category_id` | ALTA |
+
+---
+
+## Ver Tambien
+
+- [schema.prisma](https://github.com/abn-r/sacdia-backend/blob/main/prisma/schema.prisma) — Schema Prisma definitivo (fuente de verdad)
+- [Migraciones](/dev/base-de-datos/migraciones) — Scripts SQL de migracion
+- [API Reference](/dev/api) — Como la API consume estos modelos

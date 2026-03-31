@@ -1,0 +1,254 @@
+---
+title: "Clases y Honores"
+description: "Tablas del modulo de clases progresivas, honores/especialidades, inscripciones y seguimiento de progreso"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Tabla: `classes`
+
+Clases progresivas por tipo de club (Amigo, Companero, Explorador, etc.).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `class_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre de la clase | UNIQUE, NOT NULL |
+| `description` | STRING | Descripcion de la clase | NULL |
+| `active` | BOOLEAN | Clase activa | NOT NULL |
+| `club_type_id` | INT | Tipo de club al que pertenece | FK → club_types, NOT NULL |
+| `minimum_age` | INT | Edad minima requerida | NOT NULL |
+| `requires_invested_gm` | BOOLEAN | Requiere Guia Mayor investido | DEFAULT false |
+| `material_url` | VARCHAR | URL del material de estudio | NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Relaciones**:
+- Many-to-One: `club_types`
+- One-to-Many: `class_module_progress`, `class_modules`, `class_section_progress`, `enrollments`
+
+**Nota historica**: La relacion `users_classes` fue deprecada. El historico consolidado se resuelve desde `enrollments`.
+
+---
+
+## Tabla: `honors`
+
+Especialidades (logros y habilidades que los miembros pueden obtener).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `honor_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(100) | Nombre de la especialidad | UNIQUE, NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `honor_image` | STRING | URL de imagen de la especialidad | NOT NULL |
+| `honors_category_id` | INT | Categoria de la especialidad | FK → honors_categories, NOT NULL |
+| `master_honors_id` | INT | Especialidad maestra asociada | FK → master_honors, NULL |
+| `material_url` | VARCHAR | URL del material de estudio | NOT NULL |
+| `club_type_id` | INT | Tipo de club al que pertenece | FK → club_types, NOT NULL |
+| `active` | BOOLEAN | Especialidad activa | DEFAULT true |
+| `approval` | INT | Nivel de aprobacion | DEFAULT 1 |
+| `skill_level` | INT | Nivel de habilidad | DEFAULT 1 |
+| `year` | VARCHAR | Ano de la especialidad | NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Relaciones**:
+- Many-to-One: `club_types`, `honors_categories`, `master_honors`
+- One-to-Many: `users_honors`
+
+---
+
+## Tabla: `enrollments`
+
+Intento anual operativo de cursado por usuario, clase y ano eclesiastico; owner primario del progreso formativo.
+
+| Campo | Tipo | Descripcion |
+|---|---|---|
+| `enrollment_id` | INT | Identidad de la inscripcion anual |
+| `user_id` | UUID | Usuario dueno del intento |
+| `class_id` | INT | Clase cursada |
+| `ecclesiastical_year_id` | INT | Ano eclesiastico del intento |
+| `active` | BOOLEAN | Estado operativo de la inscripcion |
+
+**Regla de identidad**:
+- `UNIQUE (user_id, class_id, ecclesiastical_year_id)` evita duplicar el mismo intento anual.
+
+---
+
+## Tabla: `class_section_progress`
+
+Fuente operativa del avance por seccion; desde FS-03 pertenece a una inscripcion anual via `enrollment_id`.
+
+| Campo | Tipo | Descripcion |
+|---|---|---|
+| `section_progress_id` | INT | ID del registro |
+| `enrollment_id` | INT NULL | Owner anual del progreso |
+| `user_id` | UUID | Huella legacy transicional |
+| `class_id` | INT | Huella legacy transicional |
+| `module_id` | INT | Modulo de la seccion |
+| `section_id` | INT | Seccion evaluada |
+| `score` | FLOAT | Puntaje registrado |
+| `evidences` | JSON | Evidencias adjuntas |
+| `status` | evidence_validation_enum | Estado de validacion (migrado de VARCHAR a enum) |
+| `submitted_by_id` | UUID NULL | Usuario que envio |
+| `submitted_at` | TIMESTAMPTZ NULL | Fecha de envio |
+| `validated_by_id` | UUID NULL | Usuario que valido |
+| `validated_at` | TIMESTAMPTZ NULL | Fecha de validacion |
+| `rejection_reason` | VARCHAR NULL | Motivo de rechazo |
+
+**Regla de unicidad FS-03**:
+- `UNIQUE (enrollment_id, module_id, section_id)` cuando `enrollment_id` no es nulo.
+
+---
+
+## Tabla: `class_module_progress`
+
+Proyeccion sincronizada por modulo; resume el avance de secciones para la misma inscripcion anual.
+
+| Campo | Tipo | Descripcion |
+|---|---|---|
+| `module_progress_id` | INT | ID del registro |
+| `enrollment_id` | INT NULL | Owner anual del progreso |
+| `user_id` | UUID | Huella legacy transicional |
+| `class_id` | INT | Huella legacy transicional |
+| `module_id` | INT | Modulo resumido |
+| `score` | FLOAT | Puntaje agregado del modulo |
+
+**Regla de unicidad FS-03**:
+- `UNIQUE (enrollment_id, module_id)` cuando `enrollment_id` no es nulo.
+
+**Politica de backfill acotado**:
+- Solo se backfillean filas legacy cuyo `user_id + class_id` mapee de forma deterministica a una sola inscripcion en `enrollments`.
+- Filas ambiguas o sin match quedan con `enrollment_id = NULL` para revision manual.
+
+---
+
+## Tabla: `honors_categories`
+
+Catalogo de categorias de especialidades (Naturaleza, Manualidades, etc.).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `honor_category_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(100) | Nombre de la categoria | UNIQUE, NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `icon` | INT | Indice de icono | NULL |
+| `active` | BOOLEAN | Categoria activa | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+---
+
+## Tabla: `master_honors`
+
+Especialidades maestras (agrupan especialidades regulares para el programa de Guia Mayor).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `master_honor_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(100) | Nombre de la especialidad maestra | UNIQUE, NOT NULL |
+| `master_image` | STRING | URL de imagen | NULL |
+| `active` | BOOLEAN | Registro activo | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+---
+
+## Tabla: `users_honors`
+
+Especialidades obtenidas por usuarios.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `user_honor_id` | INT | ID unico | PK, autoincrement |
+| `user_id` | UUID | Usuario | FK → users, NOT NULL |
+| `honor_id` | INT | Especialidad | FK → honors, NOT NULL |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+| `validate` | BOOLEAN | Validada por instructor | DEFAULT false |
+| `certificate` | VARCHAR | URL del certificado | NOT NULL |
+| `images` | JSON | Imagenes de evidencia | DEFAULT "[]" |
+| `document` | VARCHAR | URL de documento adjunto | NULL |
+| `date` | DATE | Fecha de obtencion | NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Constraint UNIQUE**: `(user_id, honor_id)`
+
+**Indices**: `idx_users_honors_user_id`
+
+---
+
+## Tabla: `honor_requirements`
+
+Catalogo de requisitos estructurados por honor (5,410 registros seeded de 605 markdowns).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `requirement_id` | INT | ID unico | PK, autoincrement |
+| `honor_id` | INT | Honor al que pertenece | FK → honors, NOT NULL |
+| `requirement_number` | VARCHAR | Numeracion del requisito (ej. "1", "1.a") | NOT NULL |
+| `requirement_text` | TEXT | Texto del requisito | NOT NULL |
+| `has_sub_items` | BOOLEAN | Indica si tiene sub-items | DEFAULT false |
+| `needs_review` | BOOLEAN | Marcado para revision manual post-seed | DEFAULT false |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+
+---
+
+## Tabla: `user_honor_requirement_progress`
+
+Progreso por usuario por requisito de un honor (checklist de auto-reporte).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `progress_id` | INT | ID unico | PK, autoincrement |
+| `user_honor_id` | INT | Relacion usuario-honor | FK → users_honors, NOT NULL |
+| `requirement_id` | INT | Requisito | FK → honor_requirements, NOT NULL |
+| `completed` | BOOLEAN | Completado por el usuario | DEFAULT false |
+| `notes` | TEXT | Notas opcionales del usuario | NULL |
+| `completed_at` | TIMESTAMPTZ | Fecha en que fue marcado completado | NULL |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+
+---
+
+## Tabla: `class_modules`
+
+Modulos que componen una clase progresiva.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `module_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre del modulo | NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `class_id` | INT | Clase a la que pertenece | FK → classes, NOT NULL |
+| `active` | BOOLEAN | Modulo activo | NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Constraint UNIQUE**: `(name, class_id)`
+
+---
+
+## Tabla: `class_sections`
+
+Secciones dentro de un modulo de clase (unidades evaluables).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `section_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre de la seccion | NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `module_id` | INT | Modulo al que pertenece | FK → class_modules, NOT NULL |
+| `active` | BOOLEAN | Seccion activa | NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Constraint UNIQUE**: `(name, module_id)`
+
+---
+
+## Tabla: `users_classes` [DEPRECADA]
+
+**Estado**: ARCHIVADA Y ELIMINADA
+
+Fue archivada como `users_classes_archive` en la migracion del 2026-03-20. El historico consolidado se resuelve completamente desde `enrollments` y sus proyecciones (`class_module_progress`, `class_section_progress`).
+
+**Motivo**: La separacion entre "trayectoria consolidada" (legacy) y "inscripcion operativa anual" (authority) se resolvio completamente hacia `enrollments` como unica fuente de verdad.

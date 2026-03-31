@@ -1,0 +1,75 @@
+---
+title: "Estandares"
+description: "Convenciones de codigo, arquitectura y herramientas que rigen el desarrollo de todo el proyecto SACDIA"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+Esta seccion documenta los estandares de desarrollo que aplican a todos los repositorios del proyecto SACDIA: backend, admin web y app movil.
+
+## Proposito
+
+Los estandares existen para garantizar:
+
+- **Consistencia**: El codigo se ve y funciona de la misma manera independientemente de quien lo escribio
+- **Calidad**: Se evitan patrones inseguros, ineficientes o dificiles de mantener
+- **Velocidad**: Decisiones ya tomadas no se repiten; el equipo puede avanzar mas rapido
+- **Legibilidad**: Cualquier miembro del equipo puede entender el codigo de otro sin friccion
+
+## Documentos de Estandares
+
+### Coding Standards
+
+Reglas de codigo para TypeScript/JavaScript y React. Incluye:
+- Principios SOLID, DRY, KISS y YAGNI
+- Convenciones de variables, funciones, types e interfaces
+- Async/await y manejo de errores
+- Componentes React y state management
+- Testing y seguridad
+
+[Ver Coding Standards](/dev/estandares/coding-standards)
+
+### Stack Tecnologico
+
+Descripcion completa del stack tecnologico de SACDIA, dividido por capa:
+- Frontend (Next.js 16, shadcn/ui, Tailwind CSS)
+- Backend (NestJS, Prisma, PostgreSQL)
+- App Movil (Flutter, Clean Architecture, Riverpod)
+- Infraestructura (Vercel, Supabase, CI/CD)
+- Servicios de terceros y decisiones tecnicas
+
+[Ver Stack Tecnologico](/dev/estandares/stack-tecnologico)
+
+### Data Guidelines
+
+Guias para manejo de datos, APIs externas, validacion y seguridad. Incluye:
+- Validacion en capas (cliente, API, DB)
+- Queries seguras y transacciones
+- Paginacion y cache
+- Manejo de datos sensibles y encryption
+- Logging estructurado y privacidad (GDPR)
+
+[Ver Data Guidelines](/dev/estandares/data-guidelines)
+
+### Guia de Estructura
+
+Navegacion practica de la estructura del monorepo. Incluye:
+- Layout de directorios de cada aplicacion
+- Convenciones de nombrado (TypeScript, SQL, Dart, Git)
+- Como encontrar cosas rapidamente
+- URLs de desarrollo y comandos esenciales
+
+[Ver Guia de Estructura](/dev/estandares/guia-estructura)
+
+---
+
+## Principios Transversales
+
+Independientemente del lenguaje o plataforma, estos principios aplican en todo el proyecto:
+
+1. **Async/await** para todas las operaciones asincronas
+2. **Validar todas las entradas** de usuario, tanto en frontend como en backend
+3. **Never hardcodear secrets** — siempre desde variables de entorno
+4. **Try-catch en operaciones asincronas** con manejo especifico de errores
+5. **Commits en formato conventional commits**: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`
+6. **TypeScript strict mode** habilitado en todos los proyectos TS

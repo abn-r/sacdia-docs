@@ -1,0 +1,4 @@
+{
+  "title": "Integración Frontend",
+  "pages": ["index", "setup", "autenticacion", "endpoints", "manejo-errores", "ejemplos-modulos", "best-practices", "testing"]
+}

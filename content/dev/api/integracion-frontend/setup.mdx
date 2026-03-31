@@ -1,0 +1,145 @@
+---
+title: "Setup Inicial"
+description: "Configuración del cliente API en Next.js (Admin Panel) y Flutter (App Móvil) para consumir la REST API de SACDIA."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Next.js Admin Panel
+
+**Instalar dependencias**:
+
+```bash
+pnpm add axios swr
+```
+
+**Configurar cliente API** (`lib/api/client.ts`):
+
+```typescript
+// lib/api/client.ts
+import axios from 'axios';
+
+const apiClient = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Interceptor para agregar token automáticamente
+apiClient.interceptors.request.use(async (config) => {
+  // Obtener token del almacenamiento de sesión (Better Auth / cookies)
+  const token = getSessionToken(); // implementar según auth provider
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+// Interceptor para manejo de errores
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      // Token expirado — redirigir a login
+      window.location.href = '/login';
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export { apiClient };
+```
+
+---
+
+## Flutter Mobile App
+
+**Dependencias** (`pubspec.yaml`):
+
+```yaml
+dependencies:
+  dio: ^5.4.0
+  flutter_secure_storage: ^9.0.0
+```
+
+**Configurar cliente API** (`lib/core/network/api_client.dart`):
+
+```dart
+// lib/core/network/api_client.dart
+import 'package:dio/dio.dart';
+
+class ApiClient {
+  late final Dio _dio;
+
+  ApiClient() {
+    _dio = Dio(BaseOptions(
+      baseUrl: const String.fromEnvironment(
+        'API_URL',
+        defaultValue: '',
+      ),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
+      headers: {'Content-Type': 'application/json'},
+    ));
+
+    // Interceptor para token
+    _dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final token = await getStoredToken(); // obtener desde secure storage
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+        return handler.next(options);
+      },
+      onError: (error, handler) async {
+        if (error.response?.statusCode == 401) {
+          // Token expirado — manejar refresh o logout
+          await handleTokenExpiration();
+        }
+        return handler.next(error);
+      },
+    ));
+  }
+
+  Dio get dio => _dio;
+}
+```
+
+---
+
+## Variables de Entorno
+
+### Next.js (`.env.local`)
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000/api/v1
+```
+
+### Flutter
+
+Usar `--dart-define` en el comando de build:
+
+```bash
+flutter run --dart-define=API_URL=http://localhost:3000/api/v1
+flutter build apk --dart-define=API_URL=https://api.sacdia.app/api/v1
+```
+
+O configurar en `launch.json` (VS Code):
+
+```json
+{
+  "configurations": [
+    {
+      "name": "Flutter Dev",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main.dart",
+      "args": ["--dart-define=API_URL=http://localhost:3000/api/v1"]
+    }
+  ]
+}
+```

@@ -1,0 +1,4 @@
+{
+  "title": "Base de Datos",
+  "pages": ["index", "schema-reference", "migraciones"]
+}

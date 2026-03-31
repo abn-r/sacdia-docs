@@ -1,31 +1,93 @@
 ---
 title: Documentación de Desarrollo
-description: Guía técnica para el equipo de desarrollo de SACDIA
+description: Guía técnica para el equipo de desarrollo de SACDIA — arquitectura, APIs, estándares y flujos de trabajo.
 author: Abner Reyes
 version: "1.0.0"
 ---
 
+SACDIA es un monorepo de tres aplicaciones interconectadas: un backend REST, un panel de administración web y una app móvil. Esta sección cubre todo lo que un desarrollador necesita para contribuir al proyecto.
+
 ## Stack Tecnológico
 
-| Componente | Tecnología |
-|-----------|-----------|
-| Backend | NestJS + Prisma |
-| Admin Panel | Next.js + shadcn/ui |
-| App Móvil | Flutter |
-| Base de Datos | PostgreSQL (Neon) |
-| Autenticación | Better Auth |
-| Storage | Cloudflare R2 |
+| Componente | Tecnología | Versión |
+|-----------|-----------|---------|
+| Backend | NestJS + Prisma | 11.x / 7.x |
+| Admin Panel | Next.js + shadcn/ui | 16.x |
+| App Móvil | Flutter + Riverpod | 3.x |
+| Base de Datos | PostgreSQL (Neon) | 15.x |
+| Autenticación | Better Auth | self-hosted |
+| Storage | Cloudflare R2 | — |
+| Cache | Redis (Upstash) | — |
+| Push Notifications | Firebase FCM | — |
 
 ## Repositorios
 
-- **sacdia-backend** — API REST
-- **sacdia-admin** — Panel Web de Administración
-- **sacdia-app** — Aplicación Móvil
-- **sacdia-docs** — Este sitio de documentación
+| Repositorio | Descripción | URL |
+|------------|-------------|-----|
+| `sacdia-backend` | API REST (NestJS + Prisma) | [github.com/abn-r/sacdia-backend](https://github.com/abn-r/sacdia-backend) |
+| `sacdia-admin` | Panel Web de Administración (Next.js) | [github.com/abn-r/sacdia-admin](https://github.com/abn-r/sacdia-admin) |
+| `sacdia-app` | Aplicación Móvil (Flutter) | [github.com/abn-r/sacdia-app](https://github.com/abn-r/sacdia-app) |
+| `sacdia-docs` | Este sitio de documentación (Fumadocs) | — |
 
-## Secciones
+## Entornos
 
-- **API Reference** — Documentación de la API REST
-- **Base de Datos** — Schema y migraciones
-- **Arquitectura** — Decisiones de diseño y arquitectura
-- **Estándares** — Convenciones y estándares de código
+| Entorno | Backend | Admin |
+|---------|---------|-------|
+| Desarrollo | `http://localhost:3000` | `http://localhost:3001` |
+| API Docs (Swagger) | `http://localhost:3000/api` | — |
+| Base de datos | Neon (PostgreSQL) — configurar `DATABASE_URL` en `.env` | — |
+
+## Arquitectura General
+
+El backend expone una API REST versionada (`/api/v1/`) que consumen tanto el panel admin como la app móvil. La autenticación es JWT via Better Auth. El almacenamiento de archivos usa Cloudflare R2.
+
+```
+sacdia-admin (Next.js)
+       |
+       |  HTTP + JWT
+       v
+sacdia-backend (NestJS)  <-->  PostgreSQL (Neon)
+       ^                  <-->  Redis (cache)
+       |                  <-->  Cloudflare R2 (storage)
+  HTTP + JWT              <-->  Firebase FCM (push)
+       |
+sacdia-app (Flutter)
+```
+
+## Secciones de Desarrollo
+
+### [API Reference](/dev/api)
+
+Documentación completa de la REST API: especificación técnica, referencia de endpoints en vivo (269 endpoints), versionado, seguridad, guía de integración para frontend y testing.
+
+### [Estándares](/dev/estandares)
+
+Convenciones de código, commits, naming y estructura de proyectos aplicados en todo el monorepo.
+
+### [Base de Datos](/dev/base-de-datos)
+
+Schema de PostgreSQL, modelos Prisma, migraciones y patrones de consulta.
+
+### [Testing](/dev/testing)
+
+Estrategia de testing, comandos, cobertura esperada y guías por módulo.
+
+## Convenciones de Commits
+
+Todos los repositorios usan Conventional Commits:
+
+```
+feat:      Nueva funcionalidad
+fix:       Corrección de bug
+docs:      Documentación
+refactor:  Refactoring sin cambio de comportamiento
+test:      Tests
+chore:     Tareas de mantenimiento
+```
+
+## Flujo de Trabajo Git
+
+- `main` — producción, protegida
+- `development` — integración activa
+- `feature/*` — features individuales, se mergean a `development`
+- `fix/*` — hotfixes

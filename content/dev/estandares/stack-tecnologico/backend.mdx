@@ -1,0 +1,143 @@
+---
+title: "Backend — NestJS API"
+description: "Stack del backend API: NestJS, Prisma, PostgreSQL, autenticacion JWT y seguridad"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Framework Principal
+
+**Framework**: NestJS  
+**Version**: 10.x  
+**Por que lo elegimos**: Arquitectura modular, TypeScript nativo, decorators, excelente para APIs enterprise, integracion con Prisma
+
+## Lenguaje
+
+**Lenguaje**: Node.js con TypeScript  
+**Version**: Node 20.x LTS / TypeScript 5.x
+
+**Librerias NestJS**:
+
+- `@nestjs/config` — Configuracion
+- `@nestjs/jwt` — JWT tokens
+- `@nestjs/passport` — Autenticacion
+- `class-validator` + `class-transformer` — Validacion de DTOs
+- `@nestjs/swagger` — Documentacion API
+
+---
+
+## Base de Datos
+
+### Database Principal
+
+**Tipo**: Relacional  
+**Motor**: PostgreSQL (hosted en Supabase)  
+**Version**: 15.x  
+**ORM/ODM**: Prisma (v5.x)
+
+**Prisma Features Usados**:
+
+- Prisma Client — Type-safe queries
+- Prisma Migrate — Migraciones de DB
+- Prisma Studio — GUI para DB (dev)
+
+### Bases de Datos Adicionales
+
+- **Cache**: Redis (para sessions, rate limiting)
+- **Search**: PostgreSQL full-text search (no servicio externo)
+- **Queue**: Redis + Bull (para jobs asincronos)
+- **Storage**: Supabase Storage (archivos/imagenes)
+
+---
+
+## APIs
+
+**Estilo de API**: REST
+
+**Detalles**:
+
+- Versionado: URL-based (`/api/v1/`)
+- Autenticacion: JWT (tokens de Supabase Auth)
+- Response format: JSON
+- Status codes: Estandar HTTP
+- Rate limiting: Implementado con `@nestjs/throttler` (3 tiers)
+- Security headers: Helmet (CSP, HSTS, X-Frame-Options)
+- 2FA: Supabase MFA (TOTP)
+- Session management: Limite de 5 sesiones por usuario
+- Token blacklist: Revocacion de JWT antes de expiracion
+- IP whitelist: Para endpoints admin (soporte CIDR)
+
+---
+
+## Testing Backend
+
+- **Unit**: Jest (built-in NestJS)
+- **Integration**: Supertest + Test DB PostgreSQL
+- **DB Testing**: Docker PostgreSQL container para tests
+
+**Ejemplo de test NestJS**:
+
+```typescript
+describe("UserService", () => {
+  let service: UserService;
+  let prisma: PrismaService;
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [UserService, PrismaService],
+    }).compile();
+
+    service = module.get<UserService>(UserService);
+  });
+
+  it("should create user", async () => {
+    // Use Jest + mock Prisma
+  });
+});
+```
+
+---
+
+## Convenciones del Backend
+
+- Respuesta admin: `{ status, data }`
+- Guards: `JwtAuthGuard`, `GlobalRolesGuard`, `OwnerOrAdminGuard`
+- Async/await para todas las operaciones
+- Validacion de entrada via decoradores de NestJS
+- Prefijo API: `/api/v1/*`
+
+## Notas para IA
+
+**SIEMPRE usa estas tecnologias (backend)**:
+
+- NestJS con TypeScript
+- Prisma para queries (no raw SQL directo)
+- class-validator + class-transformer para DTOs
+- @nestjs/swagger para documentacion
+- NO Express directo, NO TypeORM, NO Sequelize
+
+**Queries correctas con Prisma**:
+
+```typescript
+// Bien
+const users = await this.prisma.user.findMany({
+  where: { email: { contains: query } },
+  include: { orders: true },
+});
+
+// Mal (raw SQL sin type safety)
+const users = await this.prisma.$queryRaw`
+  SELECT * FROM users WHERE email LIKE '%${query}%'
+`;
+```
+
+**Flujo de autenticacion**:
+
+```
+1. User login → Supabase Auth API
+2. Get JWT token from Supabase
+3. Flutter: Store en flutter_secure_storage
+4. Flutter: Dio interceptor inyecta token en headers
+5. Backend NestJS: Valida JWT (Supabase public key)
+6. Backend: No crear custom auth, usar Supabase tokens
+```

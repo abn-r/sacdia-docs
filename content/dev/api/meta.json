@@ -1,4 +1,4 @@
 {
   "title": "API Reference",
-  "pages": ["index"]
+  "pages": ["index", "especificacion", "endpoints", "versionado", "decisiones-arquitectura", "integracion-frontend", "seguridad", "testing", "servicios-externos"]
 }

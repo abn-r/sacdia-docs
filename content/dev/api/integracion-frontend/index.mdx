@@ -1,0 +1,57 @@
+---
+title: "Integración Frontend"
+description: "Guía práctica para consumir la API REST de SACDIA desde Next.js (Admin Panel) y Flutter (App Móvil), con ejemplos de código por módulo."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+Esta guía proporciona ejemplos prácticos de cómo consumir la API REST de SACDIA desde aplicaciones frontend.
+
+> [!IMPORTANT]
+> Esta guía es operativa y subordinada a [Endpoints Live Reference](/dev/api/endpoints).
+> Los endpoints y contratos runtime se validan contra la referencia live; los ejemplos de esta guía no reemplazan esa fuente de verdad.
+
+## URLs Base
+
+Definí la base URL por entorno en variables de entorno del módulo frontend correspondiente. No tomes dominios o puertos hardcodeados de esta guía como contrato global.
+
+```typescript
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+```
+
+## Configuración actual
+
+- **Versionado**: `/api/v1/` (URI-based)
+- **Formato**: JSON
+- **Autenticación**: JWT (Better Auth)
+- **Total endpoints**: 269
+
+## Secciones
+
+| Página | Contenido |
+|--------|-----------|
+| [Setup](/dev/api/integracion-frontend/setup) | Instalación y configuración del cliente API en Next.js y Flutter |
+| [Autenticación](/dev/api/integracion-frontend/autenticacion) | Login email/password, OAuth con Google, verificación y guards |
+| [Consumo de Endpoints](/dev/api/integracion-frontend/endpoints) | Pattern Service Layer con SWR (Next.js) y Riverpod (Flutter) |
+| [Manejo de Errores](/dev/api/integracion-frontend/manejo-errores) | Códigos HTTP, error handlers en Next.js y Flutter |
+| [Ejemplos por Módulo](/dev/api/integracion-frontend/ejemplos-modulos) | Perfil de salud, actividades, finanzas, honors |
+| [Best Practices](/dev/api/integracion-frontend/best-practices) | Cache, optimistic updates, paginación, upload de archivos |
+| [Testing](/dev/api/integracion-frontend/testing) | Jest + RTL (Next.js), Mockito (Flutter) |
+
+## Actualización 2026-02-17 (Admin Panel)
+
+Se agregó validación operativa para frontend admin mediante smoke E2E en `sacdia-admin/scripts/e2e-smoke.mjs`.
+
+Comandos de referencia:
+
+```bash
+# Smoke autenticado
+set -a; source .env.e2e.local; set +a; pnpm test:e2e:smoke
+
+# Smoke con create/edit opcional
+set -a; source .env.e2e.local; set +a; E2E_ENABLE_WRITE=1 pnpm test:e2e:smoke
+```
+
+Notas operativas:
+- El runner maneja fallback de conectividad `localhost -> 127.0.0.1` para entornos IPv4/IPv6.
+- Si un endpoint no esta publicado o hay rate-limit (429), reporta degradacion sin bloquear toda la corrida.

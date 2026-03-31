@@ -1,0 +1,137 @@
+---
+title: "Salud e Insurance"
+description: "Tablas de catalogos medicos (enfermedades, alergias, medicamentos) y seguros institucionales de miembros"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Modulo: Health / Catalogos Medicos
+
+### Tabla: `diseases`
+
+Catalogo de enfermedades/padecimientos que pueden asociarse a usuarios.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `disease_id` | INT | ID unico | PK, autoincrement |
+| `name` | STRING | Nombre de la enfermedad | UNIQUE, NOT NULL |
+| `description` | STRING | Descripcion detallada | NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+
+---
+
+### Tabla: `allergies`
+
+Catalogo de alergias que pueden asociarse a usuarios.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `allergy_id` | INT | ID unico | PK, autoincrement |
+| `name` | STRING | Nombre de la alergia | UNIQUE, NOT NULL |
+| `description` | STRING | Descripcion detallada | NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+
+---
+
+### Tabla: `medicines`
+
+Catalogo de medicamentos que pueden asociarse a usuarios.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `medicine_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR | Nombre del medicamento | NOT NULL |
+| `description` | VARCHAR | Descripcion detallada | NULL |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+---
+
+### Tabla: `users_allergies`
+
+Tabla pivote Many-to-Many entre `users` y `allergies`.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `user_allergies_id` | INT | ID unico | PK, autoincrement |
+| `user_id` | UUID | Usuario | FK → users, NOT NULL |
+| `allergy_id` | INT | Alergia | FK → allergies, NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+
+**Constraint UNIQUE**: `(user_id, allergy_id)`
+
+---
+
+### Tabla: `users_diseases`
+
+Tabla pivote Many-to-Many entre `users` y `diseases`.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `user_disease_id` | INT | ID unico | PK, autoincrement |
+| `user_id` | UUID | Usuario | FK → users, NOT NULL |
+| `disease_id` | INT | Enfermedad | FK → diseases, NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+
+**Constraint UNIQUE**: `(user_id, disease_id)`
+
+---
+
+### Tabla: `users_medicines`
+
+Tabla pivote Many-to-Many entre `users` y `medicines`.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `user_medicine_id` | INT | ID unico | PK, autoincrement |
+| `user_id` | UUID | Usuario | FK → users, NOT NULL |
+| `medicine_id` | INT | Medicamento | FK → medicines, NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+
+**Constraint UNIQUE**: `(user_id, medicine_id)`
+
+**Indices**: `idx_users_medicines_medicine_id`, `idx_users_medicines_user_id`
+
+---
+
+## Modulo: Insurance
+
+### Tabla: `member_insurances`
+
+Seguro institucional por miembro, usado por la app movil y por validaciones de camporee.
+
+| Campo | Tipo | Descripcion |
+|---|---|---|
+| `insurance_id` | INT | Identidad del seguro |
+| `user_id` | UUID | Usuario asegurado |
+| `insurance_type` | ENUM(`insurance_type_enum`) | Tipo de cobertura |
+| `policy_number` | VARCHAR(100) | Numero de poliza |
+| `provider` | VARCHAR(255) | Aseguradora |
+| `start_date` | DATE | Inicio de vigencia |
+| `end_date` | DATE | Fin de vigencia |
+| `coverage_amount` | DECIMAL(10,2) | Monto asegurado |
+| `active` | BOOLEAN | Seguro activo |
+| `evidence_file_url` | VARCHAR(500) | URL de evidencia adjunta |
+| `evidence_file_name` | VARCHAR(255) | Nombre original del archivo |
+| `created_by_id` | UUID | Usuario creador |
+| `modified_by_id` | UUID | Usuario que actualizo por ultima vez |
+
+**Relaciones**:
+- `users` via `user_id`
+- `users` via `created_by_id` y `modified_by_id` para auditoria
+- `camporee_members` via `insurance_id`
+
+**Notas**:
+- La evidencia se sube al bucket R2 `INSURANCE_EVIDENCE`
+- El backend expone listado por seccion, detalle por miembro y CRUD multipart para el seguro

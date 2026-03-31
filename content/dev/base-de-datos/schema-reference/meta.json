@@ -1,0 +1,17 @@
+{
+  "title": "Schema Reference",
+  "pages": [
+    "index",
+    "users-auth",
+    "organizacion",
+    "clubs",
+    "rbac",
+    "clases-honores",
+    "salud-insurance",
+    "inventario-finanzas",
+    "actividades-camporees",
+    "investidura-certificaciones",
+    "carpetas-evaluacion",
+    "sistema-recursos"
+  ]
+}

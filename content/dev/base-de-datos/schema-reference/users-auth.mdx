@@ -1,0 +1,165 @@
+---
+title: "Users & Auth"
+description: "Tablas de usuarios, autenticacion Better Auth, post-registro, representantes legales y contactos de emergencia"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Tabla: `users`
+
+Tabla principal de usuarios del sistema.
+
+**Campos** (sincronizado con schema.prisma 2026-03-18):
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `user_id` | UUID | ID unico (PK, referenciado por Better Auth `accounts.userId`) | PK |
+| `email` | VARCHAR(100) | Email del usuario | UNIQUE, NOT NULL |
+| `name` | VARCHAR(50) | Nombre | NULL |
+| `paternal_last_name` | VARCHAR(50) | Apellido paterno | NULL |
+| `maternal_last_name` | VARCHAR(50) | Apellido materno | NULL |
+| `approval_status` | ENUM(user_approval_status) | Estado administrativo de aprobacion (`pending`, `approved`, `rejected`) | DEFAULT `pending`, NOT NULL |
+| `rejection_reason` | TEXT | Motivo del rechazo administrativo cuando aplica | NULL |
+| `gender` | VARCHAR | Genero | - |
+| `birthday` | DATE | Fecha de nacimiento | - |
+| `baptism` | BOOLEAN | Esta bautizado? | DEFAULT false |
+| `baptism_date` | DATE | Fecha de bautismo | - |
+| `blood` | ENUM(blood_type) | Tipo de sangre | - |
+| `country_id` | INT | Pais | FK → countries, NULL |
+| `union_id` | INT | Union | FK → unions, NULL |
+| `local_field_id` | INT | Campo local | FK → local_fields, NULL |
+| `user_image` | TEXT | URL de foto de perfil | NULL |
+| `email_verified` | BOOLEAN | Email verificado (gestionado por Better Auth) | DEFAULT false |
+| `access_app` | BOOLEAN | Acceso a app movil | DEFAULT true |
+| `access_panel` | BOOLEAN | Acceso a panel admin | DEFAULT false |
+| `active` | BOOLEAN | Usuario activo | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Relaciones**:
+- One-to-One: `users_pr`, `legal_representatives`
+- One-to-Many: `emergency_contacts`, `club_role_assignments`, `users_honors`
+- Many-to-Many: `roles` (via `users_roles`), `allergies` (via `users_allergies`), `diseases` (via `users_diseases`), `medicines` (via `users_medicines`)
+
+**Nota historica**: Los campos `apple_connected` y `google_connected` fueron removidos en Wave 3 — el estado de OAuth ahora se resuelve desde la tabla `accounts` de Better Auth.
+
+---
+
+## Tabla: `sessions` (Better Auth)
+
+Sesiones activas gestionadas por Better Auth.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `id` | TEXT | ID unico de sesion | PK |
+| `expiresAt` | TIMESTAMPTZ | Expiracion de la sesion | NOT NULL |
+| `token` | TEXT | Token opaco de sesion | UNIQUE, NOT NULL |
+| `createdAt` | TIMESTAMPTZ | Fecha de creacion | NOT NULL |
+| `updatedAt` | TIMESTAMPTZ | Ultima actualizacion | NOT NULL |
+| `ipAddress` | TEXT | IP de origen | NULL |
+| `userAgent` | TEXT | User-Agent del cliente | NULL |
+| `userId` | TEXT | Usuario propietario | FK → users.user_id, NOT NULL |
+
+---
+
+## Tabla: `accounts` (Better Auth)
+
+Cuentas de proveedor (email/password, Google, Apple) vinculadas a un usuario.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `id` | TEXT | ID unico | PK |
+| `accountId` | TEXT | ID en el proveedor externo | NOT NULL |
+| `providerId` | TEXT | Identificador del proveedor (ej: "google", "credential") | NOT NULL |
+| `userId` | TEXT | Usuario SACDIA vinculado | FK → users.user_id, NOT NULL |
+| `accessToken` | TEXT | Access token del proveedor | NULL |
+| `refreshToken` | TEXT | Refresh token del proveedor | NULL |
+| `idToken` | TEXT | ID token del proveedor | NULL |
+| `accessTokenExpiresAt` | TIMESTAMPTZ | Expiracion del access token | NULL |
+| `refreshTokenExpiresAt` | TIMESTAMPTZ | Expiracion del refresh token | NULL |
+| `scope` | TEXT | Scopes otorgados | NULL |
+| `password` | TEXT | Hash de contrasena (solo credential provider) | NULL |
+| `createdAt` | TIMESTAMPTZ | Fecha de creacion | NOT NULL |
+| `updatedAt` | TIMESTAMPTZ | Ultima actualizacion | NOT NULL |
+
+---
+
+## Tabla: `verifications` (Better Auth)
+
+Tokens temporales para verificacion de email y flujos similares.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `id` | TEXT | ID unico | PK |
+| `identifier` | TEXT | Identificador (ej: email) | NOT NULL |
+| `value` | TEXT | Valor/token de verificacion | NOT NULL |
+| `expiresAt` | TIMESTAMPTZ | Expiracion | NOT NULL |
+| `createdAt` | TIMESTAMPTZ | Fecha de creacion | NULL |
+| `updatedAt` | TIMESTAMPTZ | Ultima actualizacion | NULL |
+
+---
+
+## Tabla: `users_pr`
+
+Tracking de post-registro (onboarding) y contexto activo de club.
+
+| Campo | Tipo | Descripcion |
+|---|---|---|
+| `user_pr_id` | INT | PK tecnico (autoincrement) |
+| `user_id` | UUID | Usuario | UNIQUE, FK → users |
+| `complete` | BOOLEAN | Post-registro completo | DEFAULT false |
+| `profile_picture_complete` | BOOLEAN | Paso 1: Foto | DEFAULT false |
+| `personal_info_complete` | BOOLEAN | Paso 2: Info personal | DEFAULT false |
+| `club_selection_complete` | BOOLEAN | Paso 3: Club | DEFAULT false |
+| `active_club_assignment_id` | UUID | Asignacion activa de club para contexto de sesion | NULL |
+| `date_completed` | TIMESTAMPTZ | Fecha de completado del post-registro | NULL |
+| `created_at` | TIMESTAMPTZ | Fecha creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Flujo**:
+1. Registro → Crea registro con todo en `false`
+2. Paso 1 → `profile_picture_complete = true`
+3. Paso 2 → `personal_info_complete = true`
+4. Paso 3 → `club_selection_complete = true` AND `complete = true`
+
+**Nota**: `active_club_assignment_id` es persistido por `PATCH /auth/me/context` y leido por el backend para resolver autorizacion efectiva por sesion.
+
+---
+
+## Tabla: `legal_representatives`
+
+Representantes legales para menores de 18 anos.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `id` | UUID | ID unico | PK |
+| `user_id` | UUID | Usuario menor | FK → users, UNIQUE |
+| `representative_user_id` | UUID | Usuario representante (si esta registrado) | FK → users, NULL |
+| `name` | VARCHAR(100) | Nombre (si no es usuario) | NULL |
+| `paternal_last_name` | VARCHAR(100) | Apellido paterno | NULL |
+| `maternal_last_name` | VARCHAR(100) | Apellido materno | NULL |
+| `phone` | VARCHAR(20) | Telefono | NULL |
+| `relationship_type_id` | UUID | Tipo de relacion | FK → relationship_types |
+
+**Constraint CHECK**:
+```sql
+-- Debe tener O un usuario registrado O datos manuales
+(representative_user_id IS NOT NULL) OR 
+(name IS NOT NULL AND paternal_last_name IS NOT NULL AND phone IS NOT NULL)
+```
+
+---
+
+## Tabla: `emergency_contacts`
+
+Contactos de emergencia (maximo 5 por usuario).
+
+| Campo | Tipo | Descripcion |
+|---|---|---|
+| `id` | UUID | ID unico | PK |
+| `user_id` | UUID | Usuario | FK → users |
+| `name` | VARCHAR(100) | Nombre del contacto | NOT NULL |
+| `phone` | VARCHAR(20) | Telefono | NOT NULL |
+| `relationship_type_id` | UUID | Relacion (padre, madre, etc.) | FK → relationship_types |
+
+**Validacion**: Trigger limita a maximo 5 contactos por usuario.

@@ -1,4 +1,4 @@
 {
   "title": "Desarrollo",
-  "pages": ["index", "api", "database", "architecture", "standards"]
+  "pages": ["index", "api", "estandares", "base-de-datos", "testing"]
 }

@@ -1,0 +1,199 @@
+---
+title: "Consumo de Endpoints"
+description: "Pattern recomendado de Service Layer para consumir la API en Next.js con SWR y en Flutter con Dio + Riverpod."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Pattern Recomendado: API Service Layer
+
+El patrón recomendado es crear una capa de servicio que encapsula las llamadas a la API, expone hooks reutilizables en Next.js y use cases en Flutter.
+
+---
+
+## Next.js con SWR
+
+```typescript
+// lib/api/services/clubs.service.ts
+import { apiClient } from '../client';
+import useSWR from 'swr';
+
+export interface Club {
+  club_id: number;
+  name: string;
+  local_field_id: number;
+  club_types: {
+    club_type_id: number;
+    name: string;
+  };
+  active: boolean;
+}
+
+// Fetcher genérico
+const fetcher = (url: string) => apiClient.get(url).then((res) => res.data);
+
+// Hook para listar clubs
+export function useClubs() {
+  const { data, error, isLoading, mutate } = useSWR<{
+    status: string;
+    data: Club[];
+  }>('/clubs', fetcher);
+
+  return {
+    clubs: data?.data,
+    isLoading,
+    isError: error,
+    mutate,
+  };
+}
+
+// Función para crear club
+export async function createClub(clubData: Partial<Club>) {
+  const response = await apiClient.post('/clubs', clubData);
+  return response.data;
+}
+
+// Función para actualizar club
+export async function updateClub(clubId: number, clubData: Partial<Club>) {
+  const response = await apiClient.patch(`/clubs/${clubId}`, clubData);
+  return response.data;
+}
+
+// Función para eliminar club
+export async function deleteClub(clubId: number) {
+  const response = await apiClient.delete(`/clubs/${clubId}`);
+  return response.data;
+}
+```
+
+**Uso en componente**:
+
+```typescript
+// app/dashboard/clubs/page.tsx
+'use client';
+
+import { useClubs, createClub } from '@/lib/api/services/clubs.service';
+import { useState } from 'react';
+
+export default function ClubsPage() {
+  const { clubs, isLoading, isError, mutate } = useClubs();
+  const [isCreating, setIsCreating] = useState(false);
+
+  const handleCreate = async (data: any) => {
+    setIsCreating(true);
+    try {
+      await createClub(data);
+      mutate(); // Revalidar lista
+      toast.success('Club creado exitosamente');
+    } catch (error) {
+      toast.error('Error al crear club');
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  if (isLoading) return <Spinner />;
+  if (isError) return <ErrorMessage />;
+
+  return (
+    <div>
+      <h1>Clubs</h1>
+      <ClubList clubs={clubs} />
+      <CreateClubForm onSubmit={handleCreate} isLoading={isCreating} />
+    </div>
+  );
+}
+```
+
+---
+
+## Flutter con Dio + Riverpod
+
+```dart
+// lib/features/clubs/data/datasources/clubs_remote_datasource.dart
+class ClubsRemoteDataSource {
+  final Dio dio;
+
+  Future<List<ClubModel>> getClubs() async {
+    try {
+      final response = await dio.get('/clubs');
+      final data = response.data['data'] as List;
+      return data.map((json) => ClubModel.fromJson(json)).toList();
+    } on DioException catch (e) {
+      throw ServerException(e.message ?? 'Error fetching clubs');
+    }
+  }
+
+  Future<ClubModel> createClub(ClubModel club) async {
+    try {
+      final response = await dio.post('/clubs', data: club.toJson());
+      return ClubModel.fromJson(response.data['data']);
+    } on DioException catch (e) {
+      throw ServerException(e.message ?? 'Error creating club');
+    }
+  }
+}
+
+// lib/features/clubs/domain/usecases/get_clubs.dart
+class GetClubs {
+  final ClubsRepository repository;
+
+  Future<Either<Failure, List<Club>>> call() async {
+    return await repository.getClubs();
+  }
+}
+
+// lib/features/clubs/presentation/providers/clubs_provider.dart
+final clubsProvider = FutureProvider<List<Club>>((ref) async {
+  final useCase = ref.read(getClubsUseCaseProvider);
+  final result = await useCase();
+
+  return result.fold(
+    (failure) => throw Exception(failure.message),
+    (clubs) => clubs,
+  );
+});
+```
+
+**Uso en widget**:
+
+```dart
+// lib/features/clubs/presentation/pages/clubs_page.dart
+class ClubsPage extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final clubsAsync = ref.watch(clubsProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Clubs')),
+      body: clubsAsync.when(
+        data: (clubs) => ClubsList(clubs: clubs),
+        loading: () => CircularProgressIndicator(),
+        error: (error, stack) => ErrorWidget(error.toString()),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushNamed(context, '/clubs/create'),
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+```
+
+---
+
+## Envelope de respuesta
+
+Todas las respuestas de la API usan el envelope `{ status, data }`. Siempre acceder a `.data` para obtener el recurso:
+
+```typescript
+// Next.js
+const response = await apiClient.get('/clubs/1');
+const club = response.data.data; // response.data = { status, data: Club }
+```
+
+```dart
+// Flutter
+final response = await dio.get('/clubs/1');
+final club = ClubModel.fromJson(response.data['data']);
+```

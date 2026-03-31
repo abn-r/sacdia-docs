@@ -1,0 +1,243 @@
+---
+title: "Autenticación"
+description: "Implementación de login, OAuth con Google/Apple, y verificación de sesión en Next.js y Flutter para la API de SACDIA."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+La API usa JWT (Bearer token) para autenticación. Los tokens se obtienen mediante login email/password o OAuth.
+
+## 1. Login con Email/Password
+
+**Next.js**:
+
+```typescript
+// app/login/actions.ts
+'use server';
+
+export async function loginAction(email: string, password: string) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    return { error: error.message };
+  }
+
+  const { data } = await response.json();
+  // data.accessToken, data.refreshToken, data.expiresAt
+
+  return { accessToken: data.accessToken, user: data.user };
+}
+```
+
+**Flutter**:
+
+```dart
+// lib/features/auth/data/datasources/auth_remote_datasource.dart
+class AuthRemoteDataSource {
+  final Dio dio;
+
+  Future<AuthTokens> login(String email, String password) async {
+    final response = await dio.post('/auth/login', data: {
+      'email': email,
+      'password': password,
+    });
+
+    return AuthTokens.fromJson(response.data['data']);
+  }
+}
+```
+
+---
+
+## 2. OAuth con Google
+
+**Next.js**:
+
+```typescript
+// app/login/oauth-buttons.tsx
+'use client';
+
+export function GoogleLoginButton() {
+  const handleGoogleLogin = async () => {
+    // Redirigir al endpoint de OAuth
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/oauth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        redirectTo: `${window.location.origin}/auth/callback`,
+      }),
+    });
+
+    const { data } = await response.json();
+    if (data.redirectUrl) {
+      window.location.href = data.redirectUrl;
+    }
+  };
+
+  return (
+    <button onClick={handleGoogleLogin}>
+      Sign in with Google
+    </button>
+  );
+}
+```
+
+**Flutter**:
+
+```dart
+Future<void> signInWithGoogle() async {
+  final response = await dio.post('/auth/oauth/google', data: {
+    'redirectTo': 'com.sacdia.app://auth/callback',
+  });
+
+  final redirectUrl = response.data['data']['redirectUrl'];
+  // Abrir redirectUrl en browser o WebView
+  await launchUrl(Uri.parse(redirectUrl));
+}
+```
+
+---
+
+## 3. Verificar Autenticación
+
+### Next.js Middleware
+
+```typescript
+// middleware.ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export async function middleware(req: NextRequest) {
+  const token = req.cookies.get('access_token')?.value;
+
+  // Proteger rutas
+  if (!token && req.nextUrl.pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  // Verificar token con la API
+  if (token) {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) {
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ['/dashboard/:path*', '/clubs/:path*'],
+};
+```
+
+### Flutter Route Guard
+
+```dart
+class AuthGuard extends AutoRouteGuard {
+  final AuthRepository authRepository;
+
+  @override
+  void onNavigation(NavigationResolver resolver, StackRouter router) async {
+    final isAuthenticated = await authRepository.isAuthenticated();
+    
+    if (isAuthenticated) {
+      resolver.next();
+    } else {
+      router.push(const LoginRoute());
+    }
+  }
+}
+```
+
+---
+
+## 4. Refresh Token
+
+El token de refresh se obtiene al hacer login y permite renovar el access token sin forzar al usuario a iniciar sesión de nuevo.
+
+**Contrato de refresh**:
+
+```typescript
+// POST /api/v1/auth/refresh
+// Body: { refreshToken: string }
+// Response: { accessToken, refreshToken, expiresAt, tokenType }
+```
+
+**Next.js**:
+
+```typescript
+// lib/api/refresh.ts
+export async function refreshAccessToken(refreshToken: string) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ refreshToken }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to refresh token');
+  }
+
+  const { data } = await response.json();
+  return data; // { accessToken, refreshToken, expiresAt }
+}
+```
+
+**Flutter**:
+
+```dart
+Future<AuthTokens> refreshToken(String refreshToken) async {
+  final response = await dio.post('/auth/refresh', data: {
+    'refreshToken': refreshToken,
+  });
+
+  return AuthTokens.fromJson(response.data['data']);
+}
+```
+
+---
+
+## 5. Logout
+
+El endpoint de logout es fail-safe (best effort): no requiere JWT válido, acepta bearer opcional.
+
+```typescript
+// Next.js
+export async function logoutAction(accessToken?: string, refreshToken?: string) {
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
+    body: JSON.stringify({ refreshToken }),
+  });
+
+  // Limpiar cookies/storage local
+  clearLocalSession();
+}
+```
+
+```dart
+// Flutter
+Future<void> logout({String? accessToken, String? refreshToken}) async {
+  try {
+    await dio.post('/auth/logout', data: {
+      if (refreshToken != null) 'refreshToken': refreshToken,
+    });
+  } catch (_) {
+    // Best effort — ignorar errores del server
+  } finally {
+    await secureStorage.deleteAll(); // siempre limpiar local
+  }
+}
+```

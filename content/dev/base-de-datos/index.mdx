@@ -1,0 +1,71 @@
+---
+title: "Base de Datos"
+description: "Documentacion de la base de datos PostgreSQL de SACDIA: schema de referencia, migraciones y convenciones"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+SACDIA utiliza PostgreSQL hosteado en Supabase como base de datos principal. El acceso a la base de datos desde el backend se realiza exclusivamente a traves de Prisma ORM.
+
+## Autoridad del Schema
+
+La fuente de verdad del modelo de datos es el archivo `schema.prisma` en el repositorio `sacdia-backend`. Esta documentacion es una referencia humana generada a partir de ese archivo y se sincroniza manualmente.
+
+```
+sacdia-backend/
+└── prisma/
+    ├── schema.prisma      ← FUENTE DE VERDAD
+    └── migrations/        ← Historial de migraciones Prisma
+```
+
+## Estadisticas del Schema (2026-03-25)
+
+| Metrica | Valor |
+|---|---|
+| Modelos | 83 |
+| Enums | 8 |
+| Ultima sincronizacion | 2026-03-25 |
+
+## Secciones
+
+### Schema Reference
+
+Referencia completa de todas las tablas, campos, relaciones e indices, organizada por dominio de negocio.
+
+[Ver Schema Reference](/dev/base-de-datos/schema-reference)
+
+Dominios documentados:
+- [Users & Auth](/dev/base-de-datos/schema-reference/users-auth) — Usuarios, sesiones Better Auth, post-registro
+- [Jerarquia Organizacional](/dev/base-de-datos/schema-reference/organizacion) — Paises, uniones, campos locales, distritos, iglesias
+- [Clubs](/dev/base-de-datos/schema-reference/clubs) — Clubs, secciones, tipos, anos eclesiasticos, unidades
+- [RBAC](/dev/base-de-datos/schema-reference/rbac) — Roles, permisos, asignaciones
+- [Clases y Honores](/dev/base-de-datos/schema-reference/clases-honores) — Clases progresivas, especialidades, inscripciones
+- [Salud e Insurance](/dev/base-de-datos/schema-reference/salud-insurance) — Catalogos medicos y seguros institucionales
+- [Inventario y Finanzas](/dev/base-de-datos/schema-reference/inventario-finanzas) — Inventario de club y registros financieros
+- [Actividades y Camporees](/dev/base-de-datos/schema-reference/actividades-camporees) — Actividades programadas y eventos de camporee
+- [Investidura y Certificaciones](/dev/base-de-datos/schema-reference/investidura-certificaciones) — Proceso de investidura y certificaciones GM
+- [Carpetas y Evaluacion](/dev/base-de-datos/schema-reference/carpetas-evaluacion) — Sistema de carpetas anuales con scoring y rankings
+- [Sistema y Recursos](/dev/base-de-datos/schema-reference/sistema-recursos) — Notificaciones, logs, recursos digitales y enums
+
+### Migraciones
+
+Guia operativa para ejecutar scripts de inicializacion y crear nuevas migraciones.
+
+[Ver Migraciones](/dev/base-de-datos/migraciones)
+
+---
+
+## Convenciones Clave
+
+- **ORM**: Siempre usar Prisma para queries — nunca raw SQL directo
+- **Naming**: snake_case para tablas y columnas
+- **PKs**: `{tabla}_id` UUID para tablas principales
+- **Timestamps**: `created_at` y `modified_at` en todas las tablas
+- **Soft delete**: Campo `active` BOOLEAN en lugar de DELETE fisico (en la mayoria de tablas)
+- **Transacciones**: Usar `prisma.$transaction()` para operaciones relacionadas
+
+## Ver Tambien
+
+- [Coding Standards](/dev/estandares/coding-standards) — Como escribir queries con Prisma
+- [Data Guidelines](/dev/estandares/data-guidelines) — Paginacion, indices y seguridad de datos
+- [API Reference](/dev/api) — Como los endpoints consumen estos modelos

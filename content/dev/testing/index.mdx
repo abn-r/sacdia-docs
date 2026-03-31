@@ -1,0 +1,71 @@
+---
+title: "Testing"
+description: "Recursos y guias de testing para el proyecto SACDIA: usuarios de prueba, estrategias y herramientas"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+Esta seccion contiene los recursos de testing disponibles para el proyecto SACDIA, incluyendo usuarios precreados y estrategias de prueba por capa.
+
+## Recursos Disponibles
+
+### Usuarios de Prueba
+
+Usuarios precreados en la rama `development` de Neon con diferentes roles de club asignados. Utiles para pruebas de autenticacion, autorizacion y flujos de usuario.
+
+[Ver Usuarios de Prueba](/dev/testing/usuarios-prueba)
+
+---
+
+## Estrategias de Testing por Capa
+
+### Backend (NestJS)
+
+- **Unit tests**: Jest (built-in NestJS) — probar services y logica de negocio
+- **Integration tests**: Supertest + Test DB PostgreSQL
+- **DB Testing**: Docker PostgreSQL container para tests
+- **Coverage objetivo**: >70%
+
+### Admin Web (Next.js)
+
+- **Unit/Integration**: Jest
+- **Component Testing**: React Testing Library
+- **E2E**: Playwright
+- **Coverage objetivo**: >70%
+
+### App Movil (Flutter)
+
+- **Unit Tests**: Testear Use Cases y Repositories (con mockito)
+- **Widget Tests**: flutter_test (built-in)
+- **Integration Tests**: integration_test package (E2E)
+- **Coverage objetivo**: >70% para produccion
+
+---
+
+## Convenciones de Tests
+
+Todos los tests siguen el patron **Arrange-Act-Assert**:
+
+```typescript
+it('should create user with valid data', async () => {
+  // Arrange
+  const userData = { email: 'test@example.com', name: 'Test' };
+  
+  // Act
+  const user = await userService.createUser(userData);
+  
+  // Assert
+  expect(user).toBeDefined();
+  expect(user.email).toBe(userData.email);
+});
+```
+
+Para mas detalles sobre patrones de testing ver [Coding Standards](/dev/estandares/coding-standards#testing).
+
+---
+
+## Entorno de Testing
+
+Los usuarios de prueba y datos semilla existen exclusivamente en la rama `development` de Neon. No ejecutar seeds de testing en produccion.
+
+Para configurar el entorno de testing local, ver [Guia de Estructura](/dev/estandares/guia-estructura#9-comandos-esenciales).

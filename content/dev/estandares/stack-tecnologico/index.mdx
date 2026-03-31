@@ -1,0 +1,38 @@
+---
+title: "Stack Tecnologico"
+description: "Vision general del stack tecnologico completo de SACDIA: backend, admin web, app movil e infraestructura"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+SACDIA es una plataforma full-stack compuesta por tres aplicaciones principales que comparten convenciones, autenticacion y base de datos.
+
+## Resumen del Stack
+
+| Componente | Tecnologia | Lenguaje |
+|---|---|---|
+| Backend API | NestJS 10.x | TypeScript 5.x |
+| Admin Web | Next.js 16 (App Router) | TypeScript 5.x |
+| App Movil | Flutter 3.x | Dart 3.3+ |
+| Base de Datos | PostgreSQL 15.x (Supabase) | SQL |
+| ORM | Prisma 5.x | - |
+| Auth | Supabase Auth | - |
+| Cache | Redis (Upstash) | - |
+| Storage | Supabase Storage / Cloudflare R2 | - |
+
+## Metodologia
+
+**Arquitectura**: Backend REST API + Multiples Clients (Web Admin + Flutter App)
+
+**Metodologia de Desarrollo**: Clean Architecture aplicada en todas las capas
+
+**Package Manager**: pnpm (backend y admin), pub (Flutter)
+
+## Secciones
+
+- [Frontend (Admin Web)](/dev/estandares/stack-tecnologico/frontend) — Next.js, shadcn/ui, estado, testing
+- [Backend (API)](/dev/estandares/stack-tecnologico/backend) — NestJS, Prisma, autenticacion, seguridad
+- [App Movil (Flutter)](/dev/estandares/stack-tecnologico/mobile) — Clean Architecture, Riverpod, Dio, navegacion
+- [Infraestructura](/dev/estandares/stack-tecnologico/infraestructura) — Hosting, Docker, CI/CD
+- [Servicios de Terceros](/dev/estandares/stack-tecnologico/servicios) — Auth, email, pagos, notificaciones
+- [Decisiones Tecnicas](/dev/estandares/stack-tecnologico/decisiones) — Por que elegimos cada tecnologia

@@ -1,0 +1,228 @@
+---
+title: "Testing de Integración Frontend"
+description: "Tests de la capa de integración con la API en Next.js (Jest + React Testing Library) y Flutter (Mockito + Dio mock)."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Next.js Tests (Jest + React Testing Library)
+
+```typescript
+// __tests__/api/clubs.service.test.ts
+import { renderHook, waitFor } from '@testing-library/react';
+import { SWRConfig } from 'swr';
+import { useClubs, createClub } from '@/lib/api/services/clubs.service';
+import { apiClient } from '@/lib/api/client';
+
+jest.mock('@/lib/api/client');
+
+describe('Clubs Service', () => {
+  it('should fetch clubs', async () => {
+    const mockClubs = [{ club_id: 1, name: 'Test Club' }];
+    (apiClient.get as jest.Mock).mockResolvedValue({
+      data: { data: mockClubs },
+    });
+
+    const wrapper = ({ children }: any) => (
+      <SWRConfig value={{ provider: () => new Map() }}>
+        {children}
+      </SWRConfig>
+    );
+
+    const { result } = renderHook(() => useClubs(), { wrapper });
+
+    await waitFor(() => expect(result.current.clubs).toEqual(mockClubs));
+  });
+
+  it('should create club', async () => {
+    const newClub = { name: 'New Club', local_field_id: 1 };
+    (apiClient.post as jest.Mock).mockResolvedValue({
+      data: { data: { club_id: 1, ...newClub } },
+    });
+
+    const result = await createClub(newClub);
+
+    expect(result.data.name).toBe('New Club');
+    expect(apiClient.post).toHaveBeenCalledWith('/clubs', newClub);
+  });
+});
+```
+
+### Test de error handling
+
+```typescript
+// __tests__/api/error-handler.test.ts
+import { handleApiError } from '@/lib/api/error-handler';
+import { AxiosError } from 'axios';
+
+describe('handleApiError', () => {
+  it('should show toast for 401', () => {
+    const error = new AxiosError('Unauthorized');
+    error.response = { status: 401, data: { message: 'Unauthorized' } } as any;
+
+    const locationSpy = jest.spyOn(window, 'location', 'get').mockReturnValue({
+      href: '',
+    } as any);
+
+    handleApiError(error);
+
+    expect(window.location.href).toBe('/login');
+  });
+
+  it('should show validation errors for 422', () => {
+    const error = new AxiosError('Validation Error');
+    error.response = {
+      status: 422,
+      data: {
+        message: 'Validation failed',
+        details: [{ field: 'email', message: 'must be valid' }]
+      }
+    } as any;
+
+    // Verificar que se muestra toast para cada campo
+    handleApiError(error);
+    // assert toast calls
+  });
+});
+```
+
+---
+
+## Flutter Tests (Mockito)
+
+```dart
+// test/features/clubs/data/datasources/clubs_remote_datasource_test.dart
+@GenerateMocks([Dio])
+void main() {
+  late ClubsRemoteDataSource dataSource;
+  late MockDio mockDio;
+
+  setUp(() {
+    mockDio = MockDio();
+    dataSource = ClubsRemoteDataSource(mockDio);
+  });
+
+  group('getClubs', () {
+    test('should return list of clubs when successful', () async {
+      // Arrange
+      when(mockDio.get('/clubs')).thenAnswer(
+        (_) async => Response(
+          data: {
+            'status': 'success',
+            'data': [
+              {'club_id': 1, 'name': 'Test Club'}
+            ]
+          },
+          statusCode: 200,
+          requestOptions: RequestOptions(path: '/clubs'),
+        ),
+      );
+
+      // Act
+      final result = await dataSource.getClubs();
+
+      // Assert
+      expect(result, isA<List<ClubModel>>());
+      expect(result.length, 1);
+      expect(result.first.name, 'Test Club');
+    });
+
+    test('should throw ServerException when fails', () async {
+      // Arrange
+      when(mockDio.get('/clubs')).thenThrow(
+        DioException(
+          requestOptions: RequestOptions(path: '/clubs'),
+          response: Response(
+            statusCode: 500,
+            requestOptions: RequestOptions(path: '/clubs'),
+          ),
+        ),
+      );
+
+      // Act & Assert
+      expect(
+        () => dataSource.getClubs(),
+        throwsA(isA<ServerException>()),
+      );
+    });
+  });
+}
+```
+
+### Test de autenticación
+
+```dart
+// test/features/auth/data/datasources/auth_remote_datasource_test.dart
+@GenerateMocks([Dio])
+void main() {
+  late AuthRemoteDataSource dataSource;
+  late MockDio mockDio;
+
+  setUp(() {
+    mockDio = MockDio();
+    dataSource = AuthRemoteDataSource(mockDio);
+  });
+
+  test('should return AuthTokens on successful login', () async {
+    when(mockDio.post('/auth/login', data: anyNamed('data'))).thenAnswer(
+      (_) async => Response(
+        data: {
+          'status': 'success',
+          'data': {
+            'accessToken': 'token123',
+            'refreshToken': 'refresh123',
+            'expiresAt': '2026-12-31T00:00:00Z',
+          },
+        },
+        statusCode: 200,
+        requestOptions: RequestOptions(path: '/auth/login'),
+      ),
+    );
+
+    final result = await dataSource.login('test@test.com', 'password123');
+
+    expect(result.accessToken, 'token123');
+    expect(result.refreshToken, 'refresh123');
+  });
+
+  test('should throw ServerException on 401', () async {
+    when(mockDio.post('/auth/login', data: anyNamed('data'))).thenThrow(
+      DioException(
+        requestOptions: RequestOptions(path: '/auth/login'),
+        response: Response(
+          statusCode: 401,
+          data: {'message': 'Invalid credentials'},
+          requestOptions: RequestOptions(path: '/auth/login'),
+        ),
+      ),
+    );
+
+    expect(
+      () => dataSource.login('test@test.com', 'wrong'),
+      throwsA(isA<ServerException>()),
+    );
+  });
+}
+```
+
+---
+
+## Smoke Tests (Admin Panel E2E)
+
+El admin panel tiene un script de smoke test para verificar conectividad con la API en entorno de desarrollo:
+
+```bash
+# Archivo: sacdia-admin/scripts/e2e-smoke.mjs
+
+# Smoke autenticado
+set -a; source .env.e2e.local; set +a; pnpm test:e2e:smoke
+
+# Smoke con operaciones de escritura habilitadas
+set -a; source .env.e2e.local; set +a; E2E_ENABLE_WRITE=1 pnpm test:e2e:smoke
+```
+
+Este script:
+- Verifica conectividad con todos los endpoints críticos.
+- Maneja fallback `localhost -> 127.0.0.1` para entornos IPv4/IPv6.
+- Reporta degradación si un endpoint tiene rate-limit (429) sin bloquear toda la corrida.
+- Genera reporte de cobertura de endpoints verificados.

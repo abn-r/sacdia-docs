@@ -1,0 +1,199 @@
+---
+title: "Manejo de Errores"
+description: "Códigos HTTP de la API, error handlers centralizados para Next.js y Flutter, y estrategias de manejo de errores de validación."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Estructura de Errores de la API
+
+```typescript
+// Error Response Format
+interface ApiError {
+  status: 'error';
+  statusCode: number;
+  message: string;
+  error?: string;
+  details?: any;
+}
+```
+
+## Códigos HTTP Comunes
+
+| Código | Significado | Acción Recomendada |
+|--------|-------------|-------------------|
+| 200 | OK | Procesar respuesta exitosa |
+| 201 | Created | Recurso creado exitosamente |
+| 400 | Bad Request | Validar datos de entrada |
+| 401 | Unauthorized | Refrescar token o redirigir a login |
+| 403 | Forbidden | Usuario sin permisos, mostrar mensaje |
+| 404 | Not Found | Recurso no existe, manejar caso |
+| 409 | Conflict | Duplicado, mostrar mensaje específico |
+| 422 | Validation Error | Mostrar errores de validación |
+| 429 | Too Many Requests | Rate limit, esperar y reintentar |
+| 500 | Server Error | Error de servidor, reintentar o contactar soporte |
+
+---
+
+## Next.js Error Handler
+
+```typescript
+// lib/api/error-handler.ts
+import { AxiosError } from 'axios';
+import { toast } from 'sonner';
+
+export function handleApiError(error: unknown) {
+  if (error instanceof AxiosError) {
+    const statusCode = error.response?.status;
+    const message = error.response?.data?.message || error.message;
+
+    switch (statusCode) {
+      case 400:
+        toast.error(`Datos inválidos: ${message}`);
+        break;
+      case 401:
+        toast.error('Sesión expirada. Por favor inicia sesión nuevamente.');
+        window.location.href = '/login';
+        break;
+      case 403:
+        toast.error('No tienes permisos para realizar esta acción.');
+        break;
+      case 404:
+        toast.error('Recurso no encontrado.');
+        break;
+      case 409:
+        toast.error(`Conflicto: ${message}`);
+        break;
+      case 422:
+        // Errores de validación específicos
+        const details = error.response?.data?.details;
+        if (details && Array.isArray(details)) {
+          details.forEach((err: any) => {
+            toast.error(`${err.field}: ${err.message}`);
+          });
+        } else {
+          toast.error(message);
+        }
+        break;
+      case 429:
+        toast.error('Demasiadas peticiones. Por favor espera un momento.');
+        break;
+      case 500:
+      default:
+        toast.error('Error del servidor. Por favor intenta nuevamente.');
+        break;
+    }
+  } else {
+    toast.error('Error inesperado. Por favor intenta nuevamente.');
+  }
+}
+
+// Uso
+try {
+  await createClub(data);
+} catch (error) {
+  handleApiError(error);
+}
+```
+
+---
+
+## Flutter Error Handler
+
+```dart
+// lib/core/errors/error_handler.dart
+class ErrorHandler {
+  static String getMessage(dynamic error) {
+    if (error is DioException) {
+      switch (error.response?.statusCode) {
+        case 400:
+          return error.response?.data['message'] ?? 'Datos inválidos';
+        case 401:
+          return 'Sesión expirada. Por favor inicia sesión nuevamente.';
+        case 403:
+          return 'No tienes permisos para realizar esta acción.';
+        case 404:
+          return 'Recurso no encontrado.';
+        case 409:
+          return error.response?.data['message'] ?? 'Conflicto';
+        case 422:
+          final details = error.response?.data['details'];
+          if (details is List) {
+            return details.map((e) => e['message']).join('\n');
+          }
+          return error.response?.data['message'] ?? 'Error de validación';
+        case 429:
+          return 'Demasiadas peticiones. Por favor espera un momento.';
+        case 500:
+        default:
+          return 'Error del servidor. Por favor intenta nuevamente.';
+      }
+    }
+    return 'Error inesperado. Por favor intenta nuevamente.';
+  }
+
+  static void show(BuildContext context, dynamic error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(getMessage(error)),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+}
+
+// Uso
+try {
+  await createClub(club);
+} catch (error) {
+  ErrorHandler.show(context, error);
+}
+```
+
+---
+
+## Consideraciones Especiales
+
+### Error 404 vs lista vacía
+
+Nunca convertir un `404` en lista vacía. Para sub-recursos de usuario (allergies, diseases, etc.):
+
+- `200` con `data: []` — El usuario existe pero no tiene selecciones activas.
+- `404` — El usuario no existe. Tratarlo como error real.
+
+```dart
+// Incorrecto
+try {
+  final items = await dio.get('/users/$userId/allergies');
+  return items;
+} catch (e) {
+  if (e is DioException && e.response?.statusCode == 404) {
+    return []; // INCORRECTO: 404 significa user no existe
+  }
+  rethrow;
+}
+
+// Correcto
+final response = await dio.get('/users/$userId/allergies');
+// 200 con data: [] = usuario sin selecciones
+// 404 = usuario no existe (lanzará excepción automáticamente)
+```
+
+### Error 409 ENROLLMENT_RESOLUTION_AMBIGUOUS
+
+Cuando se trabaja con progreso de clases y hay ambigüedad de enrollment:
+
+```typescript
+try {
+  const progress = await apiClient.get(`/users/${userId}/classes/${classId}/progress`);
+  return progress.data;
+} catch (error) {
+  if (error instanceof AxiosError && error.response?.status === 409) {
+    const code = error.response.data?.error?.code;
+    if (code === 'ENROLLMENT_RESOLUTION_AMBIGUOUS') {
+      // Solicitar al usuario que seleccione un enrollment específico
+      showEnrollmentSelector();
+    }
+  }
+}
+```

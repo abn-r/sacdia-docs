@@ -1,0 +1,172 @@
+---
+title: "Clubs"
+description: "Tablas del modulo de clubes: clubs, secciones, tipos, anos eclesiasticos, unidades y asignaciones de roles"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Tabla: `clubs`
+
+Club contenedor (una iglesia tiene 1 club principal por tipo).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `club_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(50) | Nombre del club | NOT NULL |
+| `description` | STRING | Descripcion del club | NULL |
+| `active` | BOOLEAN | Club activo | DEFAULT false |
+| `local_field_id` | INT | Campo local al que pertenece | FK → local_fields, NOT NULL |
+| `address` | STRING | Direccion del club | NULL |
+| `church_id` | INT | Iglesia a la que pertenece | FK → churches, NOT NULL |
+| `coordinates` | JSON | Coordenadas geograficas | NOT NULL |
+| `districlub_type_id` | INT | Distrito al que pertenece | FK → districts, NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Relaciones**:
+- Many-to-One: `churches`, `districts`, `local_fields`
+- One-to-Many: `club_sections`
+
+---
+
+## Tabla: `club_sections`
+
+Secciones de club (unidades operativas por tipo: Aventureros, Conquistadores, Guias Mayores).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `club_section_id` | SERIAL | ID unico | PK |
+| `active` | BOOLEAN | Seccion activa | DEFAULT false |
+| `souls_target` | INT | Meta de almas | DEFAULT 1 |
+| `fee` | INT | Cuota | DEFAULT 1 |
+| `meeting_day` | JSON[] | Dias de reunion | |
+| `meeting_time` | JSON[] | Horarios de reunion | |
+| `club_type_id` | INT | Tipo de club | NOT NULL, FK → club_types |
+| `main_club_id` | INT | Club contenedor | NULL, FK → clubs ON DELETE CASCADE |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Unique**: `(main_club_id, club_type_id)`
+
+**Nota**: Consolidacion de las anteriores `club_adventurers`, `club_pathfinders`, `club_master_guilds` (2026-03-17, Decision 10).
+
+---
+
+## Tabla: `club_role_assignments`
+
+Asignacion de roles a usuarios en secciones de club.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `id` | UUID | ID unico | PK |
+| `user_id` | UUID | Usuario | FK → users |
+| `role_id` | UUID | Rol (debe ser `role_category = 'CLUB'`) | FK → roles |
+| `club_section_id` | INT | Seccion de club | FK → club_sections, NOT NULL |
+| `ecclesiastical_year_id` | INT | Ano eclesiastico | FK → ecclesiastical_years |
+| `start_date` | DATE | Fecha inicio | DEFAULT CURRENT_DATE |
+| `end_date` | DATE | Fecha fin | NULL |
+| `active` | BOOLEAN | Asignacion activa | DEFAULT true |
+| `status` | VARCHAR(20) | Estado (pending/active/inactive) | CHECK |
+
+**Constraint UNIQUE**:
+```sql
+UNIQUE (user_id, role_id, club_section_id, ecclesiastical_year_id)
+```
+
+---
+
+## Tabla: `club_types`
+
+Catalogo de tipos de club (Aventureros, Conquistadores, Guias Mayores).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `club_type_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(50) | Nombre del tipo | UNIQUE, NOT NULL |
+| `active` | BOOLEAN | Tipo activo | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Relaciones**:
+- One-to-Many: `activities`, `award_categories`, `classes`, `club_annual_rankings`, `club_ideals`, `club_sections`, `finances`, `folder_templates`, `folders`, `honors`, `units`
+
+---
+
+## Tabla: `ecclesiastical_years`
+
+Anos eclesiasticos (periodos administrativos anuales de la iglesia).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `year_id` | INT | ID unico | PK, autoincrement |
+| `start_date` | DATE | Fecha de inicio del ano eclesiastico | NOT NULL |
+| `end_date` | DATE | Fecha de fin del ano eclesiastico | NOT NULL |
+| `active` | BOOLEAN | Ano activo | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Relaciones**:
+- One-to-Many: `club_annual_rankings`, `club_enrollments`, `club_role_assignments`, `enrollments`, `folder_templates`, `folders`, `investiture_configs`, `local_camporees`, `union_camporees`
+
+---
+
+## Tabla: `units`
+
+Unidades dentro de una seccion de club (agrupaciones de miembros con capitan, secretario y consejero).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `unit_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre de la unidad | NOT NULL |
+| `captain_id` | UUID | Capitan de la unidad | FK → users, NOT NULL |
+| `secretary_id` | UUID | Secretario de la unidad | FK → users, NOT NULL |
+| `advisor_id` | UUID | Consejero de la unidad | FK → users, NOT NULL |
+| `substitute_advisor_id` | UUID | Consejero suplente | FK → users, NULL |
+| `club_type_id` | INT | Tipo de club | FK → club_types, NOT NULL |
+| `active` | BOOLEAN | Unidad activa | NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `club_section_id` | INT | Seccion de club | FK → club_sections, NULL |
+
+**Indices**: `idx_units_club_section_id`
+
+**Relaciones**:
+- Many-to-One: `users` (advisor_id), `users` (captain_id), `club_sections`, `club_types`, `users` (secretary_id), `users` (substitute_advisor_id)
+- One-to-Many: `unit_members`
+
+---
+
+## Tabla: `unit_members`
+
+Membresia de usuarios en unidades de club.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `unit_member_id` | INT | ID unico | PK, autoincrement |
+| `unit_id` | INT | Unidad | FK → units, NOT NULL |
+| `user_id` | UUID | Usuario miembro | UNIQUE, FK → users, NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `active` | BOOLEAN | Membresia activa | DEFAULT true |
+
+**Nota**: `user_id` es UNIQUE — un usuario solo puede pertenecer a una unidad.
+
+---
+
+## Tabla: `club_ideals`
+
+Ideales del club por tipo (himno, lema, voto, ley, etc.).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `club_ideal_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(50) | Nombre del ideal (ej: "Himno", "Lema") | NOT NULL |
+| `ideal_order` | INT | Orden de presentacion | NOT NULL |
+| `club_type_id` | INT | Tipo de club | FK → club_types, NOT NULL |
+| `active` | BOOLEAN | Ideal activo | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `ideal` | STRING | Contenido/texto del ideal | NULL |
+
+**Relaciones**:
+- Many-to-One: `club_types`

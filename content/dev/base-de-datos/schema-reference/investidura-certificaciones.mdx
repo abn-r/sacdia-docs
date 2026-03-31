@@ -1,0 +1,171 @@
+---
+title: "Investidura y Certificaciones"
+description: "Tablas del modulo de investidura (validacion y configuracion) y certificaciones de Guias Mayores"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Modulo: Investiture
+
+### Tabla: `investiture_validation_history`
+
+Historial de acciones de validacion del proceso de investidura.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `history_id` | INT | ID unico | PK, autoincrement |
+| `enrollment_id` | INT | Inscripcion | FK → enrollments (ON DELETE CASCADE), NOT NULL |
+| `action` | ENUM(investiture_action_enum) | Accion realizada (`SUBMITTED`, `APPROVED`, `REJECTED`, `REINVESTITURE_REQUESTED`) | NOT NULL |
+| `performed_by` | UUID | Usuario que realizo la accion | FK → users, NOT NULL |
+| `comments` | STRING | Comentarios opcionales | NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de la accion | DEFAULT NOW() |
+
+**Indices**: `idx_investiture_history_enrollment`
+
+**Relaciones**:
+- Many-to-One: `enrollments`, `users`
+
+---
+
+### Tabla: `investiture_config`
+
+Configuracion de investidura por campo local y ano eclesiastico (fechas limite).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `config_id` | INT | ID unico | PK, autoincrement |
+| `local_field_id` | INT | Campo local | FK → local_fields (ON DELETE CASCADE), NOT NULL |
+| `ecclesiastical_year_id` | INT | Ano eclesiastico | FK → ecclesiastical_years (ON DELETE CASCADE), NOT NULL |
+| `submission_deadline` | DATE | Fecha limite de envio | NOT NULL |
+| `investiture_date` | DATE | Fecha de investidura programada | NOT NULL |
+| `active` | BOOLEAN | Configuracion activa | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Constraint UNIQUE**: `(local_field_id, ecclesiastical_year_id)`
+
+**Relaciones**:
+- Many-to-One: `ecclesiastical_years`, `local_fields`
+
+---
+
+## Modulo: Certifications
+
+### Tabla: `certifications`
+
+Catalogo de certificaciones (programas formativos adicionales mas alla de clases progresivas).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `certification_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre de la certificacion | UNIQUE, NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `material_url` | VARCHAR | URL del material de estudio | NULL |
+| `active` | BOOLEAN | Certificacion activa | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+| `duration_hours` | INT | Duracion estimada en horas | NULL |
+
+**Relaciones**:
+- One-to-Many: `certification_module_progress`, `certification_modules`, `certification_section_progress`, `users_certifications`
+
+---
+
+### Tabla: `certification_modules`
+
+Modulos que componen una certificacion.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `module_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre del modulo | NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `certification_id` | INT | Certificacion a la que pertenece | FK → certifications, NOT NULL |
+| `active` | BOOLEAN | Modulo activo | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Constraint UNIQUE**: `(name, certification_id)`
+
+---
+
+### Tabla: `certification_sections`
+
+Secciones dentro de un modulo de certificacion (unidades evaluables).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `section_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre de la seccion | NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `module_id` | INT | Modulo al que pertenece | FK → certification_modules, NOT NULL |
+| `active` | BOOLEAN | Seccion activa | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Constraint UNIQUE**: `(name, module_id)`
+
+---
+
+### Tabla: `users_certifications`
+
+Inscripciones de usuarios a certificaciones y su estado de completado.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `enrollment_id` | INT | ID unico | PK, autoincrement |
+| `user_id` | UUID | Usuario inscrito | FK → users, NOT NULL |
+| `certification_id` | INT | Certificacion | FK → certifications, NOT NULL |
+| `enrollment_date` | TIMESTAMPTZ | Fecha de inscripcion | DEFAULT NOW() |
+| `completion_status` | BOOLEAN | Certificacion completada? | DEFAULT false |
+| `completion_date` | TIMESTAMPTZ | Fecha de completado | NULL |
+| `certificate_url` | VARCHAR | URL del certificado emitido | NULL |
+| `active` | BOOLEAN | Inscripcion activa | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Indices**: `idx_users_certifications_completion` sobre `(user_id, completion_status)`
+
+---
+
+### Tabla: `certification_module_progress`
+
+Progreso de un usuario por modulo de certificacion.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `progress_id` | INT | ID unico | PK, autoincrement |
+| `user_id` | UUID | Usuario | FK → users, NOT NULL |
+| `certification_id` | INT | Certificacion | FK → certifications, NOT NULL |
+| `module_id` | INT | Modulo | NOT NULL |
+| `score` | FLOAT | Puntaje obtenido | NOT NULL |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+| `completed` | BOOLEAN | Modulo completado? | DEFAULT false |
+| `completion_date` | TIMESTAMPTZ | Fecha de completado | NULL |
+
+**Constraint UNIQUE**: `(user_id, certification_id, module_id)`
+
+---
+
+### Tabla: `certification_section_progress`
+
+Progreso de un usuario por seccion de certificacion.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `progress_id` | INT | ID unico | PK, autoincrement |
+| `user_id` | UUID | Usuario | FK → users, NOT NULL |
+| `certification_id` | INT | Certificacion | FK → certifications, NOT NULL |
+| `module_id` | INT | Modulo | NOT NULL |
+| `section_id` | INT | Seccion | NOT NULL |
+| `score` | FLOAT | Puntaje obtenido | NOT NULL |
+| `evidences` | JSON | Evidencias adjuntas | NULL |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+| `completed` | BOOLEAN | Seccion completada? | DEFAULT false |
+| `completion_date` | TIMESTAMPTZ | Fecha de completado | NULL |
+
+**Constraint UNIQUE**: `(user_id, certification_id, module_id, section_id)`

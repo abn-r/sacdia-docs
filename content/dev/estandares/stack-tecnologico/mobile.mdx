@@ -1,0 +1,406 @@
+---
+title: "App Movil — Flutter"
+description: "Stack de la aplicacion movil Flutter con Clean Architecture, Riverpod y Dio"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Framework Principal
+
+**Framework**: Flutter  
+**Version**: 3.19+ (Stable channel)  
+**Lenguaje**: Dart 3.3+  
+**Por que**: Cross-platform (iOS + Android con mismo codigo), performance casi nativo, widgets ricos, comunidad activa
+
+---
+
+## Arquitectura
+
+**Patron**: Clean Architecture
+
+**Capas**:
+
+```
+lib/
+├── core/                  # Utilidades, constantes, extensions, errores
+│   ├── constants/
+│   ├── extensions/
+│   ├── utils/
+│   └── errors/
+│
+├── features/              # Features por dominio (bounded contexts)
+│   └── [feature_name]/
+│       ├── data/          # Capa de Datos
+│       │   ├── datasources/    # Remote y Local data sources
+│       │   ├── models/         # DTOs (de/hacia JSON)
+│       │   └── repositories/   # Implementacion de repositories
+│       │
+│       ├── domain/        # Capa de Dominio (logica de negocio)
+│       │   ├── entities/       # Entidades del negocio (plain Dart objects)
+│       │   ├── repositories/   # Interfaces de repositories
+│       │   └── usecases/       # Casos de uso (1 accion por clase)
+│       │
+│       └── presentation/  # Capa de Presentacion (UI)
+│           ├── pages/          # Pantallas completas
+│           ├── widgets/        # Widgets reutilizables del feature
+│           ├── providers/      # Riverpod providers
+│           └── state/          # State notifiers, estados
+│
+└── shared/                # Compartido entre features
+    ├── widgets/           # Widgets globales reutilizables
+    ├── theme/             # Temas, colores, text styles
+    └── providers/         # Providers globales (auth, config)
+```
+
+**Principios Clean Architecture aplicados**:
+
+- **Dependency Rule**: Dependencias apuntan hacia adentro (Presentation → Domain ← Data)
+- **Domain no depende de nada**: Solo Dart puro
+- **Use Cases**: Una clase por accion de negocio
+- **Repository Pattern**: Abstraccion para acceso a datos
+
+---
+
+## State Management
+
+**Solucion**: Riverpod 2.x
+
+**Por que Riverpod**:
+
+- Type-safe con compile-time errors
+- No necesita BuildContext
+- Testeable facilmente (providers son top-level)
+- Mejor que Provider (su sucesor mejorado)
+- Auto-dispose cuando no se usa
+- Code generation support
+
+**Tipos de Providers usados**:
+
+```dart
+// Estado simple inmutable
+final counterProvider = StateProvider<int>((ref) => 0);
+
+// Estado complejo con logica
+final userNotifierProvider = StateNotifierProvider<UserNotifier, UserState>((ref) {
+  return UserNotifier(ref.read(userRepositoryProvider));
+});
+
+// Async data loading
+final usersProvider = FutureProvider<List<User>>((ref) async {
+  return await ref.read(userRepositoryProvider).getUsers();
+});
+
+// Stream para real-time
+final notificationsProvider = StreamProvider<Notification>((ref) {
+  return ref.read(notificationServiceProvider).notificationsStream();
+});
+```
+
+---
+
+## HTTP & Networking
+
+**HTTP Client**: Dio 5.x
+
+**Configuracion**:
+
+```dart
+// DioClient con interceptors
+- BaseURL configurada
+- Timeout (connect: 30s, receive: 30s)
+- Auth Interceptor (inyecta JWT token)
+- Logging Interceptor (solo en dev mode)
+- Error Interceptor (manejo centralizado de errores)
+- Retry Interceptor (3 reintentos en errores de red)
+```
+
+**Librerias complementarias**:
+
+- `dio_cache_interceptor` — Cache de HTTP responses
+- `pretty_dio_logger` — Logs legibles (dev only)
+
+---
+
+## Serializacion de Datos
+
+**json_serializable 6.x** + **freezed 2.x**
+
+**Por que**:
+
+- Code generation = menos boilerplate
+- Type-safe serialization
+- freezed: Immutable models + union types + copyWith
+
+**Ejemplo**:
+
+```dart
+@freezed
+class User with _$User {
+  const factory User({
+    required String id,
+    required String email,
+    required String name,
+    DateTime? lastLogin,
+  }) = _User;
+
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+}
+```
+
+---
+
+## Local Storage & Persistence
+
+**Secure Storage (Tokens, Secrets)**:
+
+- `flutter_secure_storage` — Keychain (iOS) / KeyStore (Android)
+- Para: JWT tokens, refresh tokens, API keys
+
+**Preferences (Settings simples)**:
+
+- `shared_preferences` — Key-value storage
+- Para: Theme mode, idioma, flags de features
+
+**SQLite Local (Cache opcional)**:
+
+- `drift` (antes Moor) — SQL type-safe
+- Solo si necesitas cache offline complejo
+
+---
+
+## Autenticacion Flow
+
+**Provider**: Supabase Auth
+
+**Librerias**: `supabase_flutter` 2.x
+
+**Flow de Autenticacion**:
+
+```
+1. User Login/Register → Supabase Auth API
+2. Supabase Auth retorna JWT access token + refresh token
+3. Guardar tokens en flutter_secure_storage
+4. Dio Interceptor inyecta token en headers para llamadas a Backend NestJS:
+   Authorization: Bearer {jwt_token}
+5. Backend NestJS valida JWT (verifica signature con Supabase public key)
+6. Refresh automatico cuando token expira (Dio interceptor detecta 401)
+```
+
+**Providers Riverpod de Auth**:
+
+```dart
+// Auth state provider
+final authStateProvider = StateNotifierProvider<AuthNotifier, AuthState>(...);
+
+// User profile provider
+final currentUserProvider = FutureProvider<User?>(...);
+
+// Auth repository
+final authRepositoryProvider = Provider<AuthRepository>(...);
+```
+
+---
+
+## Navegacion
+
+**Router**: go_router 13.x
+
+**Por que**:
+
+- Routing declarativo type-safe
+- Deep linking support
+- Redirecciones (guards para auth)
+- Rutas anidadas
+- Manejo de back button
+
+**Estructura**:
+
+```dart
+final router = GoRouter(
+  redirect: (context, state) {
+    // Auth guards aqui
+  },
+  routes: [
+    GoRoute(path: '/login', builder: ...),
+    GoRoute(path: '/home', builder: ...),
+    GoRoute(
+      path: '/feature/:id',
+      builder: ...,
+      routes: [  // Nested routes
+        GoRoute(path: 'detail', builder: ...),
+      ],
+    ),
+  ],
+);
+```
+
+---
+
+## UI/UX
+
+**Design System**: Material 3 (Material You)
+
+**Temas**:
+
+- Light theme
+- Dark theme
+- Dynamic color (Material You) opcional
+
+**Librerias UI Esenciales**:
+
+```yaml
+dependencies:
+  # Icons & Images
+  flutter_svg: ^2.0.0
+  cached_network_image: ^3.3.0
+
+  # Loading & Feedback
+  flutter_spinkit: ^5.2.0
+  fluttertoast: ^8.2.0
+
+  # Forms
+  flutter_hooks: ^0.20.0
+
+  # Animations
+  lottie: ^3.0.0
+
+  # Pull to refresh
+  pull_to_refresh: ^2.0.0
+```
+
+---
+
+## Features Especificas Moviles
+
+**Modo Offline**:
+
+- `drift` (SQLite) para cache local persistente
+- Sincronizacion automatica cuando hay conexion
+- Queue de operaciones pendientes
+
+**Real-time**:
+
+- Supabase Realtime para subscripciones
+- WebSocket fallback si es necesario
+
+**Geolocation**:
+
+- `geolocator` package
+- Permisos iOS/Android configurados
+
+**Camara/Galeria**:
+
+- `image_picker` — Seleccionar de galeria
+- `camera` — Tomar foto directo
+- `image_cropper` — Recortar imagenes
+- Compression antes de upload
+
+**Biometria**:
+
+- `local_auth` package
+- FaceID (iOS) + Fingerprint (Android)
+
+**Notificaciones Locales**:
+
+- `flutter_local_notifications`
+- Recordatorios programados
+- Background tasks con `workmanager`
+
+---
+
+## Testing Flutter
+
+**Unit Tests**:
+
+- Testear Use Cases, Repositories (con mocks)
+- `mockito` + `build_runner` para generate mocks
+
+**Widget Tests**:
+
+- Testear widgets individuales
+- `flutter_test` (built-in)
+
+**Integration Tests**:
+
+- E2E testing (opcional para MVP)
+- `integration_test` package
+
+**Coverage objetivo**: >70% para production
+
+**Ejemplo de test de use case**:
+
+```dart
+test('should get user from repository', () async {
+  // Arrange
+  when(mockRepo.getUser(any))
+    .thenAnswer((_) async => Right(tUser));
+
+  // Act
+  final result = await usecase(Params(id: '1'));
+
+  // Assert
+  expect(result, Right(tUser));
+  verify(mockRepo.getUser('1'));
+});
+```
+
+---
+
+## DevTools & Debug
+
+- Flutter DevTools (inspector, profiler, network)
+- `logger` package para logs estructurados
+- Firebase Crashlytics (para crash reporting en produccion)
+
+---
+
+## Notas para IA
+
+**SIEMPRE usa estas tecnologias (Flutter)**:
+
+- Clean Architecture (data/domain/presentation)
+- Riverpod 2.x (no Bloc, no Provider legacy)
+- Dio para HTTP (no http package)
+- freezed + json_serializable para models
+- go_router para navegacion
+- NO GetX, NO Bloc pattern
+
+**SIEMPRE estructura features asi**:
+
+```
+lib/features/[feature_name]/
+├── data/
+│   ├── datasources/
+│   │   ├── [feature]_remote_datasource.dart
+│   │   └── [feature]_local_datasource.dart
+│   ├── models/
+│   │   └── [model]_model.dart          # freezed + json_serializable
+│   └── repositories/
+│       └── [feature]_repository_impl.dart
+│
+├── domain/
+│   ├── entities/
+│   │   └── [entity].dart               # Plain Dart class
+│   ├── repositories/
+│   │   └── [feature]_repository.dart   # Abstract interface
+│   └── usecases/
+│       └── [action]_usecase.dart       # One action per class
+│
+└── presentation/
+    ├── pages/
+    ├── widgets/
+    ├── providers/                      # Riverpod providers
+    └── state/                          # StateNotifiers
+```
+
+**Versiones recomendadas para pubspec.yaml**:
+
+```yaml
+dependencies:
+  riverpod: ^2.4.0
+  freezed_annotation: ^2.4.0
+
+dev_dependencies:
+  build_runner: ^2.4.0
+  freezed: ^2.4.0
+```

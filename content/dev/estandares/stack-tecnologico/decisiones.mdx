@@ -1,0 +1,146 @@
+---
+title: "Decisiones Tecnicas"
+description: "Justificaciones y razonamiento detras de cada decision tecnologica del stack SACDIA"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+Esta pagina documenta el razonamiento detras de cada decision tecnica importante del stack. El objetivo es que cualquier miembro del equipo (o la IA) entienda por que elegimos cada herramienta y en que contexto tiene sentido cambiarla.
+
+---
+
+## Por que TypeScript
+
+- **Type safety** reduce bugs en runtime (catch errors en compilacion)
+- **Mejor DX** con autocomplete e IntelliSense
+- **Refactoring mas seguro** (rename, move files con confianza)
+- **Obligatorio para NestJS**, natural para Next.js
+- **Clean Architecture en Flutter** beneficia de tipos Dart (misma filosofia)
+- **Shared types** entre backend y frontend (menos duplicacion)
+
+---
+
+## Por que Clean Architecture (Flutter)
+
+- **Separacion de responsabilidades** clara (data/domain/presentation)
+- **Testeable**: domain layer es Dart puro (no depende de Flutter)
+- **Escalable**: nuevas features no rompen existentes
+- **Mantenible**: cambiar API o DB no afecta UI
+- **Estandar de industria** para apps complejas con longevidad
+- **Modo offline** mas facil (repository abstraction)
+
+---
+
+## Por que Supabase
+
+**Pros**:
+
+- PostgreSQL real (no NoSQL limitado como Firebase)
+- Auth built-in (menos codigo custom, mantiene estandares)
+- Storage incluido (S3-compatible)
+- Real-time subscriptions (WebSocket management handled)
+- Free tier generosa para hobby (~500MB DB, 1GB storage, 2GB bandwidth)
+- BaaS pero con SQL completo (queries complejas, joins, triggers)
+- Supabase CLI para development local
+
+**Trade-offs**:
+
+- Vendor lock-in moderado (pero PostgreSQL standard)
+- Menos control que DB self-hosted
+
+---
+
+## Por que Vercel Serverless para Backend
+
+**Pros para caso de uso (&lt;$20/mes)**:
+
+- Hobby tier gratis (100GB bandwidth, funciones ilimitadas)
+- Auto-scaling sin configuracion
+- Deploy automatico con GitHub (push to deploy)
+- Edge functions para mejor performance global
+- Mismo provider que Admin (simplifica billing y config)
+- Monorepo support nativo (backend + admin en un proyecto)
+
+**Limitaciones**:
+
+- Max 10s execution time (suficiente para APIs REST, pero no para jobs largos)
+- Cold starts (~500ms primera request, luego rapido)
+- No WebSockets persistentes (usar Supabase Realtime en su lugar)
+- Si creces mucho, evaluar Railway/Render (pay-as-you-go)
+
+Para MVP: Perfecto. Si creces, migrar es sencillo (NestJS es portable).
+
+---
+
+## Por que Riverpod sobre Bloc/Provider
+
+- **Type-safe** con compile-time safety (Provider legacy no tiene)
+- **No BuildContext** necesario (mas limpio)
+- **Auto-dispose** (mejor memory management)
+- **Testeable** facilmente (providers son top-level)
+- **Code generation** support (elimina boilerplate)
+- **Mejor DX** que Bloc (menos ceremony, mas directo)
+
+---
+
+## Por que pnpm sobre npm/yarn
+
+- **30-50% mas rapido** que npm
+- **Ahorra espacio en disco** (hardlinks entre proyectos)
+- **Monorepo support nativo** (workspaces)
+- **Strict** por default (evita phantom dependencies)
+- **Compatible** con npm packages (drop-in replacement)
+
+---
+
+## Estructura de Repositorios — Alternativa Evaluada
+
+> Esta seccion conserva una alternativa evaluada durante diseno. No describe la estructura activa del workspace actual, que hoy opera con `sacdia-backend/`, `sacdia-admin/`, `sacdia-app/` y `docs/` dentro del mismo workspace.
+
+**Opcion Evaluada**: Backend + Admin juntos, Flutter separado
+
+**Por que backend + admin juntos**:
+1. Comparten types/interfaces (DTOs compartidos), validaciones (Zod schemas reutilizables), constants y enums
+2. Mismo deploy (Vercel monorepo support nativo), CI/CD simplificado
+3. Refactoring mas facil (cambios en API se reflejan inmediatamente en Admin)
+
+**Por que Flutter separado**:
+1. Ciclo de release independiente (app stores tienen su timing propio)
+2. Build process completamente diferente (no mixing concerns)
+3. Versionado independiente (v1.2.0 app != v2.1.0 backend)
+4. Menos ruido en el repositorio (Flutter tiene muchos archivos generados)
+
+---
+
+## Errores Comunes a Evitar
+
+1. No mezclar App Router y Pages Router en Next.js
+2. No usar `any` en TypeScript (usar `unknown` si es necesario)
+3. No poner logica de negocio en presentation layer (Flutter)
+4. No hardcodear URLs de API (usar env variables)
+5. No commits de `.env` files
+6. No raw SQL en Prisma (usar type-safe queries)
+7. No setState en Flutter (usar Riverpod)
+
+---
+
+## Si necesitas agregar nueva tecnologia
+
+**ANTES de sugerirla**:
+
+1. Verifica si hay algo similar ya en uso
+2. Justifica por que es necesaria
+3. Verifica compatibilidad con stack actual
+4. Menciona bundle size impact (si aplica)
+5. Pregunta al usuario antes de agregar
+
+**Ejemplo de propuesta correcta**:
+
+```
+Veo que necesitas [X]. Podriamos usar [libreria Y] que:
+- Es compatible con nuestro stack
+- Bundle size: 15KB gzipped
+- Alternativas consideradas: [A, B]
+
+Procedo con [Y] o prefieres otra opcion?
+```

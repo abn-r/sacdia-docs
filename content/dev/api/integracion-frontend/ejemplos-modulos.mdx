@@ -1,0 +1,249 @@
+---
+title: "Ejemplos por Módulo"
+description: "Ejemplos prácticos de integración para los módulos de Perfil de Salud, Rutas sensibles, Actividades, Finanzas y Honors."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Módulo: Perfil de Salud (baseline activo)
+
+El baseline health activo para frontend queda limitado a `allergies` + `diseases` + `medicines` como sub-recursos sensibles de `user`.
+
+Rutas canónicas verificadas:
+
+```http
+GET /api/v1/users/:userId/allergies
+GET /api/v1/users/:userId/diseases
+GET /api/v1/users/:userId/medicines
+PUT /api/v1/users/:userId/allergies
+PUT /api/v1/users/:userId/diseases
+PUT /api/v1/users/:userId/medicines
+DELETE /api/v1/users/:userId/allergies/:allergyId
+DELETE /api/v1/users/:userId/diseases/:diseaseId
+DELETE /api/v1/users/:userId/medicines/:medicineId
+```
+
+Contrato de integración:
+
+- Son rutas `user` sensibles con modelo owner-or-global.
+- `GET` requiere JWT y `users:read_detail`; `PUT` y `DELETE` por item requieren `users:update`.
+- Self-service depende de ownership sobre `userId`; para terceros solo cuenta permiso global suficiente resuelto por backend.
+- La respuesta exitosa siempre usa envelope `{ status: 'success', data: [...] }`.
+- En `GET`, `data` llega como lista plana:
+  - alergias: `{ allergy_id, name }`
+  - enfermedades: `{ disease_id, name }`
+- Si el usuario existe pero no tiene selecciones activas, backend responde `200` con `data: []`.
+- Frontend NO debe convertir `404` en lista vacía: `404` significa que el usuario no existe.
+- `PUT` reemplaza el conjunto activo completo.
+- `DELETE` por item desactiva logicamente una seleccion puntual ya activa.
+
+Ejemplo Flutter:
+
+```dart
+final response = await dio.get('/users/$userId/allergies');
+final items = (response.data['data'] as List<dynamic>)
+    .map((json) => AllergyModel.fromJson(json as Map<String, dynamic>))
+    .toList();
+```
+
+---
+
+## Módulo: Rutas sensibles de usuario
+
+Para `/api/v1/users/:userId/...` en superficies sensibles verificadas (`allergies`, `diseases`, `emergency-contacts`, `legal-representative`, `profile-picture`, `post-registration`, `age`, `requires-legal-representative`):
+
+- Frontend no debe interpretar estas rutas como mero "JWT-only".
+- Self-service depende de ownership sobre `userId`.
+- Acceso sobre terceros requiere permiso global resuelto (`users:read_detail` o `users:update`), no permisos de club derivados del contexto activo.
+- No introducir gating fino por salud/legal/contactos porque el backend todavía no expone permisos separados para esas categorías.
+
+Límites transitorios que deben quedar explícitos:
+
+- GAP FORMAL: no existe tier RBAC separado para datos médicos, legales o de emergencia.
+- Política cliente:
+  - Admin puede reflejar `process-state` / `administrative completion` de terceros con autorización global resuelta explícita.
+  - `GET /post-registration/status` de terceros debe tratarse como estado administrativo mínimo, sin feedback guiado extra como `nextStep`.
+  - `POST /post-registration/step-{1,2,3}/complete` de terceros debe esperar respuesta administrativa mínima del backend.
+  - Mobile y admin no deben exponer ni editar datos sensibles enviados por usuario de terceros solo por `users:update` genérico.
+
+### Validacion transversal final
+
+Checklist de consistencia para frontend:
+
+- `sacdia-admin` debe seguir usando `authorization.effective.permissions` para gating operativo y `authorization.grants` para contexto y detalle.
+- `sacdia-app` debe separar `administrative completion` de acceso a datos sensibles: `users:update` no alcanza por si solo para salud/contactos/legal de terceros.
+- Ni admin ni mobile deben crear permisos frontend nuevos para cerrar el GAP FORMAL.
+- La UX sobre terceros debe limitarse a la política mínima documentada y degradar el resto, aun cuando el actor tenga `users:update`.
+
+---
+
+## Módulo: Actividades
+
+**Listar actividades del club**:
+
+```typescript
+// Next.js
+export function useClubActivities(clubId: number, filters?: {
+  clubTypeId?: number;
+  active?: boolean;
+  activityType?: string;
+}) {
+  const query = new URLSearchParams(filters as any).toString();
+  const url = `/clubs/${clubId}/activities${query ? `?${query}` : ''}`;
+
+  return useSWR(url, fetcher);
+}
+
+// Uso
+const { data, isLoading } = useClubActivities(5, {
+  clubTypeId: 2,
+  active: true,
+  activityType: 'meeting'
+});
+```
+
+```dart
+// Flutter
+Future<List<Activity>> getClubActivities(
+  int clubId, {
+  int? clubTypeId,
+  bool? active,
+  String? activityType,
+}) async {
+  final queryParams = <String, dynamic>{
+    if (clubTypeId != null) 'clubTypeId': clubTypeId,
+    if (active != null) 'active': active,
+    if (activityType != null) 'activityType': activityType,
+  };
+
+  final response = await dio.get(
+    '/clubs/$clubId/activities',
+    queryParameters: queryParams,
+  );
+
+  return (response.data['data'] as List)
+      .map((json) => Activity.fromJson(json))
+      .toList();
+}
+```
+
+**Registrar asistencia**:
+
+```typescript
+// Next.js
+export async function registerAttendance(
+  activityId: number,
+  userId: string
+) {
+  const response = await apiClient.post(
+    `/activities/${activityId}/attendance`,
+    { user_id: userId }
+  );
+  return response.data;
+}
+```
+
+```dart
+// Flutter
+Future<Attendance> registerAttendance(int activityId, String userId) async {
+  final response = await dio.post(
+    '/activities/$activityId/attendance',
+    data: {'user_id': userId},
+  );
+  return Attendance.fromJson(response.data['data']);
+}
+```
+
+---
+
+## Módulo: Finanzas
+
+**Obtener resumen financiero**:
+
+```typescript
+// Next.js
+export function useFinancialSummary(
+  clubId: number,
+  year: number,
+  month?: number
+) {
+  const params = new URLSearchParams({
+    year: year.toString(),
+    ...(month && { month: month.toString() }),
+    clubTypeId: '2', // Conquistadores
+  });
+
+  return useSWR(
+    `/clubs/${clubId}/finances/summary?${params}`,
+    fetcher
+  );
+}
+
+// Uso en componente
+const { data } = useFinancialSummary(5, 2026, 2);
+const summary = data?.data?.summary;
+// summary.total_income
+// summary.total_expenses
+// summary.balance
+```
+
+```dart
+// Flutter
+Future<FinancialSummary> getFinancialSummary(
+  int clubId,
+  int year, {
+  int? month,
+}) async {
+  final response = await dio.get(
+    '/clubs/$clubId/finances/summary',
+    queryParameters: {
+      'year': year,
+      if (month != null) 'month': month,
+      'clubTypeId': 2,
+    },
+  );
+  return FinancialSummary.fromJson(response.data['data']);
+}
+```
+
+---
+
+## Módulo: Honors (Especialidades)
+
+**Inscribir miembro en especialidad**:
+
+```typescript
+// Next.js
+export async function enrollInHonor(
+  userId: string,
+  honorId: number,
+  instructorId: string
+) {
+  const response = await apiClient.post(
+    `/users/${userId}/honors/enroll`,
+    {
+      honor_id: honorId,
+      instructor_user_id: instructorId,
+    }
+  );
+  return response.data;
+}
+```
+
+```dart
+// Flutter
+Future<Enrollment> enrollInHonor({
+  required String userId,
+  required int honorId,
+  required String instructorId,
+}) async {
+  final response = await dio.post(
+    '/users/$userId/honors/enroll',
+    data: {
+      'honor_id': honorId,
+      'instructor_user_id': instructorId,
+    },
+  );
+  return Enrollment.fromJson(response.data['data']);
+}
+```

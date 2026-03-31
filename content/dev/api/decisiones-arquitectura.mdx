@@ -1,0 +1,305 @@
+---
+title: "Decisiones de Arquitectura"
+description: "ADRs del sistema SACDIA: nombres de campos, post-registro, representantes legales, años eclesiásticos, sistema de roles y módulo RBAC."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+Todas las decisiones confirmadas y aprobadas para la implementación de la API de SACDIA.
+
+---
+
+## 1. Nombres de Campos
+
+### Decisión Final
+
+Usar nombres **descriptivos completos** en inglés:
+
+```typescript
+// Usar (Descriptivo)
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  paternal_last_name: string;  // Descriptivo
+  maternal_last_name: string;  // Descriptivo (cambio de mother_last_name)
+  gender: 'M' | 'F';
+  birthdate: string;
+  is_baptized: boolean;
+  baptism_date?: string;
+}
+
+// No usar (Abreviado)
+interface User {
+  p_lastname: string;  // Muy corto
+  m_lastname: string;  // No claro
+}
+```
+
+**Impacto**:
+- Actualizar schema Prisma
+- Actualizar DTOs en NestJS
+- Actualizar modelos en Flutter
+- Actualizar documentación
+
+---
+
+## 2. Tabla `users_pr` — Tracking de Post-Registro
+
+### Decisión Final: Opción B — Tracking Individual
+
+**Estructura confirmada**:
+```sql
+CREATE TABLE users_pr (
+  user_id UUID PRIMARY KEY REFERENCES users(id),
+  complete BOOLEAN DEFAULT false,
+  profile_picture_complete BOOLEAN DEFAULT false,
+  personal_info_complete BOOLEAN DEFAULT false,
+  club_selection_complete BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+**Ventajas**:
+- App puede retomar exactamente donde se quedó el usuario
+- Métricas de abandono por paso
+- Mejor UX (no repetir pasos ya completados)
+- Validación granular del progreso
+
+**Flujo**:
+1. Paso 1 completo → `profile_picture_complete = true`
+2. Paso 2 completo → `personal_info_complete = true`
+3. Paso 3 completo → `club_selection_complete = true` AND `complete = true`
+
+---
+
+## 3. Representante Legal para Menores
+
+### Decisión Final
+
+**Crear nueva tabla**: `legal_representatives`
+
+```sql
+CREATE TABLE legal_representatives (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  
+  -- Opción 1: Representante es usuario registrado
+  representative_user_id UUID REFERENCES users(id),
+  
+  -- Opción 2: Solo datos del representante (si no es usuario)
+  name VARCHAR(100),
+  paternal_last_name VARCHAR(100),
+  maternal_last_name VARCHAR(100),
+  phone VARCHAR(20),
+  
+  -- Tipo de relación
+  relationship_type_id UUID REFERENCES relationship_types(id),
+  
+  -- Metadata
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  
+  -- Constraints
+  CONSTRAINT one_representative_per_user UNIQUE(user_id),
+  CONSTRAINT representative_data_check CHECK (
+    (representative_user_id IS NOT NULL) OR 
+    (name IS NOT NULL AND paternal_last_name IS NOT NULL AND phone IS NOT NULL)
+  )
+);
+```
+
+**Reglas de negocio**:
+1. Máximo 1 representante por usuario
+2. Puede ser usuario registrado (`representative_user_id`) o datos simples
+3. Modificable a futuro
+4. Solo requerido para menores de 18 años (validar en backend)
+
+**Endpoints**:
+```typescript
+POST   /api/v1/users/:userId/legal-representative
+GET    /api/v1/users/:userId/legal-representative
+PATCH  /api/v1/users/:userId/legal-representative
+DELETE /api/v1/users/:userId/legal-representative
+```
+
+---
+
+## 4. Año Eclesiástico (Ecclesiastical Year)
+
+### Decisión Final
+
+**Auto-asignar** año eclesiástico actual al usuario.
+
+**Implementación**:
+```typescript
+// En post-registro, Paso 3: Selección de club
+async completeClubSelection(userId: string, dto: CompleteClubSelectionDto) {
+  return await this.prisma.$transaction(async (tx) => {
+    // 1. Obtener año eclesiástico actual
+    const currentYear = await tx.ecclesiastical_years.findFirst({
+      where: {
+        start_date: { lte: new Date() },
+        end_date: { gte: new Date() }
+      }
+    });
+    
+    if (!currentYear) {
+      throw new Error('No active ecclesiastical year found');
+    }
+    
+    // 2. Asignar rol de miembro con año actual
+    await tx.club_role_assignments.create({
+      data: {
+        user_id: userId,
+        role_id: memberRole.id,
+        club_section_id: dto.clubSectionId,
+        ecclesiastical_year_id: currentYear.id,  // Auto-asignado
+        start_date: new Date(),
+        active: true,
+        status: 'pending'
+      }
+    });
+  });
+}
+```
+
+**Reglas**:
+- Usuario **NUNCA** selecciona año eclesiástico
+- Sistema auto-asigna el año actual
+- Admin panel puede cambiar años en el futuro
+
+---
+
+## 5. Sistema de Membresía y Roles
+
+### Decisión Final
+
+**Todos los miembros tienen rol** en `club_role_assignments`.
+
+**Flujo de registro**:
+```typescript
+// En registro
+await tx.users_roles.create({
+  data: {
+    user_id: userId,
+    role_id: 'uuid-del-rol-user',  // Rol GLOBAL: "user"
+  }
+});
+
+// En post-registro - Paso 3
+await tx.club_role_assignments.create({
+  data: {
+    user_id: userId,
+    role_id: 'uuid-del-rol-member',  // Rol CLUB: "member"
+    club_section_id: clubSectionId,
+    ecclesiastical_year_id: currentYear.id,
+    start_date: new Date(),
+    active: true,
+    status: 'pending'  // Pendiente de aprobación por director
+  }
+});
+```
+
+**Roles de sistema**:
+
+### Roles Globales (tabla: `users_roles`)
+```typescript
+- super_admin  // Acceso total
+- admin        // Admin de campo local
+- coordinator  // Coordinador
+- user         // Usuario estándar (asignado en registro)
+```
+
+### Roles de Club (tabla: `club_role_assignments`)
+```typescript
+- director      // Director del club
+- subdirector   // Subdirector
+- secretary     // Secretario
+- treasurer     // Tesorero
+- counselor     // Consejero
+- member        // Miembro regular (asignado en post-registro)
+```
+
+**Tabla `roles` tiene campo `role_category`**:
+```sql
+CREATE TABLE roles (
+  id UUID PRIMARY KEY,
+  role_name VARCHAR(50) UNIQUE NOT NULL,
+  role_category VARCHAR(10) NOT NULL CHECK (role_category IN ('GLOBAL', 'CLUB')),
+  description TEXT,
+  active BOOLEAN DEFAULT true
+);
+```
+
+---
+
+## 6. Módulo RBAC y Gestión de Permisos desde Admin Panel
+
+### Decisión Final (2026-02-09)
+
+#### Cambios en `auth.service.ts`
+
+- **`login()`**: Ahora incluye `users_roles` (con `role_name` y `role_category`) en el query de Prisma. Retorna `roles: string[]` en el objeto `user` de la respuesta.
+- **`getProfile()`**: Ahora incluye `users_roles → roles → role_permissions → permissions`. Retorna `roles: string[]` y `permissions: string[]` aplanados en `data`.
+
+#### Módulo `RbacModule` (Backend)
+
+Nuevo módulo NestJS en `src/rbac/` registrado en `app.module.ts`:
+
+| Archivo | Propósito |
+|---------|-----------|
+| `rbac.module.ts` | Módulo con imports de `PrismaModule` |
+| `rbac.controller.ts` | 8 endpoints bajo `/admin/rbac`, protegidos por `GlobalRolesGuard` |
+| `rbac.service.ts` | CRUD permisos + sync de permisos a roles |
+| `dto/create-permission.dto.ts` | Validación regex `resource:action` |
+| `dto/update-permission.dto.ts` | Actualización parcial |
+| `dto/assign-permissions.dto.ts` | Asignación bulk de UUIDs |
+
+**Endpoints**:
+- CRUD de permisos: `GET/POST/PATCH/DELETE /admin/rbac/permissions`
+- Roles con permisos: `GET /admin/rbac/roles`
+- Sync permisos a rol: `PUT /admin/rbac/roles/:id/permissions`
+- Remover permiso: `DELETE /admin/rbac/roles/:id/permissions/:pid`
+
+#### Pantallas Admin Panel (Frontend)
+
+| Ruta | Descripción |
+|------|-------------|
+| `/dashboard/rbac` | Índice con tarjetas |
+| `/dashboard/rbac/permissions` | CRUD de permisos (tabla + formularios) |
+| `/dashboard/rbac/roles` | Matriz de asignación permisos-roles con checkboxes |
+
+#### Cambios en frontend auth
+
+- `extractRoles()` (`roles.ts`): Ahora desenvuelve `{ status, data }` wrapper y soporta `users_roles` en formato Prisma.
+- `getCurrentUser()` (`session.ts`): Desenvuelve respuesta backend `{ status, data }` antes de retornar `AuthUser`.
+- Sidebar: Nueva sección "Seguridad" con enlaces a Permisos y Roles.
+
+---
+
+## Resumen de Cambios Requeridos
+
+### Base de Datos
+- [x] Actualizar `schema.prisma` con `paternal_last_name`/`maternal_last_name`
+- [x] Crear tabla `legal_representatives`
+- [x] Confirmar estructura de `users_pr`
+- [x] Agregar `role_category` a tabla `roles`
+- [x] Crear migration
+
+### Backend (NestJS)
+- [x] Actualizar DTOs (RegisterDto, UpdateUserDto)
+- [x] Crear módulo `LegalRepresentativesModule`
+- [x] Auto-asignar `ecclesiastical_year_id` en post-registro
+- [x] Validar edad < 18 para requerir representante legal
+- [x] Actualizar RolesGuard para verificar `role_category`
+
+### Frontend (Flutter)
+- [x] Actualizar modelos (`User`, `LegalRepresentative`)
+- [x] Agregar pantalla de representante legal en post-registro
+- [x] Validar edad y mostrar form condicionalmente
+
+---
+
+Todas las decisiones confirmadas — Implementación completa.

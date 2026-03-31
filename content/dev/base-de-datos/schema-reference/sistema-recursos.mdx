@@ -1,0 +1,244 @@
+---
+title: "Sistema y Recursos"
+description: "Tablas del modulo de sistema (notificaciones, logs, registros semanales), recursos digitales y enums globales"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Modulo: System / Notifications
+
+### Tabla: `error_logs`
+
+Logs de errores de procedimientos almacenados y procesos del sistema.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `log_id` | INT | ID unico | PK, autoincrement |
+| `procedure_name` | VARCHAR(100) | Nombre del procedimiento que fallo | NOT NULL |
+| `error_message` | STRING | Mensaje de error | NOT NULL |
+| `additional_details` | STRING | Detalles adicionales de contexto | NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha del error | DEFAULT NOW() |
+
+---
+
+### Tabla: `user_fcm_tokens`
+
+Tokens Firebase Cloud Messaging para push notifications por dispositivo.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `fcm_token_id` | UUID | ID unico | PK, DEFAULT uuid_generate_v4() |
+| `user_id` | UUID | Usuario dueno del token | FK → users (ON DELETE CASCADE), NOT NULL |
+| `token` | VARCHAR(255) | Token FCM del dispositivo | UNIQUE, NOT NULL |
+| `device_type` | VARCHAR(50) | Tipo de dispositivo (ios/android) | NULL |
+| `device_name` | VARCHAR(100) | Nombre del dispositivo | NULL |
+| `active` | BOOLEAN | Token activo | DEFAULT true |
+| `last_used` | TIMESTAMPTZ | Ultima vez que se uso | DEFAULT NOW() |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Indices**: `idx_user_fcm_tokens_active`, `idx_user_fcm_tokens_user_id`
+
+---
+
+### Tabla: `notification_logs`
+
+Log de notificaciones push enviadas (historial de broadcasts y envios directos).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `log_id` | INT | ID unico | PK, autoincrement |
+| `title` | VARCHAR(255) | Titulo de la notificacion enviada | NOT NULL |
+| `body` | STRING | Cuerpo del mensaje | NOT NULL |
+| `type` | VARCHAR(50) | Tipo de notificacion (ej: `broadcast`, `club`) | NOT NULL |
+| `target_type` | VARCHAR(50) | Tipo de destino (ej: `section`, `user`) | NOT NULL |
+| `target_id` | VARCHAR(255) | ID del destino (seccion, usuario, etc.) | NULL |
+| `sent_by` | UUID | Usuario que disparo el envio | FK → users, NOT NULL |
+| `tokens_sent` | INT | Cantidad de tokens a los que se envio | DEFAULT 0 |
+| `tokens_failed` | INT | Cantidad de tokens con error de entrega | DEFAULT 0 |
+| `created_at` | TIMESTAMPTZ | Fecha del envio | DEFAULT NOW() |
+
+**Indices**: `idx_notification_logs_sender`, `idx_notification_logs_created`
+
+---
+
+### Tabla: `weekly_records`
+
+Registros semanales de asistencia, puntualidad y puntos por miembro.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `record_id` | INT | ID unico | PK, autoincrement |
+| `user_id` | UUID | Usuario miembro | FK → users, NOT NULL |
+| `week` | INT | Numero de semana | NOT NULL |
+| `attendance` | INT | Puntos de asistencia | NOT NULL |
+| `punctuality` | INT | Puntos de puntualidad | NOT NULL |
+| `points` | INT | Puntos totales de la semana | NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+
+**Constraint UNIQUE**: `(user_id, week)`
+
+---
+
+## Modulo: Resources
+
+### Tabla: `resource_categories`
+
+Catalogo de categorias para clasificar recursos (Devocionales, Materiales de Estudio, etc.).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `resource_category_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(100) | Nombre de la categoria | UNIQUE, NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `active` | BOOLEAN | Categoria activa | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Indices**: `idx_resource_categories_active`
+
+---
+
+### Tabla: `resources`
+
+Recursos digitales compartidos en el sistema (documentos, audios, imagenes, videos, textos) con visibilidad escalonada por scope.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `resource_id` | UUID | ID unico | PK, gen_random_uuid() |
+| `title` | VARCHAR(255) | Titulo del recurso | NOT NULL |
+| `description` | STRING | Descripcion del recurso | NULL |
+| `resource_type` | VARCHAR(20) | Tipo: `document`, `audio`, `image`, `video_link`, `text` | NOT NULL |
+| `resource_category_id` | INT | Categoria del recurso | FK → resource_categories (SET NULL), NULL |
+| `club_type_id` | INT | Tipo de club al que aplica | FK → club_types (SET NULL), NULL |
+| `scope_level` | VARCHAR(20) | Visibilidad: `system`, `union`, `local_field` | NOT NULL |
+| `scope_id` | INT | ID de la entidad del scope | NULL |
+| `file_key` | VARCHAR(500) | Clave del archivo en R2 (bucket RESOURCES_FILES) | NULL |
+| `file_name` | VARCHAR(255) | Nombre original del archivo | NULL |
+| `file_size` | INT | Tamano del archivo en bytes | NULL |
+| `file_mime_type` | VARCHAR(100) | MIME type del archivo | NULL |
+| `content` | STRING | Contenido de texto para tipo `text` | NULL |
+| `external_url` | VARCHAR(1000) | URL externa para tipo `video_link` | NULL |
+| `uploaded_by` | UUID | Usuario que subio el recurso | FK → users (CASCADE), NOT NULL |
+| `active` | BOOLEAN | Recurso activo (soft delete) | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Notas de diseno**:
+- Scope `system` (DIA) es visible para todos los usuarios.
+- Scope `union` es visible para usuarios de esa union y niveles inferiores.
+- Scope `local_field` es visible solo para usuarios del campo local especifico.
+- Archivos almacenados en el bucket `RESOURCES_FILES` de Cloudflare R2; URLs firmadas con TTL de 1 hora.
+- Para tipos `video_link` y `text`, el campo `file_key` es opcional.
+
+---
+
+## Enums
+
+### `blood_type`
+**Valores**: `A+`, `A-`, `B+`, `B-`, `AB+`, `AB-`, `O+`, `O-`
+
+### `gender`
+**Valores**: `Masculino`, `Femenino`
+
+### `role_category`
+**Valores**: `GLOBAL`, `CLUB`
+
+### `user_approval_status`
+**Valores**: `pending`, `approved`, `rejected`
+
+### `investiture_status_enum`
+**Valores**: `IN_PROGRESS`, `SUBMITTED_FOR_VALIDATION`, `APPROVED`, `REJECTED`, `INVESTIDO`
+
+### `investiture_action_enum`
+**Valores**: `SUBMITTED`, `APPROVED`, `REJECTED`, `REINVESTITURE_REQUESTED`
+
+### `insurance_type_enum`
+**Valores**: `GENERAL_ACTIVITIES`, `CAMPOREE`, `HIGH_RISK`
+
+### `evidence_validation_enum`
+**Valores**: `PENDING`, `VALIDATED`, `REJECTED`
+
+**Uso**: `folders_section_records.status`, `class_section_progress.status`. Previamente definido pero no utilizado; ahora es el tipo canonico para estados de validacion de evidencias. Fue migrado de VARCHAR con valores en espanol a este enum.
+
+---
+
+## Queries Utiles
+
+### Obtener roles de un usuario (globales y de club)
+
+```sql
+-- Roles globales
+SELECT r.role_name, r.role_category
+FROM users_roles ur
+JOIN roles r ON r.id = ur.role_id
+WHERE ur.user_id = 'uuid-del-usuario';
+
+-- Roles de club
+SELECT
+  r.role_name,
+  ct.name AS club_type,
+  ey.name AS year
+FROM club_role_assignments cra
+JOIN roles r ON r.id = cra.role_id
+JOIN club_sections cs ON cs.club_section_id = cra.club_section_id
+JOIN club_types ct ON ct.id = cs.club_type_id
+JOIN ecclesiastical_years ey ON ey.id = cra.ecclesiastical_year_id
+WHERE cra.user_id = 'uuid-del-usuario'
+  AND cra.active = true;
+```
+
+### Obtener miembros activos de una seccion de club
+
+```sql
+SELECT
+  u.name,
+  u.paternal_last_name,
+  u.maternal_last_name,
+  r.role_name,
+  cra.start_date
+FROM club_role_assignments cra
+JOIN users u ON u.id = cra.user_id
+JOIN roles r ON r.id = cra.role_id
+WHERE cra.club_section_id = 123  -- ID de seccion
+  AND cra.active = true
+ORDER BY
+  CASE r.role_name
+    WHEN 'director' THEN 1
+    WHEN 'subdirector' THEN 2
+    WHEN 'secretary' THEN 3
+    ELSE 4
+  END;
+```
+
+### Verificar ano eclesiastico actual
+
+```sql
+SELECT id, name, start_date, end_date
+FROM ecclesiastical_years
+WHERE start_date <= CURRENT_DATE
+  AND end_date >= CURRENT_DATE;
+```
+
+---
+
+## Indices Recomendados
+
+```sql
+-- Performance en busquedas de usuarios
+CREATE INDEX idx_users_email ON users(email) WHERE active = true;
+CREATE INDEX idx_users_location ON users(country_id, union_id, local_field_id);
+
+-- Performance en club_role_assignments
+CREATE INDEX idx_cra_user ON club_role_assignments(user_id) WHERE active = true;
+CREATE INDEX idx_cra_section ON club_role_assignments(club_section_id);
+CREATE INDEX idx_cra_year ON club_role_assignments(ecclesiastical_year_id);
+
+-- Performance en jerarquia organizacional
+CREATE INDEX idx_unions_country ON unions(country_id) WHERE active = true;
+CREATE INDEX idx_lf_union ON local_fields(union_id) WHERE active = true;
+CREATE INDEX idx_districts_lf ON districts(local_field_id) WHERE active = true;
+CREATE INDEX idx_churches_district ON churches(district_id) WHERE active = true;
+```

@@ -1,0 +1,107 @@
+---
+title: "RBAC — Roles y Permisos"
+description: "Tablas del sistema de control de acceso basado en roles: roles, permisos, asignaciones y tipos de relacion"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Tabla: `roles`
+
+Roles del sistema (globales y de club).
+
+| Campo | Tipo | Descripcion | Valores |
+|---|---|---|---|
+| `id` | UUID | ID unico | PK |
+| `role_name` | VARCHAR(50) | Nombre del rol | UNIQUE |
+| `role_category` | VARCHAR(10) | Categoria | 'GLOBAL' o 'CLUB' |
+| `description` | TEXT | Descripcion | - |
+| `active` | BOOLEAN | Rol activo | DEFAULT true |
+
+**Roles Globales** (`role_category = 'GLOBAL'`):
+- `super_admin`, `admin`, `assistant_admin`, `coordinator`, `user`
+
+**Roles de Club** (`role_category = 'CLUB'`):
+- `director`, `subdirector`, `secretary`, `treasurer`, `counselor`, `member`
+
+---
+
+## Tabla: `permissions`
+
+Catalogo de permisos del sistema.
+
+| Campo | Tipo | Descripcion |
+|---|---|---|
+| `id` | UUID | ID unico | PK |
+| `permission_name` | VARCHAR | Nombre del permiso (ej: `users:read_detail`, `health:read`) |
+| `description` | TEXT | Descripcion del permiso |
+| `active` | BOOLEAN | Permiso activo |
+
+**Convencion vigente**:
+
+- Formato `resource:action` en minusculas
+- Recursos sensibles: `health`, `emergency_contacts`, `legal_representative`, `post_registration`
+- Coexisten con permisos legacy de la familia `users:*` para compatibilidad transicional
+
+---
+
+## Tabla: `role_permissions`
+
+Tabla pivote Many-to-Many entre `roles` y `permissions`.
+
+**Seed relevante**:
+
+- `docs/03-DATABASE/migrations/script_06_admin_permissions.sql` inserta el catalogo `resource:action` con permisos finos `health:*`, `emergency_contacts:*`, `legal_representative:*` y `post_registration:*`
+- Asigna esos permisos a `super_admin`, `admin` y, en lectura, a `coordinator`
+
+---
+
+## Tabla: `users_roles`
+
+Asignacion de roles GLOBALES a usuarios.
+
+| Campo | Tipo | Descripcion |
+|---|---|---|
+| `id` | UUID | ID unico |
+| `user_id` | UUID | Usuario |
+| `role_id` | UUID | Rol global asignado |
+| `assigned_at` | TIMESTAMPTZ | Fecha de asignacion |
+
+---
+
+## Tabla: `users_permissions`
+
+Asignacion directa de permisos a usuarios (bypass de roles).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `user_permission_id` | UUID | ID unico | PK, DEFAULT uuid_generate_v4() |
+| `user_id` | UUID | Usuario | FK → users, NOT NULL |
+| `permission_id` | UUID | Permiso | FK → permissions, NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `active` | BOOLEAN | Asignacion activa | DEFAULT true |
+
+**Constraint UNIQUE**: `(user_id, permission_id)`
+
+**Relaciones**:
+- Many-to-One: `users` (ON DELETE CASCADE), `permissions` (ON DELETE CASCADE)
+
+---
+
+## Tabla: `relationship_types`
+
+Catalogo de tipos de relacion (padre, madre, tutor, etc.) para contactos de emergencia y representantes legales.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `relationship_type_id` | UUID | ID unico | PK, DEFAULT uuid_generate_v4() |
+| `name` | VARCHAR(50) | Nombre del tipo de relacion | UNIQUE, NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `active` | BOOLEAN | Tipo activo | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Indices**: `idx_relationship_types_name`
+
+**Relaciones**:
+- One-to-Many: `emergency_contacts`, `legal_representatives`

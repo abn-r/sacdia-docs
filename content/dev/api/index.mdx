@@ -1,23 +1,82 @@
 ---
 title: API Reference
-description: Documentación de la API REST de SACDIA
+description: Documentación técnica completa de la REST API de SACDIA — especificación, endpoints, seguridad e integración.
 author: Abner Reyes
 version: "1.0.0"
 ---
 
-## API REST de SACDIA
+La REST API de SACDIA es el núcleo del sistema. Expone **269 endpoints** bajo `/api/v1/` que consumen el panel de administración (Next.js) y la app móvil (Flutter).
 
-La API de SACDIA está construida con NestJS y expone endpoints RESTful para todas las operaciones del sistema.
+## Documentos en esta sección
 
-### Base URL
+| Documento | Descripción |
+|-----------|-------------|
+| [Especificación Técnica](/dev/api/especificacion) | Arquitectura, módulos, sistema RBAC, tablas principales y contratos de response |
+| [Endpoints (Live Reference)](/dev/api/endpoints) | Lista completa y verificada de los 269 endpoints en producción |
+| [Versionado](/dev/api/versionado) | Estrategia URI-based, implementación NestJS y ciclo de vida de versiones |
+| [Decisiones de Arquitectura](/dev/api/decisiones-arquitectura) | ADRs: campos descriptivos, post-registro, roles, RBAC y año eclesiástico |
+| [Integración Frontend](/dev/api/integracion-frontend) | Guía práctica para consumir la API desde Next.js y Flutter |
+| [Seguridad](/dev/api/seguridad) | RBAC por sub-recurso, 2FA, blacklist de tokens, rate limiting y hardening |
+| [Testing](/dev/api/testing) | Estrategia, scripts, casos de prueba por módulo y checklist pre-deploy |
+| [Servicios Externos](/dev/api/servicios-externos) | Redis, Firebase FCM, Sentry y health check de dependencias |
 
-- **Desarrollo**: `http://localhost:3000`
-- **Producción**: Configurado en variables de entorno
+## Información Rápida
 
-### Autenticación
+```
+Base URL:     /api/v1
+Formato:      JSON
+Auth:         JWT (Bearer token)
+Total:        269 endpoints
+Versión:      v1 (URI-based versioning)
+```
 
-Todos los endpoints (excepto `/auth/*`) requieren un JWT válido en el header `Authorization: Bearer <token>`.
+## Módulos de la API
 
-### Documentación interactiva
+| Módulo | Prefijo | Descripción |
+|--------|---------|-------------|
+| Auth | `/api/v1/auth` | Login, OAuth, MFA, sesiones |
+| Users | `/api/v1/users` | Perfil, salud, contactos, post-registro |
+| Admin | `/api/v1/admin` | Gestión administrativa, RBAC, catálogos |
+| Clubs | `/api/v1/clubs` | Clubes, secciones, miembros, finanzas |
+| Classes | `/api/v1/classes` | Clases progresivas, progreso, inscripciones |
+| Honors | `/api/v1/honors` | Especialidades, requisitos, progreso |
+| Activities | `/api/v1/activities` | Actividades, asistencia |
+| Camporees | `/api/v1/camporees` | Campamentos, registro de miembros |
+| Certifications | `/api/v1/certifications` | Certificaciones de Guías Mayores |
+| Folders | `/api/v1/folders` | Carpetas de evidencias |
+| Finances | `/api/v1/finances` | Movimientos financieros |
+| Inventory | `/api/v1/inventory` | Inventario por sección de club |
+| Notifications | `/api/v1/notifications` | Push notifications (FCM) |
+| Catalogs | `/api/v1/catalogs` | Catálogos maestros (público) |
+| Resources | `/api/v1/resources` | Recursos educativos |
+| Investiture | `/api/v1/investiture` | Flujo de investidura y validación |
+| Health | `/api/v1/health` | Estado de dependencias externas |
 
-La documentación Swagger está disponible en `/api` cuando el backend está corriendo en desarrollo.
+## Formato de Respuesta Estándar
+
+Todas las respuestas siguen el mismo envelope:
+
+```json
+{
+  "status": "success",
+  "data": { },
+  "meta": {
+    "timestamp": "2026-01-29T17:00:00Z",
+    "version": "1.0.0",
+    "requestId": "uuid"
+  }
+}
+```
+
+Los errores usan:
+
+```json
+{
+  "status": "error",
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Validation failed",
+    "details": [{ "field": "email", "message": "must be a valid email" }]
+  }
+}
+```

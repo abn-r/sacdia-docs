@@ -1,0 +1,324 @@
+---
+title: "Carpetas y Evaluacion"
+description: "Tablas del modulo de carpetas de evaluacion, carpetas anuales con scoring, evidencias y rankings de clubes"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Modulo: Folders (Carpetas de Evaluacion)
+
+### Tabla: `folders`
+
+Carpetas de evaluacion del club por ano eclesiastico (contienen modulos y secciones calificables).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `folder_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre de la carpeta | UNIQUE, NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `active` | BOOLEAN | Carpeta activa | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `club_type` | INT | Tipo de club | FK → club_types, NULL |
+| `ecclesiastical_year_id` | INT | Ano eclesiastico | FK → ecclesiastical_years, NULL |
+| `status` | VARCHAR(50) | Estado de la carpeta | DEFAULT "incompleto" |
+| `total_points` | INT | Puntos acumulados | DEFAULT 0 |
+| `max_points` | INT | Puntaje maximo posible | DEFAULT 0 |
+| `minimum_points` | INT | Puntaje minimo requerido | DEFAULT 0 |
+
+---
+
+### Tabla: `folders_modules`
+
+Modulos dentro de una carpeta de evaluacion.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `folder_module_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre del modulo | NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `folder_id` | INT | Carpeta a la que pertenece | FK → folders, NULL |
+| `total_points` | INT | Puntos acumulados | DEFAULT 0 |
+| `max_points` | INT | Puntaje maximo posible | DEFAULT 0 |
+| `minimum_points` | INT | Puntaje minimo requerido | DEFAULT 0 |
+| `active` | BOOLEAN | Modulo activo | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+---
+
+### Tabla: `folders_sections`
+
+Secciones dentro de un modulo de carpeta (unidades evaluables individuales).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `folder_section_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre de la seccion | NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `module_id` | INT | Modulo al que pertenece | FK → folders_modules, NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `total_points` | INT | Puntos acumulados | DEFAULT 0 |
+| `max_points` | INT | Puntaje maximo posible | DEFAULT 0 |
+| `minimum_points` | INT | Puntaje minimo requerido | DEFAULT 0 |
+| `active` | BOOLEAN | Seccion activa | DEFAULT true |
+
+---
+
+### Tabla: `folder_assignments`
+
+Asignacion de carpetas a usuarios miembros para seguimiento individual.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `folder_assignment_id` | INT | ID unico | PK, autoincrement |
+| `folder_id` | INT | Carpeta asignada | FK → folders, NULL |
+| `active` | BOOLEAN | Asignacion activa | DEFAULT true |
+| `assignment_date` | TIMESTAMPTZ | Fecha de asignacion | DEFAULT NOW() |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `user_id` | UUID | Usuario asignado | FK → users, NULL |
+| `completion_date` | TIMESTAMPTZ | Fecha de completado | NULL |
+| `progress_percentage` | FLOAT | Porcentaje de avance | DEFAULT 0 |
+| `status` | STRING | Estado de la asignacion | DEFAULT "IN_PROGRESS" |
+| `total_points` | INT | Puntos acumulados | DEFAULT 0 |
+| `club_section_id` | INT | Seccion de club | FK → club_sections, NULL |
+
+**Indices**: `idx_folder_assignments_club_section_id`
+
+---
+
+### Tabla: `folders_section_records`
+
+Registros de puntaje por seccion de carpeta, con evidencias y flujo de validacion.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `folder_section_record_id` | INT | ID unico | PK, autoincrement |
+| `folder_id` | INT | Carpeta | FK → folders, NULL |
+| `module_id` | INT | Modulo de carpeta | FK → folders_modules, NULL |
+| `section_id` | INT | Seccion de carpeta | FK → folders_sections, NULL |
+| `points` | INT | Puntos obtenidos | DEFAULT 0 |
+| `pdf_file` | VARCHAR(255) | URL del archivo PDF adjunto | NULL |
+| `evidences` | JSON | Evidencias adjuntas (legacy) | NULL |
+| `active` | BOOLEAN | Registro activo | DEFAULT true |
+| `club_section_id` | INT | Seccion de club | FK → club_sections, NULL |
+| `status` | evidence_validation_enum | Estado de validacion | DEFAULT PENDING |
+| `submitted_by_id` | UUID | Usuario que envio | FK → users, NULL |
+| `submitted_at` | TIMESTAMPTZ | Fecha de envio | NULL |
+| `validated_by_id` | UUID | Usuario que valido | FK → users, NULL |
+| `validated_at` | TIMESTAMPTZ | Fecha de validacion | NULL |
+| `earned_points` | INT | Puntos efectivamente ganados | DEFAULT 0 |
+| `rejection_reason` | VARCHAR | Motivo de rechazo de la validacion | NULL |
+
+**Indices**: `idx_folders_section_records_club_section_id`
+
+---
+
+### Tabla: `evidence_files`
+
+Archivos de evidencia asociados a registros de seccion de carpeta, progreso de clases, o honores de usuario.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `evidence_file_id` | INT | ID unico | PK, autoincrement |
+| `section_record_id` | INT | Registro de seccion | FK → folders_section_records (ON DELETE CASCADE), NULL |
+| `user_honor_id` | INT | Honor de usuario | FK → users_honors(user_honor_id), NULL |
+| `file_url` | VARCHAR(500) | URL del archivo en R2/storage | NOT NULL |
+| `file_name` | VARCHAR(255) | Nombre original del archivo | NOT NULL |
+| `file_type` | VARCHAR(50) | Tipo MIME del archivo | NOT NULL |
+| `uploaded_by_id` | UUID | Usuario que subio el archivo | FK → users, NOT NULL |
+| `uploaded_at` | TIMESTAMPTZ | Fecha de subida | DEFAULT NOW() |
+| `active` | BOOLEAN | Archivo activo | DEFAULT true |
+
+**Indices**: `idx_evidence_files_section_record`, `idx_evidence_files_uploaded_by`, `idx_evidence_files_user_honor`
+
+**Nota**: La FK `user_honor_id` fue populada via migracion SQL (`jsonb_array_elements`) que extrajo URLs del campo JSON legacy `users_honors.images` hacia filas individuales en esta tabla.
+
+---
+
+## Modulo: Annual Folders & Scoring (Carpetas Anuales y Calificacion)
+
+El sistema permite a los clubes recopilar evidencias por ano eclesiastico y a los oficiales de campo evaluar cada seccion con puntaje.
+
+```
+club_sections → club_enrollments → annual_folders → annual_folder_evidences
+                                                   → annual_folder_section_evaluations
+                folder_templates → folder_template_sections
+                                 → annual_folders
+                club_enrollments → club_annual_rankings ← award_categories
+```
+
+### Tabla: `club_enrollments`
+
+Inscripcion anual de una seccion de club a un ano eclesiastico.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `club_enrollment_id` | UUID | ID unico | PK, default uuid_generate_v4() |
+| `club_section_id` | INT | Seccion de club inscrita | FK → club_sections, NOT NULL |
+| `ecclesiastical_year_id` | INT | Ano eclesiastico | FK → ecclesiastical_years, NOT NULL |
+| `status` | VARCHAR | Estado de la inscripcion | DEFAULT "active" |
+| `address` | VARCHAR | Direccion del club para el periodo | NULL |
+| `meeting_days` | VARCHAR | Dias de reunion | NULL |
+| `created_by` | UUID | Usuario que creo la inscripcion | FK → users, NOT NULL |
+| `closed_at` | TIMESTAMPTZ | Fecha de cierre | NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Constraint UNIQUE**: `(club_section_id, ecclesiastical_year_id)`
+
+**Indices**: `idx_club_enrollments_club_section`, `idx_club_enrollments_year`
+
+---
+
+### Tabla: `folder_templates`
+
+Plantillas de carpeta anual por tipo de club y ano eclesiastico.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `folder_template_id` | UUID | ID unico | PK, default uuid_generate_v4() |
+| `name` | VARCHAR(200) | Nombre de la plantilla | NOT NULL |
+| `club_type_id` | INT | Tipo de club al que aplica | FK → club_types, NOT NULL |
+| `ecclesiastical_year_id` | INT | Ano eclesiastico | FK → ecclesiastical_years, NOT NULL |
+| `active` | BOOLEAN | Plantilla activa | DEFAULT true |
+| `minimum_points` | INT | Puntaje minimo requerido para aprobar la carpeta | DEFAULT 0 |
+| `closing_date` | TIMESTAMPTZ | Fecha limite para envio de evidencias | NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Constraint UNIQUE**: `(club_type_id, ecclesiastical_year_id)`
+
+**Nota**: `minimum_points` y `closing_date` fueron anadidos como parte de la feature annual-folders-scoring (Phase 5.1).
+
+---
+
+### Tabla: `folder_template_sections`
+
+Secciones dentro de una plantilla de carpeta (cada seccion es una unidad evaluable con puntaje maximo y minimo).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `section_id` | UUID | ID unico | PK, default uuid_generate_v4() |
+| `folder_template_id` | UUID | Plantilla a la que pertenece | FK → folder_templates (ON DELETE CASCADE), NOT NULL |
+| `name` | VARCHAR(200) | Nombre de la seccion | NOT NULL |
+| `description` | TEXT | Descripcion de la seccion | NULL |
+| `order` | INT | Orden de presentacion | NOT NULL |
+| `required` | BOOLEAN | Seccion obligatoria | DEFAULT true |
+| `max_points` | INT | Puntaje maximo posible para esta seccion | DEFAULT 0 |
+| `minimum_points` | INT | Puntaje minimo requerido para aprobar esta seccion | DEFAULT 0 |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Indices**: `idx_folder_template_sections_template`
+
+---
+
+### Tabla: `annual_folders`
+
+Carpeta anual concreta de un club (instancia de una plantilla vinculada a una inscripcion de club).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `annual_folder_id` | UUID | ID unico | PK, default uuid_generate_v4() |
+| `club_enrollment_id` | UUID | Inscripcion de club propietaria | FK → club_enrollments, NOT NULL |
+| `folder_template_id` | UUID | Plantilla base | FK → folder_templates, NOT NULL |
+| `status` | VARCHAR(20) | Estado de la carpeta | DEFAULT "open" |
+| `submitted_at` | TIMESTAMPTZ | Fecha de envio para evaluacion | NULL |
+| `closed_at` | TIMESTAMPTZ | Fecha de cierre definitivo | NULL |
+| `total_earned_points` | INT | Puntos totales obtenidos (agregado de evaluaciones) | DEFAULT 0 |
+| `total_max_points` | INT | Puntos maximos posibles (suma de max_points de secciones) | DEFAULT 0 |
+| `progress_percentage` | FLOAT | Porcentaje de avance (earned/max x 100) | DEFAULT 0 |
+| `evaluated_at` | TIMESTAMPTZ | Fecha en que se completo la evaluacion | NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Valores de `status`**: `open`, `submitted`, `under_evaluation`, `evaluated`, `closed`
+
+**Constraint UNIQUE**: `(club_enrollment_id)` — cada inscripcion de club tiene exactamente una carpeta anual
+
+---
+
+### Tabla: `annual_folder_evidences`
+
+Archivos de evidencia subidos por el club para una seccion de la carpeta anual.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `evidence_id` | UUID | ID unico | PK, default uuid_generate_v4() |
+| `annual_folder_id` | UUID | Carpeta anual | FK → annual_folders (ON DELETE CASCADE), NOT NULL |
+| `section_id` | UUID | Seccion de la plantilla | FK → folder_template_sections, NOT NULL |
+| `file_url` | TEXT | URL del archivo en storage | NOT NULL |
+| `file_name` | VARCHAR(255) | Nombre original del archivo | NOT NULL |
+| `uploaded_by` | UUID | Usuario que subio la evidencia | FK → users, NOT NULL |
+| `notes` | TEXT | Notas del uploader | NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+---
+
+### Tabla: `annual_folder_section_evaluations`
+
+Evaluacion de una seccion de carpeta anual por un oficial de campo.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `evaluation_id` | UUID | ID unico | PK, default gen_random_uuid() |
+| `annual_folder_id` | UUID | Carpeta anual evaluada | FK → annual_folders (ON DELETE CASCADE), NOT NULL |
+| `section_id` | UUID | Seccion evaluada | FK → folder_template_sections, NOT NULL |
+| `earned_points` | INT | Puntos otorgados por el evaluador | DEFAULT 0 |
+| `max_points` | INT | Puntaje maximo de la seccion al momento de evaluar | DEFAULT 0 |
+| `notes` | TEXT | Observaciones del evaluador | NULL |
+| `evaluated_by_id` | UUID | Oficial que realizo la evaluacion | FK → users, NOT NULL |
+| `evaluated_at` | TIMESTAMPTZ | Fecha/hora de la evaluacion | DEFAULT NOW() |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Constraint UNIQUE**: `(annual_folder_id, section_id)` — una sola evaluacion por seccion por carpeta
+
+---
+
+### Tabla: `award_categories`
+
+Categorias de premios por rango de puntaje (ej: Oro, Plata, Bronce) configurables por tipo de club.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `award_category_id` | UUID | ID unico | PK, default gen_random_uuid() |
+| `name` | VARCHAR(200) | Nombre de la categoria (ej: "Oro", "Plata") | NOT NULL |
+| `description` | TEXT | Descripcion de la categoria | NULL |
+| `club_type_id` | INT | Tipo de club al que aplica | FK → club_types, NULL (null = aplica a todos) |
+| `min_points` | INT | Puntaje minimo para calificar | DEFAULT 0 |
+| `max_points` | INT | Puntaje maximo del rango | NULL |
+| `icon` | VARCHAR(100) | Icono representativo | NULL |
+| `order` | INT | Orden de presentacion | DEFAULT 0 |
+| `active` | BOOLEAN | Categoria activa (soft-delete) | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+---
+
+### Tabla: `club_annual_rankings`
+
+Ranking anual de clubes por puntaje de carpeta, segmentado por tipo de club y categoria de premio.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `ranking_id` | UUID | ID unico | PK, default gen_random_uuid() |
+| `club_enrollment_id` | UUID | Inscripcion de club | FK → club_enrollments, NOT NULL |
+| `club_type_id` | INT | Tipo de club | FK → club_types, NOT NULL |
+| `ecclesiastical_year_id` | INT | Ano eclesiastico | FK → ecclesiastical_years, NOT NULL |
+| `award_category_id` | UUID | Categoria de premio asignada | FK → award_categories, DEFAULT '00000000-0000-0000-0000-000000000000' |
+| `total_earned_points` | INT | Puntos totales obtenidos | DEFAULT 0 |
+| `total_max_points` | INT | Puntos maximos posibles | DEFAULT 0 |
+| `progress_percentage` | FLOAT | Porcentaje de avance | DEFAULT 0 |
+| `rank_position` | INT | Posicion en el ranking | NULL |
+| `calculated_at` | TIMESTAMPTZ | Fecha del ultimo calculo | DEFAULT NOW() |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+
+**Constraint UNIQUE**: `(club_enrollment_id, ecclesiastical_year_id, award_category_id)`
+
+**Nota**: El `award_category_id` tiene un valor sentinel por defecto (`00000000-0000-0000-0000-000000000000`) para rankings que aun no han sido categorizados. El `rank_position` se calcula en batch cuando se ejecuta el proceso de ranking.

@@ -1,0 +1,149 @@
+---
+title: "Infraestructura"
+description: "Hosting, contenedores, CI/CD y entorno de desarrollo local para SACDIA"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Hosting
+
+**Backend NestJS**: Vercel Serverless Functions (budget-friendly &lt;$20/mes)  
+**Admin Panel (Next.js)**: Vercel (mismo proyecto que backend)  
+**Database**: Supabase (PostgreSQL hosted) — Free tier para hobby  
+**Storage**: Supabase Storage — Free tier  
+**Redis**: Upstash (Serverless Redis) — Free tier  
+**Mobile App**: App Store + Google Play Store  
+
+**CDN**: Cloudflare (para assets estaticos)
+
+---
+
+## Containers & Orchestration
+
+**Containerizacion**: Docker (para backend)  
+**Orchestration**: Docker Compose (dev) / Railway o Render (produccion simple)
+
+---
+
+## CI/CD
+
+**Platform**: GitHub Actions
+
+### Backend NestJS
+
+```yaml
+on: push
+jobs:
+  test:
+    - Install dependencies
+    - Run linter (ESLint)
+    - Run tests (Jest)
+    - Run Prisma generate
+  deploy:
+    - Build Docker image
+    - Push to registry
+    - Deploy to hosting (Railway/Render)
+```
+
+### Admin Panel (Next.js)
+
+```yaml
+on: push to main
+jobs:
+  - Build Next.js app
+  - Run tests
+  - Deploy to Vercel (automatic)
+```
+
+### Flutter App
+
+```yaml
+on: tag creation
+jobs:
+  - Run tests
+  - Build APK (Android)
+  - Build IPA (iOS)
+  - Upload to Play Console / App Store Connect
+```
+
+---
+
+## Desarrollo Local
+
+### Requisitos del Sistema
+
+**Node.js**: Version 20.x LTS  
+**Flutter**: Version 3.19+ (Stable)  
+**Docker**: Requerido para PostgreSQL y Redis locales  
+**Supabase CLI**: Para desarrollo local (opcional)
+
+### Setup Inicial
+
+```bash
+# Clone repository
+git clone [repo-url]
+
+# Install dependencies
+npm install
+
+# Setup environment
+cp .env.example .env
+# Editar .env con tus valores
+
+# Run database (con Docker)
+docker-compose up -d postgres redis
+
+# Run migrations
+npm run migrate
+
+# Start dev server
+npm run dev
+```
+
+### Puertos Usados
+
+| Servicio | Puerto |
+| --- | --- |
+| Next.js Admin Panel | 3000 |
+| NestJS Backend API | 3001 |
+| PostgreSQL (Docker) | 5432 |
+| Redis (Docker) | 6379 |
+| Prisma Studio | 5555 |
+| Flutter App | Emulator/Device |
+
+---
+
+## Browser Support
+
+- Chrome: Ultimas 2 versiones
+- Firefox: Ultimas 2 versiones
+- Safari: Ultimas 2 versiones
+- Edge: Ultimas 2 versiones
+- IE11: No soportado
+
+## Mobile Support
+
+- **iOS**: 13.0+ (Flutter requirement)
+- **Android**: API 21+ (Android 5.0 Lollipop)
+
+## Versiones Minimas
+
+**Node.js**: 20.x LTS  
+**Flutter**: 3.19+  
+**Dart**: 3.3+
+
+---
+
+## Restricciones Tecnicas
+
+### Performance
+
+- Bundle size maximo: Definir por proyecto
+- Time to Interactive: &lt; Y segundos
+- Core Web Vitals: Cumplir umbrales "Good"
+
+### Seguridad
+
+- TLS 1.3+ obligatorio
+- Todas las dependencias sin vulnerabilidades criticas/altas
+- Secrets nunca en codigo (usar secrets manager)

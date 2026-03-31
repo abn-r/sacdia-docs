@@ -1,0 +1,112 @@
+---
+title: "Jerarquia Organizacional"
+description: "Tablas de jerarquia geografica y eclesiastica: paises, uniones, campos locales, distritos e iglesias"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+La jerarquia geografica sigue este patron:
+
+```
+Country → Union → Local Field → District → Church → Club
+```
+
+---
+
+## Tabla: `countries`
+
+Paises disponibles en el sistema (catalogo geografico de nivel superior).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `country_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(50) | Nombre del pais | UNIQUE, NOT NULL |
+| `abbreviation` | VARCHAR(8) | Abreviatura del pais | UNIQUE, NOT NULL |
+| `active` | BOOLEAN | Pais activo | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Indices**: `idx_countries_active` sobre `(active)`
+
+**Relaciones**:
+- One-to-Many: `unions`, `users`
+
+---
+
+## Tabla: `unions`
+
+Uniones eclesiasticas (nivel regional, agrupan campos locales).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `union_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(50) | Nombre de la union | UNIQUE, NOT NULL |
+| `abbreviation` | VARCHAR(8) | Abreviatura de la union | UNIQUE, NOT NULL |
+| `active` | BOOLEAN | Union activa | DEFAULT false |
+| `country_id` | INT | Pais al que pertenece | FK → countries, NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Relaciones**:
+- Many-to-One: `countries`
+- One-to-Many: `local_fields`, `union_camporees`, `users`
+
+---
+
+## Tabla: `local_fields`
+
+Campos locales (nivel de asociacion local, agrupa distritos y clubes).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `local_field_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(50) | Nombre del campo local | UNIQUE, NOT NULL |
+| `abbreviation` | VARCHAR(8) | Abreviatura del campo local | UNIQUE, NOT NULL |
+| `active` | BOOLEAN | Campo local activo | DEFAULT false |
+| `union_id` | INT | Union a la que pertenece | FK → unions, NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Relaciones**:
+- Many-to-One: `unions`
+- One-to-Many: `camporee_clubs`, `camporee_members`, `clubs`, `districts`, `investiture_configs`, `local_camporees`, `union_camporee_local_fields`, `users`
+
+---
+
+## Tabla: `districts`
+
+Distritos eclesiasticos dentro de un campo local (agrupan iglesias).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `districlub_type_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(50) | Nombre del distrito | NOT NULL |
+| `active` | BOOLEAN | Distrito activo | DEFAULT false |
+| `local_field_id` | INT | Campo local al que pertenece | FK → local_fields, NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Nota**: El PK se llama `districlub_type_id` por razones historicas (fue renombrado pero el nombre quedo asi en la BD).
+
+**Relaciones**:
+- Many-to-One: `local_fields`
+- One-to-Many: `churches`, `clubs`
+
+---
+
+## Tabla: `churches`
+
+Iglesias locales dentro de un distrito (cada iglesia puede tener un club).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `church_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(50) | Nombre de la iglesia | NOT NULL |
+| `active` | BOOLEAN | Iglesia activa | DEFAULT false |
+| `districlub_type_id` | INT | Distrito al que pertenece | FK → districts, NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Relaciones**:
+- Many-to-One: `districts`
+- One-to-Many: `clubs`

@@ -1,0 +1,115 @@
+---
+title: "Inventario y Finanzas"
+description: "Tablas del modulo de inventario de club y registros financieros (ingresos y egresos)"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Modulo: Inventory
+
+### Tabla: `inventory_categories`
+
+Catalogo de categorias para clasificar items del inventario de club.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `inventory_category_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(100) | Nombre de la categoria | NOT NULL |
+| `icon` | INT | Indice de icono | NULL, DEFAULT 0 |
+| `active` | BOOLEAN | Categoria activa | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Nota de inconsistencia**: El PK en la base real tiene un typo (`inventory_categoty_id`); en schema.prisma se mapea como `inventory_category_id`.
+
+---
+
+### Tabla: `club_inventory`
+
+Items del inventario de una seccion de club.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `club_inventory_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(100) | Nombre del item | NOT NULL |
+| `description` | STRING | Descripcion del item | NULL |
+| `inventory_category_id` | INT | Categoria | FK → inventory_categories, NULL |
+| `amount` | INT | Cantidad en inventario | NULL, DEFAULT 0 |
+| `active` | BOOLEAN | Item activo | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `club_section_id` | INT | Seccion de club duena | FK → club_sections, NULL |
+
+**Indices**: `idx_club_inventory_club_section_id`
+
+**Relaciones**:
+- Many-to-One: `club_sections`, `inventory_categories`
+- One-to-Many: `inventory_history`
+
+---
+
+### Tabla: `inventory_history`
+
+Log de auditoria de cambios en items de inventario de club.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `history_id` | INT | ID unico | PK, autoincrement |
+| `inventory_id` | INT | Item de inventario afectado | FK → club_inventory (ON DELETE CASCADE), NOT NULL |
+| `action` | VARCHAR(20) | Accion realizada (ej: `UPDATE`, `DELETE`) | NOT NULL |
+| `field_changed` | VARCHAR(100) | Campo que fue modificado | NULL |
+| `old_value` | STRING | Valor anterior del campo | NULL |
+| `new_value` | STRING | Valor nuevo del campo | NULL |
+| `performed_by` | UUID | Usuario que realizo la accion | FK → users, NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha del cambio | DEFAULT NOW() |
+
+**Indices**: `idx_inventory_history_inventory`, `idx_inventory_history_performer`
+
+---
+
+## Modulo: Finances
+
+### Tabla: `finances_categories`
+
+Catalogo de categorias financieras (ingresos/egresos).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `finance_category_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(100) | Nombre de la categoria | NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `icon` | INT | Indice de icono | NULL, DEFAULT 0 |
+| `type` | INT | Tipo (ingreso/egreso) | NOT NULL |
+| `active` | BOOLEAN | Categoria activa | DEFAULT false |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Constraint UNIQUE**: `(name, type)` (map: `unique_name_type`)
+
+---
+
+### Tabla: `finances`
+
+Registros financieros (ingresos y egresos) de un club.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `finance_id` | INT | ID unico | PK, autoincrement |
+| `year` | INT | Ano del registro | NOT NULL |
+| `month` | INT | Mes del registro | NOT NULL |
+| `amount` | INT | Monto | NOT NULL |
+| `description` | STRING | Descripcion del movimiento | NULL |
+| `club_type_id` | INT | Tipo de club | FK → club_types, NOT NULL |
+| `finance_category_id` | INT | Categoria financiera | FK → finances_categories, NOT NULL |
+| `finance_date` | DATE | Fecha del movimiento | NOT NULL |
+| `active` | BOOLEAN | Registro activo | DEFAULT false |
+| `created_by` | UUID | Usuario creador | FK → users, NOT NULL |
+| `modified_by_id` | UUID | Usuario que modifico | FK → users, NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `club_section_id` | INT | Seccion de club | FK → club_sections, NULL |
+
+**Indices**: `idx_finances_club_section_id`
+
+**Relaciones**:
+- Many-to-One: `club_sections`, `club_types`, `users`, `finances_categories`, `users` (via modified_by_id)

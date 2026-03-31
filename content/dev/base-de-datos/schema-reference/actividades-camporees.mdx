@@ -1,0 +1,194 @@
+---
+title: "Actividades y Camporees"
+description: "Tablas del modulo de actividades de club y camporees locales y de union"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## Modulo: Activities
+
+### Tabla: `activity_types`
+
+Catalogo de tipos de actividad (campamento, excursion, reunion, etc.).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `activity_type_id` | INT | ID unico | PK, autoincrement |
+| `code` | VARCHAR(50) | Codigo unico de tipo | UNIQUE, NOT NULL |
+| `name` | VARCHAR(100) | Nombre del tipo | UNIQUE, NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `active` | BOOLEAN | Tipo activo | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+---
+
+### Tabla: `activities`
+
+Actividades programadas de un club (campamentos, excursiones, reuniones).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `activity_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(80) | Nombre de la actividad | NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `club_type_id` | INT | Tipo de club | FK → club_types, NOT NULL |
+| `active` | BOOLEAN | Actividad activa | DEFAULT false |
+| `lat` | FLOAT | Latitud de ubicacion | NOT NULL |
+| `long` | FLOAT | Longitud de ubicacion | NOT NULL |
+| `activity_time` | VARCHAR(10) | Hora de la actividad | DEFAULT "09:00" |
+| `activity_place` | STRING | Lugar de la actividad | DEFAULT "place" |
+| `image` | STRING | URL de imagen | NOT NULL |
+| `platform` | INT | Plataforma (0=presencial) | DEFAULT 0 |
+| `link_meet` | STRING | Link de videollamada | NULL |
+| `additional_data` | STRING | Datos adicionales | NULL |
+| `attendees` | JSON | Lista de asistentes | NULL |
+| `classes` | JSON | Clases asociadas | NULL |
+| `created_by` | UUID | Usuario creador | FK → users, NOT NULL |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | NULL |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | NULL |
+| `activity_type_id` | INT | Tipo de actividad | FK → activity_types, NOT NULL |
+| `club_section_id` | INT | Seccion de club | FK → club_sections, NULL |
+| `is_joint` | BOOLEAN | Actividad conjunta (abarca multiples secciones) | DEFAULT false |
+
+**Indices**: `idx_activities_activity_type_id`, `idx_activities_club_section_id`
+
+**Relaciones**:
+- Many-to-One: `activity_types`, `club_sections`, `club_types`, `users`
+- One-to-Many: `activity_instances`
+
+---
+
+### Tabla: `activity_instances`
+
+Instancias de una actividad por seccion de club (permite reutilizar una actividad en multiples secciones).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `activity_instance_id` | INT | ID unico | PK, autoincrement |
+| `activity_id` | INT | Actividad base | FK → activities (ON DELETE CASCADE), NOT NULL |
+| `active` | BOOLEAN | Instancia activa | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW(), @updatedAt |
+| `club_section_id` | INT | Seccion de club | FK → club_sections, NULL |
+
+**Constraint UNIQUE**: `(activity_id, club_section_id)` (map: `activity_instances_unique_instance_per_activity`)
+
+**Indices**: `idx_activity_instances_activity`, `idx_activity_instances_club_section_id`
+
+---
+
+## Modulo: Camporees
+
+### Tabla: `local_camporees`
+
+Camporees a nivel de campo local (eventos presenciales de competencia entre clubes).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `local_camporee_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre del camporee | NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `start_date` | DATE | Fecha de inicio | NOT NULL |
+| `end_date` | DATE | Fecha de fin | NOT NULL |
+| `local_field_id` | INT | Campo local organizador | FK → local_fields, NOT NULL |
+| `includes_adventurers` | BOOLEAN | Incluye Aventureros | DEFAULT false, NULL |
+| `includes_pathfinders` | BOOLEAN | Incluye Conquistadores | DEFAULT false, NULL |
+| `includes_master_guides` | BOOLEAN | Incluye Guias Mayores | DEFAULT false, NULL |
+| `local_camporee_place` | STRING | Lugar del camporee | DEFAULT "Lugar" |
+| `registration_cost` | DECIMAL(10,2) | Costo de inscripcion | NULL |
+| `ecclesiastical_year` | INT | Ano eclesiastico | FK → ecclesiastical_years, NOT NULL |
+| `active` | BOOLEAN | Camporee activo | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Relaciones**:
+- Many-to-One: `ecclesiastical_years`, `local_fields`
+- One-to-Many: `camporee_clubs`, `camporee_members`
+
+---
+
+### Tabla: `union_camporees`
+
+Camporees a nivel de union (eventos regionales de mayor escala).
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `union_camporee_id` | INT | ID unico | PK, autoincrement |
+| `name` | VARCHAR(255) | Nombre del camporee | NOT NULL |
+| `description` | STRING | Descripcion | NULL |
+| `start_date` | DATE | Fecha de inicio | NOT NULL |
+| `end_date` | DATE | Fecha de fin | NOT NULL |
+| `union_id` | INT | Union organizadora | FK → unions, NOT NULL |
+| `includes_adventurers` | BOOLEAN | Incluye Aventureros | DEFAULT false, NULL |
+| `includes_pathfinders` | BOOLEAN | Incluye Conquistadores | DEFAULT false, NULL |
+| `includes_master_guides` | BOOLEAN | Incluye Guias Mayores | DEFAULT false, NULL |
+| `union_camporee_place` | STRING | Lugar del camporee | DEFAULT "Lugar" |
+| `registration_cost` | DECIMAL(10,2) | Costo de inscripcion | NULL |
+| `ecclesiastical_year` | INT | Ano eclesiastico | FK → ecclesiastical_years, NOT NULL |
+| `active` | BOOLEAN | Camporee activo | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Relaciones**:
+- Many-to-One: `ecclesiastical_years`, `unions`
+- One-to-Many: `union_camporee_local_fields`
+
+---
+
+### Tabla: `union_camporee_local_fields`
+
+Tabla pivote entre camporees de union y campos locales participantes.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `union_camporee_lf_id` | INT | ID del camporee de union | PK (compuesto), FK → union_camporees (ON DELETE CASCADE) |
+| `local_field_id` | INT | Campo local participante | PK (compuesto), FK → local_fields (ON DELETE CASCADE) |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `active` | BOOLEAN | Relacion activa | DEFAULT true |
+
+**PK compuesta**: `(union_camporee_lf_id, local_field_id)`
+
+---
+
+### Tabla: `camporee_clubs`
+
+Clubes inscritos en un camporee local.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `camporee_club_id` | INT | ID unico | PK, autoincrement |
+| `camporee_id` | INT | Camporee | FK → local_camporees (ON DELETE CASCADE), NOT NULL |
+| `camporee_type` | VARCHAR(50) | Tipo de camporee | NOT NULL |
+| `club_id` | INT | Club (legacy) | NULL |
+| `local_field_id` | INT | Campo local | FK → local_fields (ON DELETE CASCADE), NULL |
+| `active` | BOOLEAN | Inscripcion activa | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+| `club_section_id` | INT | Seccion de club | FK → club_sections, NULL |
+
+**Indices**: `idx_camporee_clubs_club_section_id`
+
+---
+
+### Tabla: `camporee_members`
+
+Miembros individuales inscritos en un camporee local.
+
+| Campo | Tipo | Descripcion | Constraints |
+|---|---|---|---|
+| `camporee_member_id` | INT | ID unico | PK, autoincrement |
+| `camporee_id` | INT | Camporee | FK → local_camporees (ON DELETE CASCADE), NOT NULL |
+| `camporee_type` | VARCHAR(50) | Tipo de camporee | NOT NULL |
+| `user_id` | UUID | Usuario miembro | FK → users, NOT NULL |
+| `club_name` | VARCHAR(255) | Nombre del club (desnormalizado) | NULL |
+| `local_field_id` | INT | Campo local | FK → local_fields (ON DELETE CASCADE), NULL |
+| `insurance_verified` | BOOLEAN | Seguro verificado | DEFAULT false |
+| `insurance_id` | INT | Seguro del miembro | FK → member_insurances, NULL |
+| `active` | BOOLEAN | Inscripcion activa | DEFAULT true |
+| `created_at` | TIMESTAMPTZ | Fecha de creacion | DEFAULT NOW() |
+| `modified_at` | TIMESTAMPTZ | Ultima actualizacion | DEFAULT NOW() |
+
+**Relaciones**:
+- Many-to-One: `local_camporees`, `member_insurances`, `local_fields`, `users`
