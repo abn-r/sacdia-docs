@@ -1,0 +1,212 @@
+---
+title: "Source of Truth"
+description: "Jerarquía documental vigente de SACDIA: qué fuentes mandan, cuáles apoyan y cuáles no representan estado actual"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+> Este documento congela qué fuentes mandan, cuáles solo apoyan y cuáles no pueden usarse como estado actual.
+> Si una fuente subordinada contradice una fuente superior, no se sintetiza por intuición: se escala el conflicto.
+> Para Runtime, este archivo manda sobre cualquier duda de precedencia dentro de la documentación del proyecto.
+
+## Propósito operativo
+
+Este archivo define la jerarquía documental vigente del proyecto SACDIA para Canon Factory Wave 0.
+
+Su función es:
+
+1. fijar el orden de consulta;
+2. separar fuentes canónicas de fuentes auxiliares;
+3. bloquear el uso de roadmaps, bitácoras o notas históricas como estado actual;
+4. reducir ambigüedad operativa para Runtime y Matrix.
+
+## Regla general de precedencia
+
+La precedencia documental congelada es:
+
+1. `docs/canon/source-of-truth.md` — este documento
+2. `docs/README.md`
+3. `docs/canon/*` aplicable al tema consultado
+4. documentación operativa subordinada explícitamente autorizada por este archivo
+5. material auxiliar permitido
+6. material histórico o explícitamente no autorizado
+
+Si una fuente de nivel inferior contradice una de nivel superior, prevalece la superior y el punto conflictivo debe registrarse para arbitraje.
+
+## Autoridad congelada por dominio
+
+### Producto y alcance funcional
+
+Fuentes canónicas:
+
+1. [Modelo del dominio](/docs/fundamentos/dominio)
+2. [Identidad del sistema](/docs/fundamentos/identidad)
+
+Fuentes subordinadas permitidas:
+
+- `docs/features/<dominio>.md`
+
+Reglas:
+
+- Los documentos de `docs/features/` pueden precisar reglas de dominio activas, pero no redefinen el canon base del sistema.
+
+### Baseline técnica global
+
+Fuentes canónicas técnicas:
+
+1. [Arquitectura del sistema](/docs/fundamentos/arquitectura)
+2. [Decisiones clave](/docs/fundamentos/decisiones-clave)
+3. `docs/steering/tech.md`
+4. `docs/steering/coding-standards.md`
+5. `docs/steering/data-guidelines.md`
+6. `docs/steering/agents.md`
+
+Reglas:
+
+- `tech.md` define la baseline tecnológica global activa.
+- `coding-standards.md`, `data-guidelines.md` y `agents.md` son normativos para implementación, validación y operación de agentes.
+
+### API y runtime operativo
+
+Fuentes canónicas de API/runtime:
+
+1. `docs/api/ENDPOINTS-LIVE-REFERENCE.md`
+2. `docs/api/ARCHITECTURE-DECISIONS.md`
+
+Reglas:
+
+- `ENDPOINTS-LIVE-REFERENCE.md` es el contrato runtime vigente para App y Admin.
+- `ARCHITECTURE-DECISIONS.md` manda para decisiones aprobadas y racionales estructurales.
+- Runtime no debe inspeccionar código fuente como autoridad primaria de API; debe usar el documento runtime generado.
+
+### Datos, schema y modelo operativo
+
+Fuentes canónicas de datos:
+
+1. `docs/database/schema.prisma`
+2. `docs/database/README.md`
+3. `docs/database/SCHEMA-REFERENCE.md`
+
+Reglas:
+
+- `schema.prisma` es la fuente de verdad estructural del modelo de datos.
+- `SCHEMA-REFERENCE.md` es una referencia humana útil, pero queda subordinada a `schema.prisma` cuando haya drift o diferencias de naming, tipos o claves.
+- Cuando `SCHEMA-REFERENCE.md` o ejemplos de otros documentos difieran en forma estructural exacta, gana `schema.prisma`.
+
+### Gobernanza documental
+
+Fuentes canónicas de gobernanza:
+
+1. [Source of Truth](/docs/fundamentos/source-of-truth) — este documento
+2. `docs/README.md`
+3. `docs/canon/gobernanza-canon.md`
+
+## Orden de consulta obligatorio
+
+### Si la pregunta es de producto o alcance
+
+1. [Source of Truth](/docs/fundamentos/source-of-truth)
+2. [Modelo del dominio](/docs/fundamentos/dominio)
+3. [Identidad del sistema](/docs/fundamentos/identidad)
+4. `docs/features/<dominio>.md`
+
+### Si la pregunta es de arquitectura o baseline técnica
+
+1. [Source of Truth](/docs/fundamentos/source-of-truth)
+2. [Arquitectura del sistema](/docs/fundamentos/arquitectura)
+3. [Decisiones clave](/docs/fundamentos/decisiones-clave)
+4. `docs/steering/tech.md`
+5. `docs/steering/coding-standards.md`
+6. `docs/steering/data-guidelines.md`
+
+### Si la pregunta es de API o comportamiento runtime
+
+1. [Source of Truth](/docs/fundamentos/source-of-truth)
+2. `docs/api/ENDPOINTS-LIVE-REFERENCE.md`
+3. `docs/api/ARCHITECTURE-DECISIONS.md`
+4. `docs/features/<dominio>.md`
+
+### Si la pregunta es de datos o schema
+
+1. [Source of Truth](/docs/fundamentos/source-of-truth)
+2. `docs/database/schema.prisma`
+3. `docs/database/README.md`
+4. `docs/database/SCHEMA-REFERENCE.md`
+
+### Si la pregunta es de precedencia documental
+
+1. [Source of Truth](/docs/fundamentos/source-of-truth)
+2. `docs/README.md`
+3. `docs/canon/gobernanza-canon.md`
+
+## Fuentes auxiliares permitidas
+
+Estas fuentes pueden usarse como contexto subordinado, orientación o navegación, pero no como autoridad final de estado actual:
+
+- `AGENTS.md`
+- `CLAUDE.md`
+- `README.md`
+- `docs/features/**` cuando precisan un dominio sin contradecir canon ni runtime
+
+Uso permitido:
+
+- onboarding;
+- ruteo hacia documentos correctos;
+- contexto operativo;
+- trazabilidad o explicación narrativa.
+
+Uso no permitido:
+
+- cerrar estado actual por sí solas;
+- invalidar canon;
+- reemplazar contratos runtime o schema.
+
+## Fuentes explícitamente no autorizadas para estado actual
+
+Quedan explícitamente fuera como fuente de estado actual:
+
+- `docs/history/phases/03-IMPLEMENTATION-ROADMAP.md`
+- cualquier documento marcado `HISTORICAL`
+- `docs/history/`
+- changelogs, bitácoras de sesión y resúmenes de fase cuando pretendan describir contrato vigente
+- código fuente como autoridad primaria ad hoc, salvo cuando su salida ya fue promovida a documento canónico explícito
+
+Regla explícita:
+
+> `docs/history/phases/03-IMPLEMENTATION-ROADMAP.md` NO representa estado actual.
+> Solo puede leerse como roadmap, bitácora de fases o snapshot histórico.
+
+## Regla de contradicciones
+
+Si dos fuentes autorizadas chocan:
+
+1. no sintetizar por intuición;
+2. no "promediar" documentos;
+3. mantener la jerarquía ya congelada;
+4. registrar el conflicto para arbitraje;
+5. aislar el punto conflictivo sin bloquear el resto de la autoridad general, salvo que el choque impida operar.
+
+Si el conflicto bloquea el uso seguro de la documentación, debe marcarse `BLOCKER` y escalarse a arbitraje documental.
+
+## Mandato operativo para Runtime y Matrix
+
+Runtime y Matrix deben operar con estas reglas:
+
+1. iniciar cualquier decisión de precedencia en este archivo;
+2. usar `ENDPOINTS-LIVE-REFERENCE.md` para afirmar comportamiento API vigente;
+3. usar `schema.prisma` para afirmar estructura de datos vigente;
+4. tratar roadmaps y documentos históricos como apoyo narrativo, no como contrato actual;
+5. escalar contradicciones reales en vez de resolverlas por intuición.
+
+## Freeze de Wave 0
+
+La congelación de Wave 0 queda así:
+
+- canon y gobernanza documental: `docs/canon/*` + `docs/README.md`
+- runtime API: `docs/api/ENDPOINTS-LIVE-REFERENCE.md`
+- decisiones aprobadas: `docs/api/ARCHITECTURE-DECISIONS.md`
+- baseline técnica global: `docs/steering/*` activos
+- datos: `docs/database/schema.prisma`
+- histórico y roadmap: prohibidos como estado actual
+
+Mientras este archivo no sea reemplazado explícitamente por otro documento canónico, esta jerarquía permanece vigente.

@@ -1,0 +1,45 @@
+---
+title: "Developer Workflow"
+description: "Flujo recomendado para trabajar con documentacion y desarrollo en SACDIA, con checklists pre y post implementacion."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+**Estado**: ACTIVE
+
+Guia unificada para trabajar con documentacion y desarrollo en SACDIA.
+
+## Flujo recomendado
+
+1. Leer contexto canonico:
+   - `docs/README.md`
+   - `docs/00-STEERING/*`
+2. Ubicar dominio afectado:
+   - `docs/01-FEATURES/<feature>/`
+   - `docs/02-API/`
+   - `docs/03-DATABASE/`
+3. Definir alcance:
+   - que cambia
+   - que no cambia
+   - impacto en API/DB/UI
+4. Implementar con pruebas.
+5. Actualizar documentacion en el mismo cambio.
+
+## Reglas practicas
+
+- No implementar desde documentos historicos.
+- Si cambia contrato de endpoint, actualizar `docs/02-API/`.
+- Si cambia schema o relaciones, actualizar `docs/03-DATABASE/`.
+- Si cambia flujo de negocio, actualizar `docs/01-FEATURES/<feature>/`.
+
+## Checklist pre-implementacion
+
+- [ ] Lei steering y docs del dominio.
+- [ ] Confirme contrato vigente.
+- [ ] Identifique pruebas a ejecutar.
+
+## Checklist post-implementacion
+
+- [ ] Pruebas relevantes ejecutadas.
+- [ ] Documentacion sincronizada.
+- [ ] Sin referencias a rutas legacy fuera de la estructura canonica actual.

@@ -1,0 +1,49 @@
+---
+title: "Autorización"
+description: "Modelo de autorización contextual de SACDIA: roles, permisos, scope territorial y asignaciones de club"
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+SACDIA no usa RBAC puro. Usa un modelo de **RBAC contextual** que combina roles, permisos granulares, scope territorial y asignaciones de club para resolver qué puede hacer cada actor en cada contexto.
+
+## Idea central
+
+La autorización de SACDIA se entiende en dos planos:
+
+- **Grants**: todo lo que el usuario tiene asignado potencialmente (roles globales, asignaciones de club).
+- **Effective**: lo que el backend ya resolvió para la sesión actual (permisos vigentes, scope activo).
+
+Los clientes siempre consumen `effective`. Los grants se usan para matrices administrativas y selectores de contexto.
+
+## Documentos de esta sección
+
+### Modelo de autorización
+
+La decisión arquitectónica central: por qué SACDIA usa RBAC contextual en lugar de RBAC puro o ABAC puro. Describe las piezas del modelo: roles, permisos, scope territorial, club assignments y active assignment.
+
+[Ver Modelo de autorización](/docs/autorizacion/modelo)
+
+### Runtime de autenticación y autorización
+
+El comportamiento técnico vigente del dominio de autenticación: endpoints canónicos, contratos de tokens, flujo OAuth, MFA, gestión de sesiones y campos legacy.
+
+[Ver Runtime de autenticación](/docs/autorizacion/runtime)
+
+### Contrato canónico de autorización
+
+La fuente de verdad para el payload `authorization` que expone `GET /auth/me`. Define el shape TypeScript, la semántica de cada campo y las reglas de consumo para backend, admin web y app móvil.
+
+[Ver Contrato canónico](/docs/autorizacion/contrato-canonico)
+
+### Sistema de permisos
+
+El catálogo canónico de nombres de permisos y su convención `resource:action`. Lista todos los permisos por módulo: usuarios, roles, clubes, jerarquía geográfica, catálogos, clases, honores, actividades, finanzas, inventario, notificaciones y sistema.
+
+[Ver Sistema de permisos](/docs/autorizacion/permisos)
+
+### Matriz de enforcement RBAC
+
+Cómo se traduce cada permiso en enforcement real de backend. Define los tipos de recurso (`global`, `club`, `club_instance`, `club_assignment`, `user`) y la tabla operativa de enforcement por acción.
+
+[Ver Matriz de enforcement](/docs/autorizacion/matriz-rbac)

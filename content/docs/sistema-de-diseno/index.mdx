@@ -1,0 +1,54 @@
+---
+title: "Sistema de Diseño"
+description: "Referencia del sistema de diseño del panel administrativo de SACDIA: componentes, tokens, patrones y reglas de interfaz."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+> Documento de referencia para todas las interfaces del panel administrativo.
+> Cada nueva pantalla, componente o modal debe seguir estas definiciones.
+
+## Que es este sistema de diseno
+
+El sistema de diseño de SACDIA Admin define las reglas visuales, los componentes reutilizables y los patrones de interaccion que garantizan una experiencia coherente en todo el panel administrativo.
+
+No es un conjunto de sugerencias: es la fuente de verdad. Cualquier nueva pantalla, componente o flujo debe ajustarse a lo documentado aqui antes de entregarse.
+
+## Cuando usarlo
+
+Consulta este sistema siempre que vayas a:
+
+- Crear una pantalla nueva
+- Agregar un componente nuevo
+- Revisar cómo debe verse un estado de carga, error o vacio
+- Decidir entre variantes de un componente
+- Implementar dark mode en algun elemento
+- Definir espaciado, tipografia o colores
+
+## Estructura de la documentacion
+
+| Seccion | Que cubre |
+|---------|-----------|
+| [Stack y Paleta](/docs/sistema-de-diseno/stack-y-paleta) | Tecnologias del stack de UI y sistema de colores OKLCH |
+| [Tipografia y Espaciado](/docs/sistema-de-diseno/tipografia-y-espaciado) | Escala tipografica, radios, grids y breakpoints |
+| [Componentes](/docs/sistema-de-diseno/componentes) | Todos los componentes shadcn/Radix con variantes y ejemplos |
+| [Patrones CRUD](/docs/sistema-de-diseno/patrones-crud) | Flujos de crear, editar y eliminar; layout de paginas |
+| [Formularios](/docs/sistema-de-diseno/formularios) | Estructura de campos, validacion y tipos de input |
+| [Presentacion de datos](/docs/sistema-de-diseno/presentacion-datos) | KPIs, graficos, timelines, listas descriptivas |
+| [Dark mode y Responsive](/docs/sistema-de-diseno/dark-mode-y-responsive) | Reglas de compatibilidad de color y diseno responsive |
+| [Estructura de archivos](/docs/sistema-de-diseno/estructura-archivos) | Organizacion de carpetas y convenciones de naming |
+
+## Regla absoluta
+
+Toda interfaz nueva o existente usa componentes de `@/components/ui/*` (shadcn/Radix) para elementos interactivos visibles.
+
+Si se necesita un componente que no existe, instalar via:
+
+```bash
+npx shadcn@latest add <componente>
+```
+
+**Excepciones tipicas permitidas**:
+- `<input type="hidden">` para formularios o server actions
+- Elementos nativos requeridos por APIs del navegador o integraciones third-party sin wrapper equivalente
+- Casos puntuales documentados en PR con justificacion tecnica (accesibilidad o compatibilidad)

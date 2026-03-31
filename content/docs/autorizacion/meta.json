@@ -1,0 +1,4 @@
+{
+  "title": "Autorización",
+  "pages": ["index", "modelo", "runtime", "contrato-canonico", "permisos", "matriz-rbac"]
+}

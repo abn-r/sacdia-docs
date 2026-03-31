@@ -1,0 +1,105 @@
+---
+title: "Stack y Paleta de Color"
+description: "Tecnologias del stack de UI y sistema de colores OKLCH con tokens semanticos para light y dark mode."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## 1. Stack de UI
+
+| Capa | Tecnologia | Version |
+|------|-----------|---------|
+| Framework | Next.js (App Router) | 16.x |
+| Componentes | shadcn/ui (estilo `new-york`) | latest |
+| Primitivos | Radix UI (`radix-ui`) | 1.4.x |
+| Estilos | Tailwind CSS v4 + `tw-animate-css` | 4.x |
+| Iconos | `lucide-react` | 0.563+ |
+| Graficos | Recharts | 3.x |
+| Formularios | React Hook Form + Zod | 7.x / 4.x |
+| Toasts | Sonner | 2.x |
+| Temas | next-themes | 0.4.x |
+| Utilidad CSS | `cn()` de `clsx` + `tailwind-merge` | - |
+
+**Regla absoluta (retroactiva)**: Toda interfaz, nueva o existente, usa componentes de `@/components/ui/*` (shadcn/Radix) para elementos interactivos visibles. Si se necesita un componente que no existe, instalar via `npx shadcn@latest add <componente>`.
+
+**Excepciones tipicas permitidas**:
+- `<input type="hidden">` para formularios/server actions.
+- Elementos nativos requeridos por APIs del navegador o integraciones third-party sin wrapper equivalente.
+- Casos puntuales documentados en PR con justificacion tecnica (accesibilidad o compatibilidad).
+
+---
+
+## 2. Paleta de Color (OKLCH)
+
+El sistema usa CSS custom properties en OKLCH para precision de color perceptual. Todas las clases de Tailwind referencian estos tokens.
+
+### 2.1 Tokens de Superficie
+
+| Token | Light Mode | Dark Mode | Uso |
+|-------|-----------|-----------|-----|
+| `--background` | `oklch(0.985 0.001 75)` | `oklch(0.16 0.025 280)` | Fondo general de la app |
+| `--foreground` | `oklch(0.147 0.004 49.25)` | `oklch(1 0 0)` | Texto principal |
+| `--card` | `oklch(1 0 0)` | `oklch(0.195 0.028 280)` | Fondo de tarjetas |
+| `--card-foreground` | `oklch(0.147 0.004 49.25)` | `oklch(1 0 0)` | Texto en tarjetas |
+| `--popover` | `oklch(1 0 0)` | `oklch(0.195 0.028 280)` | Fondo de popovers/menus |
+| `--muted` | `oklch(0.97 0.001 75)` | `oklch(0.22 0.025 280)` | Superficies secundarias |
+| `--muted-foreground` | `oklch(0.553 0.013 58)` | `oklch(0.65 0.02 250)` | Texto secundario/auxiliar |
+| `--accent` | `oklch(0.97 0.001 75)` | `oklch(0.395 0.27 264 / 10%)` | Hover backgrounds |
+| `--secondary` | `oklch(0.97 0.001 75)` | `oklch(0.22 0.025 280)` | Botones secundarios |
+
+### 2.2 Colores Semanticos
+
+| Token | Light | Dark | Clase Tailwind | Uso |
+|-------|-------|------|----------------|-----|
+| `--primary` | `oklch(0.395 0.27 264)` | `oklch(0.395 0.27 264)` | `text-primary`, `bg-primary` | Acciones principales, enlaces, brand |
+| `--destructive` | `oklch(0.577 0.245 27.325)` | `oklch(0.65 0.2 25)` | `text-destructive`, `bg-destructive` | Errores, eliminaciones, alertas |
+| `--success` | `oklch(0.52 0.17 152)` | `oklch(0.62 0.17 152)` | `text-success`, `bg-success` | Estados activos, confirmaciones |
+| `--warning` | `oklch(0.75 0.15 80)` | `oklch(0.78 0.14 80)` | `text-warning`, `bg-warning` | Advertencias, estados pendientes |
+
+### 2.3 Colores de Borde e Input
+
+| Token | Light | Dark |
+|-------|-------|------|
+| `--border` | `oklch(0.923 0.003 48.72)` | `oklch(0.6 0.02 250 / 15%)` |
+| `--input` | `oklch(0.923 0.003 48.72)` | `oklch(0.6 0.02 250 / 12%)` |
+| `--ring` | `oklch(0.395 0.27 264)` | `oklch(0.395 0.27 264)` |
+
+### 2.4 Colores de Grafico
+
+| Token | Uso | Clase |
+|-------|-----|-------|
+| `--chart-1` | Serie primaria | `var(--chart-1)` |
+| `--chart-2` | Serie secundaria | `var(--chart-2)` |
+| `--chart-3` | Serie terciaria | `var(--chart-3)` |
+| `--chart-4` | Serie cuaternaria (success-like) | `var(--chart-4)` |
+| `--chart-5` | Serie quinaria (warning-like) | `var(--chart-5)` |
+
+### 2.5 Colores de Sidebar
+
+| Token | Uso |
+|-------|-----|
+| `--sidebar` | Fondo del sidebar |
+| `--sidebar-foreground` | Texto normal del sidebar |
+| `--sidebar-primary` | Color primario del sidebar (= primary) |
+| `--sidebar-accent` | Background hover/activo en sidebar |
+| `--sidebar-border` | Borde del sidebar |
+
+### 2.6 Reglas de Uso de Color
+
+```
+HACER:
+  bg-primary/10          -> Fondo tenue para iconos o badges
+  bg-destructive/10      -> Fondo tenue para estados de error
+  bg-success/10          -> Fondo tenue para estados activos
+  bg-warning/10          -> Fondo tenue para estados pendientes
+  text-muted-foreground  -> Texto auxiliar, labels secundarios
+  bg-muted               -> Fondos neutros (skeletons, placeholders)
+
+EVITAR POR DEFECTO:
+  bg-blue-50, bg-red-100, bg-amber-50  -> Colores hardcoded de Tailwind
+  text-blue-600, text-red-500           -> Usar tokens semanticos
+
+EXCEPCION:
+  Se permiten colores hardcoded cuando haya solicitud explicita de mejora visual
+  y se valide compatibilidad en dark mode.
+```

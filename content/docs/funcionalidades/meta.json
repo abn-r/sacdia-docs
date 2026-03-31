@@ -1,0 +1,19 @@
+{
+  "title": "Funcionalidades",
+  "pages": [
+    "index",
+    "---Gestión de Clubes---",
+    "gestion-clubs", "gestion-seguros",
+    "---Actividades y Eventos---",
+    "actividades", "actividades-conjuntas", "camporees", "aprobaciones-camporees",
+    "---Formación---",
+    "clases-progresivas", "honores", "certificaciones-guias-mayores",
+    "---Evaluación y Evidencias---",
+    "carpetas-evidencias", "validacion-evidencias", "validacion-investiduras",
+    "aprobaciones-masivas", "annual-folders-scoring",
+    "---Administración---",
+    "finanzas", "inventario", "catalogos", "rbac",
+    "---Operaciones---",
+    "sla-dashboard", "recursos", "comunicaciones"
+  ]
+}

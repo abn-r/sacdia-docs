@@ -1,0 +1,50 @@
+---
+title: "Idea to Spec"
+description: "Como convertir una idea en una especificacion ejecutable con requisitos, diseno y tareas bien definidas."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+**Estado**: ACTIVE
+
+Guia compacta para convertir una idea en una especificacion ejecutable.
+
+## Paso 1: Claridad de problema
+
+Define en 5 lineas:
+- problema actual
+- usuario afectado
+- resultado esperado
+- limites del alcance
+- metricas de exito
+
+## Paso 2: Requirements
+
+Escribe requisitos con formato EARS:
+- `WHEN ... THE SYSTEM SHALL ...`
+- incluye casos felices, errores y bordes.
+
+## Paso 3: Design
+
+Documenta:
+- arquitectura propuesta
+- contratos API (request/response/errores)
+- impacto en DB (tablas, indices, migracion)
+- decisiones y tradeoffs
+
+## Paso 4: Tasks
+
+Divide en tareas pequenas con:
+- criterio de terminado
+- pruebas por tarea
+- dependencias explicitas
+
+## Entregables minimos por iniciativa
+
+- `requirements` (que)
+- `design` (como)
+- `tasks` (orden de ejecucion)
+
+## Regla de oro
+
+Si la implementacion cambia el comportamiento, actualiza la documentacion en el mismo trabajo.

@@ -1,0 +1,325 @@
+---
+title: "Patrones CRUD"
+description: "Flujos y componentes para crear, editar y eliminar registros: paginas dedicadas, AlertDialog de confirmacion y layout estandar."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## 6. Patrones de CRUD
+
+### 6.1 Crear / Editar -> Flujo por paginas (obligatorio)
+
+**REGLA**: Crear y Editar usan paginas dedicadas (`/new` y `/[id]`).  
+No usar `Dialog` como patron principal de CRUD.
+
+```tsx
+// Listado -> alta
+<Link href={`${routeBase}/new`}>
+  <Button>
+    <Plus className="mr-2 h-4 w-4" />
+    Nuevo elemento
+  </Button>
+</Link>
+
+// Listado -> edicion
+<Link href={`${routeBase}/${itemId}`}>
+  <Button variant="ghost" size="icon" className="h-8 w-8">
+    <Pencil className="h-3.5 w-3.5" />
+  </Button>
+</Link>
+```
+
+**Comportamiento esperado del flujo por paginas:**
+- Crear (`/new`): submit -> POST -> `toast.success` -> redirect al listado.
+- Editar (`/[id]`): submit -> PUT/PATCH -> `toast.success` -> redirect al listado.
+- Mantener `PageHeader`, boton "Volver" y estado loading del submit.
+
+---
+
+### 6.2 Eliminar / Desactivar -> Confirmacion (AlertDialog)
+
+**REGLA**: Eliminar y desactivar SIEMPRE usan `AlertDialog` con confirmacion obligatoria.
+
+```tsx
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
+<AlertDialog open={open} onOpenChange={setOpen}>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogMedia className="bg-destructive/10">
+        <AlertTriangle className="h-5 w-5 text-destructive" />
+      </AlertDialogMedia>
+      <AlertDialogTitle>Desactivar registro?</AlertDialogTitle>
+      <AlertDialogDescription>
+        Estas a punto de desactivar <strong className="text-foreground">"Nombre"</strong>.
+        Este registro no se eliminara permanentemente, pero dejara de estar disponible.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel disabled={loading}>Cancelar</AlertDialogCancel>
+      <AlertDialogAction variant="destructive" onClick={handleConfirm} disabled={loading}>
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Procesando...
+          </>
+        ) : (
+          "Desactivar"
+        )}
+      </AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+**Tamanos de AlertDialog:**
+- `size="default"` -> `sm:max-w-lg` (eliminacion con contexto)
+- `size="sm"` -> `max-w-xs` (confirmacion rapida)
+
+---
+
+### 6.3 Flujo Completo de CRUD
+
+```
+[Pagina de Listado]
+  |
+  |-- Boton "Crear nuevo" (esquina superior derecha)
+  |     -> Navega a /new (pagina de formulario)
+  |     -> onSubmit: POST -> toast.success -> redirect al listado
+  |
+  |-- Boton "Editar" (en cada fila / card)
+  |     -> Navega a /[id] (pagina de formulario prellenado)
+  |     -> onSubmit: PUT/PATCH -> toast.success -> redirect al listado
+  |
+  |-- Boton "Eliminar/Desactivar" (en cada fila / card)
+  |     -> Abre AlertDialog de confirmacion
+  |     -> onConfirm: DELETE -> toast.success -> recarga lista
+```
+
+---
+
+### 6.4 Layout de Pagina CRUD
+
+```tsx
+<div className="space-y-5">
+  {/* Header */}
+  <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <div>
+      <h1 className="text-2xl font-bold text-foreground">Titulo</h1>
+      <p className="mt-1 text-sm text-muted-foreground">Descripcion</p>
+    </div>
+    <Link href={`${routeBase}/new`} className="shrink-0">
+      <Button>
+        <Plus className="mr-2 h-4 w-4" />
+        Nuevo elemento
+      </Button>
+    </Link>
+  </div>
+
+  {/* Buscador */}
+  <div className="relative max-w-sm">
+    <Search className="absolute left-3 top-2.5 text-muted-foreground" size={18} />
+    <Input placeholder="Buscar..." className="pl-10" />
+  </div>
+
+  {/* Tabla */}
+  <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+    <Table>...</Table>
+  </div>
+
+  {/* Footer */}
+  <div className="flex items-center justify-between border-t border-border pt-4">
+    <p className="text-sm text-muted-foreground">
+      Mostrando <span className="font-medium text-foreground">{filtered}</span> de{" "}
+      <span className="font-medium text-foreground">{total}</span> registros
+    </p>
+  </div>
+</div>
+```
+
+---
+
+## 7. Componentes Compartidos
+
+### 7.1 PageHeader
+
+**Import:** `@/components/shared/page-header`
+
+```tsx
+<PageHeader
+  icon={ShieldCheck}           // Opcional: LucideIcon
+  title="Titulo de la pagina"
+  description="Descripcion corta de la seccion."
+  actions={<Button>Accion</Button>}  // Opcional: ReactNode
+/>
+```
+
+- Icono en contenedor `h-9 w-9 rounded-lg bg-primary/10 text-primary`
+- Titulo: `text-xl font-semibold tracking-tight`
+- Descripcion: `text-[13px] text-muted-foreground`
+
+---
+
+### 7.2 EmptyState
+
+**Import:** `@/components/shared/empty-state`
+
+```tsx
+<EmptyState
+  icon={Inbox}                    // Default: Inbox
+  title="Sin registros"
+  description="Ajusta tus filtros o agrega un nuevo elemento."
+  action={<Button size="sm">Crear</Button>}  // Opcional
+/>
+```
+
+- Envuelto en `Card` con `border-dashed`
+- Icono en circulo `h-12 w-12 rounded-full bg-muted`
+- Centrado: `flex-col items-center justify-center px-6 py-12 text-center`
+
+---
+
+### 7.3 LoadingSkeleton
+
+**Import:** `@/components/shared/loading-skeleton`
+
+```tsx
+<LoadingSkeleton rows={5} />
+```
+
+- Simula toolbar + tabla con Skeleton pulses
+- Envuelto en Card
+
+---
+
+### 7.4 StatusBadge
+
+**Import:** `@/components/shared/status-badge`
+
+```tsx
+<StatusBadge active={true} />  // -> Badge variant="success" "Activo"
+<StatusBadge active={false} /> // -> Badge variant="destructive" "Inactivo"
+```
+
+---
+
+### 7.5 DataTable
+
+**Import:** `@/components/shared/data-table`
+
+Tabla completa con busqueda integrada, basada en TanStack Table.
+
+```tsx
+<DataTable
+  columns={[
+    { key: "name", title: "Nombre", render: (item) => item.name, searchableValue: (item) => item.name },
+    { key: "status", title: "Estado", render: (item) => <StatusBadge active={item.active} /> },
+  ]}
+  rows={items}
+  searchPlaceholder="Buscar miembros..."
+  emptyTitle="Sin miembros"
+  emptyDescription="No hay miembros registrados aun."
+/>
+```
+
+---
+
+### 7.6 DataTablePagination
+
+**Import:** `@/components/shared/data-table-pagination`
+
+```tsx
+<DataTablePagination page={1} totalPages={5} onPageChange={setPage} />
+```
+
+---
+
+### 7.7 ConfirmDialog
+
+**Import:** `@/components/shared/confirm-dialog`
+
+Wrapper reutilizable de AlertDialog para acciones destructivas.
+
+```tsx
+<ConfirmDialog
+  title="Desactivar usuario?"
+  description="El usuario dejara de tener acceso al sistema."
+  triggerLabel="Desactivar"
+  confirmLabel="Si, desactivar"
+  onConfirm={async () => { await deleteUser(id); }}
+  triggerVariant="destructive"
+/>
+```
+
+---
+
+### 7.8 CatalogFormPage
+
+**Import:** `@/components/catalogs/catalog-form-page`
+
+Componente de pagina para formularios CRUD de catalogos.  
+Exponer `CatalogNewPage` y `CatalogEditPage` como patron oficial para `/new` y `/[id]`.
+
+---
+
+### 7.9 CatalogDeleteDialog
+
+**Import:** `@/components/catalogs/catalog-delete-dialog`
+
+AlertDialog generico para desactivacion de registros de catalogo.
+
+---
+
+### 7.10 AppToaster
+
+**Import:** `@/components/shared/app-toaster`
+
+- Provider global de Sonner
+- Posicion: `top-right`
+- `richColors` habilitado
+- `closeButton` habilitado
+
+**Uso de toasts:**
+```tsx
+import { toast } from "sonner";
+
+toast.success("Registro creado correctamente");
+toast.error("Error al guardar el registro");
+toast.warning("El registro ya existe");
+```
+
+---
+
+## Checklist para Nuevas Interfaces
+
+Antes de entregar cualquier nueva pantalla o componente, verificar:
+
+- [ ] Solo usa componentes de `@/components/ui/*` (nunca HTML nativo para inputs, botones, tablas)
+- [ ] Excepciones de HTML nativo documentadas (ej. `input hidden`, integraciones sin wrapper)
+- [ ] Colores usan tokens semanticos por defecto (hardcoded solo por solicitud visual explicita)
+- [ ] Funciona correctamente en dark mode
+- [ ] Formularios de crear/editar usan flujo por paginas (`/new`, `/[id]`)
+- [ ] Eliminaciones usan `AlertDialog` con confirmacion
+- [ ] Iconos son de `lucide-react` con tamanos estandar
+- [ ] Textos en espanol por defecto y listos para i18n
+- [ ] Loading states implementados (Skeleton o Loader2)
+- [ ] Empty states implementados (EmptyState component)
+- [ ] Errores mostrados con estilo destructive
+- [ ] Toasts para feedback de acciones
+- [ ] Responsive (mobile cards + desktop tabla si aplica)
+- [ ] Hover/focus states presentes en elementos interactivos
+- [ ] `PageHeader` usado como encabezado de pagina
+- [ ] Footer con conteo de registros si es listado
+- [ ] Acciones en tabla con Tooltip (1-2 acciones) o DropdownMenu (3+)
+- [ ] No hay imports sin usar
+- [ ] `pnpm build` compila sin errores

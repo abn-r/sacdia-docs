@@ -1,0 +1,139 @@
+---
+title: "Formularios"
+description: "Estructura de campos, validacion con Zod y React Hook Form, tipos de input y manejo de errores en el panel administrativo."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## 11. Formularios
+
+### 11.1 Estructura de Campo
+
+```tsx
+<div className="space-y-2">
+  <Label htmlFor="fieldName">
+    Nombre del campo
+    {required && <span className="ml-0.5 text-destructive">*</span>}
+  </Label>
+  <Input
+    id="fieldName"
+    name="fieldName"
+    placeholder="Escribe aqui..."
+    required
+  />
+</div>
+```
+
+---
+
+### 11.2 Validacion
+
+- **Client-side**: Zod schemas con React Hook Form
+- **Server-side**: Server actions con validacion Zod
+- **Errores inline**: `text-destructive` debajo del campo
+- **Error general**: Banner con borde destructive
+
+```tsx
+{error && (
+  <p className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive animate-in fade-in slide-in-from-top-1">
+    {error}
+  </p>
+)}
+```
+
+---
+
+### 11.3 Tipos de Campo
+
+| Tipo | Componente | Notas |
+|------|-----------|-------|
+| Texto | `Input type="text"` | - |
+| Email | `Input type="email"` | - |
+| Password | `Input type="password"` | Con icono `Lock` a la izquierda |
+| Numero | `Input type="number"` | - |
+| Fecha | `Input type="date"` | Formato `yyyy-MM-dd` |
+| Texto largo | `Textarea` | `rows={3}` minimo |
+| Booleano | `Switch` | Con label inline a la derecha |
+| Seleccion | `Select` | Con opciones `<option>` |
+| Checkbox | `Checkbox` | Para aceptaciones o multi-select |
+
+---
+
+### 11.4 Formularios en Modales (solo excepciones)
+
+Los formularios CRUD van siempre en paginas dedicadas. Los formularios en modal son solo para casos excepcionales no-CRUD principal.
+
+- Espaciado entre campos: `space-y-4`
+- Padding del form: `py-2`
+- Footer: `DialogFooter className="gap-2 pt-2"`
+- Boton cancelar: `variant="outline"`
+- Boton submit: `variant="default"` (primario)
+- Estado loading: texto del boton cambia + `disabled`
+
+---
+
+### Ejemplo completo con React Hook Form + Zod
+
+```tsx
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const schema = z.object({
+  nombre: z.string().min(1, "El nombre es requerido"),
+  email: z.string().email("Email invalido"),
+  activo: z.boolean().default(true),
+});
+
+type FormData = z.infer<typeof schema>;
+
+export function MiFormulario() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
+
+  async function onSubmit(data: FormData) {
+    // POST / PUT al backend
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="nombre">
+          Nombre <span className="ml-0.5 text-destructive">*</span>
+        </Label>
+        <Input id="nombre" {...register("nombre")} placeholder="Ingresa el nombre" />
+        {errors.nombre && (
+          <p className="text-sm text-destructive">{errors.nombre.message}</p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input id="email" type="email" {...register("email")} />
+        {errors.email && (
+          <p className="text-sm text-destructive">{errors.email.message}</p>
+        )}
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Switch id="activo" {...register("activo")} />
+        <Label htmlFor="activo">Activo</Label>
+      </div>
+
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Guardando...
+          </>
+        ) : (
+          "Guardar"
+        )}
+      </Button>
+    </form>
+  );
+}
+```

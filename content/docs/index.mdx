@@ -1,16 +1,54 @@
 ---
-title: Bienvenido a SACDIA
-description: Documentación oficial del Sistema de Administración de Clubes JA
-author: Abner Reyes
+title: "Documentación SACDIA"
+description: "Sistema de Administración de Clubes de Conquistadores, Aventureros y Guías Mayores del Ministerio Juvenil Adventista"
+author: "Abner Reyes"
 version: "1.0.0"
 ---
 
-## ¿Qué es SACDIA?
+SACDIA es el sistema institucional de trazabilidad para los clubes del Ministerio Juvenil Adventista. Registra, preserva y opera la trayectoria de miembros dentro de los programas de Conquistadores, Aventureros y Guías Mayores.
 
-SACDIA es el Sistema de Administración de Clubes de Conquistadores, Aventureros y Guías Mayores. Permite gestionar clubes, miembros, actividades, finanzas e inventario de manera centralizada.
+## Qué es SACDIA
 
-## Secciones
+SACDIA no es solo un panel administrativo ni una app. Es un sistema institucional que organiza la relación entre miembros, clubes, secciones, procesos formativos, validaciones y niveles de autoridad a lo largo del tiempo.
 
-- **Primeros Pasos** — Guía rápida para comenzar a usar SACDIA
-- **Funcionalidades** — Descripción detallada de cada módulo
-- **Guías** — Tutoriales paso a paso para tareas comunes
+La unidad de valor principal es la **trayectoria institucional del miembro**. Todo lo demás — secciones, procesos, validaciones, reportes y vistas operativas — existe para sostener, interpretar o proyectar esa trayectoria.
+
+## Componentes del sistema
+
+SACDIA se compone de tres aplicaciones que cooperan sobre una base común:
+
+- **sacdia-backend** — API REST en NestJS con la lógica de negocio, seguridad y contratos operativos
+- **sacdia-admin** — Panel web en Next.js para gestión, supervisión y operación administrativa
+- **sacdia-app** — App móvil en Flutter para interacción contextual y uso cotidiano
+
+## Secciones de esta documentación
+
+### Fundamentos
+
+El lenguaje del sistema, sus conceptos centrales y las decisiones estructurales que lo gobiernan. Punto de partida obligatorio para entender cualquier parte del sistema.
+
+[Ver Fundamentos](/docs/fundamentos)
+
+### Autorización
+
+El modelo de autorización contextual de SACDIA: cómo se combinan roles, permisos, scope territorial y asignaciones de club para resolver qué puede hacer cada actor.
+
+[Ver Autorización](/docs/autorizacion)
+
+### Funcionalidades
+
+Descripción detallada de cada módulo: miembros, clubes, clases, honores, actividades, finanzas e inventario.
+
+[Ver Funcionalidades](/docs/funcionalidades)
+
+### Sistema de Diseño
+
+Componentes, tokens, patrones y convenciones visuales del panel administrativo.
+
+[Ver Sistema de Diseño](/docs/sistema-de-diseno)
+
+### Guías
+
+Tutoriales paso a paso para tareas operativas concretas.
+
+[Ver Guías](/docs/guias)

@@ -1,0 +1,44 @@
+---
+title: "Funcionalidades"
+description: "Registro de todas las funcionalidades del sistema SACDIA y su estado de implementacion."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+SACDIA cuenta con 22 funcionalidades implementadas que cubren la gestion completa de clubes de Conquistadores, Aventureros y Guias Mayores. Esta pagina registra el estado de implementacion de cada modulo a traves de las tres capas del sistema: backend (NestJS), panel admin (Next.js) y app movil (Flutter).
+
+## Resumen de funcionalidades
+
+| Dominio | Estado | Backend | Admin | App |
+|---------|--------|---------|-------|-----|
+| [Gestion de Clubs](/docs/funcionalidades/gestion-clubs) | IMPLEMENTADO | ClubsModule (14 endpoints) | 3 pages funcionales | club + members + units |
+| [Gestion de Seguros](/docs/funcionalidades/gestion-seguros) | IMPLEMENTADO | InsurancesModule (4 endpoints) | CRUD funcional | 3 screens |
+| [Actividades](/docs/funcionalidades/actividades) | IMPLEMENTADO | ActivitiesModule (7 endpoints) | UI completa (list + detail + create/edit + delete) | 4 screens + edit/delete en detalle |
+| [Actividades Conjuntas](/docs/funcionalidades/actividades-conjuntas) | IMPLEMENTADO | ActivitiesModule (`is_joint` + multi-instance) | No aplica | Joint toggle + section picker |
+| [Camporees](/docs/funcionalidades/camporees) | IMPLEMENTADO | CamporeesModule (8 endpoints) | CRUD completo + gestion de miembros | 4 screens + capa de datos completa |
+| [Aprobaciones de Camporees](/docs/funcionalidades/aprobaciones-camporees) | IMPLEMENTADO | CamporeesModule (approval endpoints) | Approval UI (pending badges, union routing, member status) | No aplica |
+| [Clases Progresivas](/docs/funcionalidades/clases-progresivas) | IMPLEMENTADO | ClassesModule (7 endpoints) | Read-only | 6 screens |
+| [Honores](/docs/funcionalidades/honores) | IMPLEMENTADO | HonorsModule (16 endpoints, incluye requirements + progress) | CRUD funcional | 4 screens + checklist de requisitos por honor |
+| [Certificaciones de Guias Mayores](/docs/funcionalidades/certificaciones-guias-mayores) | IMPLEMENTADO | CertificationsModule (7 endpoints) | list + detail + progress | 4 screens |
+| [Carpetas de Evidencias](/docs/funcionalidades/carpetas-evidencias) | IMPLEMENTADO | FoldersModule (7 endpoints) | Read-only | 2 screens |
+| [Validacion de Evidencias](/docs/funcionalidades/validacion-evidencias) | IMPLEMENTADO | EvidenceReviewModule (7 endpoints) | Dedicated review page + gallery + bulk ops | No aplica |
+| [Validacion de Investiduras](/docs/funcionalidades/validacion-investiduras) | IMPLEMENTADO | InvestitureModule (5 endpoints) | table + dialogs + history | 3 screens |
+| [Aprobaciones Masivas](/docs/funcionalidades/aprobaciones-masivas) | IMPLEMENTADO | InvestitureModule (+2 bulk endpoints) | Bulk action bar + checkboxes (hasta 200) | No aplica |
+| [Calificacion de Carpetas Anuales](/docs/funcionalidades/annual-folders-scoring) | IMPLEMENTADO | EvaluationModule + AwardCategoriesModule + RankingsModule (11 endpoints) | Evaluacion + Rankings + CRUD categorias | Solo lectura |
+| [Finanzas](/docs/funcionalidades/finanzas) | IMPLEMENTADO | FinancesModule (7 endpoints) | Dashboard completo (resumen + tabla + filtros + CRUD) | 3 screens + eliminacion con AlertDialog |
+| [Inventario](/docs/funcionalidades/inventario) | IMPLEMENTADO | InventoryModule (6 endpoints) | CRUD funcional | 4 screens |
+| [Catalogos](/docs/funcionalidades/catalogos) | IMPLEMENTADO | CatalogsModule + AdminModule (55 endpoints). Redis cache-aside: 14 catalogos TTL 1h, ano eclesiastico 24h. Auto-invalidacion en mutaciones. | 13 pages funcionales | Shared catalogs |
+| [RBAC](/docs/funcionalidades/rbac) | IMPLEMENTADO | RbacModule (10 endpoints) | 3 pages funcionales | No aplica |
+| [SLA Dashboard](/docs/funcionalidades/sla-dashboard) | IMPLEMENTADO | AnalyticsModule (1 endpoint) | Dashboard con metricas operacionales | No aplica |
+| [Recursos](/docs/funcionalidades/recursos) | IMPLEMENTADO | ResourcesModule (14 endpoints) | Categorias CRUD + Recursos CRUD | Clean Architecture completa |
+| [Comunicaciones](/docs/funcionalidades/comunicaciones) | IMPLEMENTADO | NotificationsModule (7 endpoints) | 1 page funcional | FCM tokens |
+| [Autenticacion](/docs/funcionalidades) | IMPLEMENTADO | AuthModule (22 endpoints) | Login funcional | 5 screens |
+
+## Conteo por estado
+
+| Estado | Cantidad | Dominios |
+|--------|----------|----------|
+| IMPLEMENTADO | 22 | auth, gestion-clubs, clases-progresivas, honores, catalogos, communications, carpetas-evidencias, annual-folders-scoring, rbac, gestion-seguros, actividades, actividades-conjuntas, finanzas, camporees, certificaciones-guias-mayores, inventario, validacion-investiduras, aprobaciones-camporees, aprobaciones-masivas, validacion-evidencias, sla-dashboard, recursos |
+| PARCIAL | 0 | — |
+| SIN CANON | 0 | — |
+| FANTASMA | 0 | — |

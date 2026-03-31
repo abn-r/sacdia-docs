@@ -1,0 +1,104 @@
+---
+title: "Tipografia y Espaciado"
+description: "Escala tipografica, fuentes, radios de borde, grids del dashboard y breakpoints del panel administrativo."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## 3. Tipografia
+
+### 3.1 Fuentes
+
+| Variable | Stack | Uso |
+|----------|-------|-----|
+| `--font-geist-sans` | `"Inter", "SF Pro Display", -apple-system, sans-serif` | Todo el texto de la app |
+| `--font-geist-mono` | `"JetBrains Mono", "SF Mono", monospace` | Codigo, valores tabulares |
+
+### 3.2 Escala Tipografica
+
+| Elemento | Clase | Tamano | Peso | Tracking |
+|----------|-------|--------|------|----------|
+| Titulo de pagina (h1) | `text-2xl font-bold` | 1.5rem | 700 | - |
+| Titulo de pagina (h1 alternativo) | `text-xl font-semibold tracking-tight` | 1.25rem | 600 | tight |
+| Subtitulo / Card Title | `text-base font-semibold` | 1rem | 600 | - |
+| Nombre de seccion (sidebar) | `text-[10px] font-semibold uppercase tracking-widest` | 10px | 600 | widest |
+| Texto normal | `text-sm` | 0.875rem | 400 | - |
+| Texto auxiliar | `text-sm text-muted-foreground` | 0.875rem | 400 | - |
+| Descripcion corta | `text-[13px] text-muted-foreground` | 13px | 400 | - |
+| Label de formulario | `text-sm font-medium` | 0.875rem | 500 | - |
+| Label tipo tag | `text-xs font-medium uppercase tracking-wider` | 0.75rem | 500 | wider |
+| Valores numericos | `tabular-nums` | - | - | - |
+| Table header | `text-xs font-medium uppercase tracking-wider text-muted-foreground` | 0.75rem | 500 | wider |
+| Badge | `text-xs font-medium` | 0.75rem | 500 | - |
+| Micro texto | `text-[11px]` | 11px | - | - |
+| Footer de pagina | `text-sm text-muted-foreground` | 0.875rem | 400 | - |
+| Codigo inline | `rounded bg-muted px-1.5 py-0.5 text-xs font-mono` | 0.75rem | 400 | - |
+
+### 3.3 Reglas Tipograficas
+
+- Nunca usar `font-size` arbitrario fuera de la escala definida
+- Titulos principales: `font-bold` (700) o `font-semibold` (600)
+- Nunca usar `font-light` o `font-thin`
+- Valores numericos: siempre `tabular-nums` para alineacion consistente
+- Texto truncado: `truncate` con `max-w-*` definido
+
+---
+
+## 4. Espaciado y Layout
+
+### 4.1 Radios de Borde
+
+| Token | Valor | Uso |
+|-------|-------|-----|
+| `--radius` | `0.5rem` (8px) | Base |
+| `--radius-sm` | `calc(var(--radius) - 4px)` = 4px | Checkboxes, badges pequenos |
+| `--radius-md` | `calc(var(--radius) - 2px)` = 6px | Inputs, buttons |
+| `--radius-lg` | `var(--radius)` = 8px | Cards, dialogs |
+| `--radius-xl` | `calc(var(--radius) + 4px)` = 12px | Cards grandes, login |
+| `--radius-2xl` | `calc(var(--radius) + 8px)` = 16px | Elementos especiales |
+
+**Clases principales:**
+- `rounded-md` -> Inputs, buttons, selects (6px)
+- `rounded-lg` -> Sidebar items, icons containers (8px)
+- `rounded-xl` -> Cards, modals, containers principales (12px)
+- `rounded-full` -> Avatars, dots, badges circulares
+
+### 4.2 Grid del Dashboard
+
+```
+Layout principal:
+  Sidebar (w-64, sticky top-0, h-screen) | Contenido (flex-1)
+
+Contenido:
+  Header (h-16, sticky top-0, border-b)
+  Main (padding: p-4 md:p-6)
+
+Spacing vertical entre secciones:
+  space-y-6   -> Espaciado principal entre secciones de pagina
+  space-y-5   -> Dentro de cards o secciones menores
+  space-y-4   -> Formularios, listas de items
+  space-y-3   -> Elementos compactos
+
+Spacing de padding en Cards:
+  p-5         -> CardContent estandar
+  p-4         -> CardFooter, secciones compactas
+  p-7         -> Formularios de login (especial)
+```
+
+### 4.3 Grids de Tarjetas
+
+| Contexto | Clase |
+|----------|-------|
+| KPIs / Estadisticas (4 cols) | `grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4` |
+| Tarjetas de contenido (3 cols) | `grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3` |
+| Metricas simples (3 cols) | `grid grid-cols-1 gap-3 sm:grid-cols-3` |
+| Grafico + Sidebar | `grid grid-cols-1 gap-6 lg:grid-cols-3` con `col-span-2` en grafico |
+
+### 4.4 Breakpoints
+
+| Breakpoint | Pixel | Uso |
+|------------|-------|-----|
+| `sm` | 640px | Grids 2-col, elementos responsive |
+| `md` | 768px | Sidebar visible, tabla desktop, padding mayor |
+| `lg` | 1024px | Grids de graficos |
+| `xl` | 1280px | Grids de 3-4 columnas |

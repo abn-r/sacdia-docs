@@ -1,0 +1,640 @@
+---
+title: "Componentes UI"
+description: "Catalogo completo de componentes shadcn/Radix con variantes, tamanos y ejemplos de uso para el panel administrativo."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+Todos los componentes se importan desde `@/components/ui/*`. No usar HTML nativo para elementos interactivos visibles.
+
+---
+
+## 5. Componentes UI (shadcn/Radix)
+
+### 5.1 Button
+
+**Import:** `@/components/ui/button`
+
+| Variante | Uso | Clase |
+|----------|-----|-------|
+| `default` | Acciones primarias (Crear, Guardar) | `bg-primary text-primary-foreground` |
+| `destructive` | Eliminar, desactivar | `bg-destructive text-white` |
+| `outline` | Acciones secundarias, filtros, cancelar | `border bg-background` |
+| `secondary` | Alternativa neutra | `bg-secondary text-secondary-foreground` |
+| `ghost` | Iconos, acciones sutiles en tablas | `hover:bg-accent` |
+| `link` | Links en texto, "Ver todos" | `text-primary underline-offset-4` |
+| `success` | Confirmaciones positivas | `bg-success text-success-foreground` |
+
+| Tamano | Uso | Valor |
+|--------|-----|-------|
+| `default` | Botones de accion principal | `h-9 px-4` |
+| `xs` | Botones micro en badges | `h-6 px-2 text-xs` |
+| `sm` | Botones en tablas, footers | `h-8 px-3` |
+| `lg` | Botones de login, CTAs grandes | `h-10 px-6` |
+| `icon` | Solo icono (header, acciones) | `size-9` |
+| `icon-xs` | Icono micro | `size-6` |
+| `icon-sm` | Icono en dropdown triggers | `size-8` |
+| `icon-lg` | Icono grande (hero, acciones destacadas) | `size-10` |
+
+**Patron de boton con icono:**
+```tsx
+<Button>
+  <Plus size={16} />
+  Crear nuevo
+</Button>
+```
+
+---
+
+### 5.2 Badge
+
+**Import:** `@/components/ui/badge`
+
+| Variante | Uso | Estilo |
+|----------|-----|--------|
+| `default` | Tags genericos, conteos | `bg-primary/10 text-primary border-primary/20` |
+| `secondary` | Labels neutros | `bg-secondary text-secondary-foreground` |
+| `success` | Estado activo | `bg-success/10 text-success border-success/20` |
+| `destructive` | Estado error/inactivo | `bg-destructive/10 text-destructive` |
+| `warning` | Estado pendiente | `bg-warning/10 text-warning-foreground` |
+| `outline` | Etiquetas sutiles | `bg-transparent text-foreground border-border` |
+
+**Patron de uso:**
+```tsx
+<Badge variant="success">Activo</Badge>
+<Badge variant="warning">Pendiente</Badge>
+<Badge variant="destructive">Inactivo</Badge>
+```
+
+---
+
+### 5.3 Card
+
+**Import:** `@/components/ui/card`
+
+Estructura base: `Card > CardHeader > CardTitle + CardDescription > CardContent > CardFooter`
+
+```tsx
+// Card estandar
+<Card>
+  <CardHeader>
+    <CardTitle>Titulo</CardTitle>
+    <CardDescription>Descripcion</CardDescription>
+  </CardHeader>
+  <CardContent>
+    {/* Contenido */}
+  </CardContent>
+</Card>
+
+// Card de estadistica (sin CardHeader)
+<Card className="group transition-all hover:border-primary/20">
+  <CardContent className="p-5">
+    {/* KPI con icono */}
+  </CardContent>
+</Card>
+
+// Card con acciones en footer
+<Card>
+  <CardContent className="p-5">{/* ... */}</CardContent>
+  <Separator />
+  <CardFooter className="gap-3 p-4">
+    <Button variant="outline" size="sm" className="flex-1">Editar</Button>
+    <Button variant="secondary" size="sm" className="flex-1">Permisos</Button>
+  </CardFooter>
+</Card>
+```
+
+**Clases base de Card:** `rounded-xl border bg-card text-card-foreground shadow-sm`
+
+---
+
+### 5.4 Table
+
+**Import:** `@/components/ui/table`
+
+```tsx
+<div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+  <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead>Nombre</TableHead>
+        <TableHead>Estado</TableHead>
+        <TableHead className="text-right">Acciones</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      <TableRow>
+        <TableCell>
+          <div className="flex items-center gap-3">
+            <Avatar className="h-8 w-8">
+              <AvatarFallback>CM</AvatarFallback>
+            </Avatar>
+            <span className="font-medium">Carlos Mendoza</span>
+          </div>
+        </TableCell>
+        <TableCell>
+          <Badge variant="success">Activo</Badge>
+        </TableCell>
+        <TableCell>
+          <div className="flex justify-end gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon" variant="ghost" className="h-8 w-8">
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Editar</TooltipContent>
+            </Tooltip>
+          </div>
+        </TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
+</div>
+```
+
+**Estilos de cabecera:** `h-9 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground`  
+**Estilos de celda:** `px-3 py-2.5 align-middle`  
+**Hover en filas:** `hover:bg-muted/30`
+
+---
+
+### 5.5 Input
+
+**Import:** `@/components/ui/input`
+
+- Altura: `h-9`
+- Border radius: `rounded-md`
+- Focus: `ring-2 ring-ring ring-offset-1`
+- Con icono a la izquierda:
+
+```tsx
+<div className="relative">
+  <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+  <Input placeholder="Buscar..." className="pl-8" />
+</div>
+```
+
+---
+
+### 5.6 Select
+
+**Import:** `@/components/ui/select`
+
+- Mismo estilo que Input (`h-9`, `rounded-md`)
+- Incluye `ChevronDown` automatico
+- `appearance-none` para ocultar el select nativo
+
+---
+
+### 5.7 Textarea
+
+**Import:** `@/components/ui/textarea`
+
+- `min-h-[100px]`
+- Mismo border/focus que Input
+
+---
+
+### 5.8 Label
+
+**Import:** `@/components/ui/label`
+
+- Clase: `text-sm font-medium`
+- Campos requeridos: agregar `<span className="ml-0.5 text-destructive">*</span>`
+
+---
+
+### 5.9 Avatar
+
+**Import:** `@/components/ui/avatar`
+
+| Tamano | Clase | Pixel |
+|--------|-------|-------|
+| `sm` | `size-6` | 24px |
+| `default` | `size-8` | 32px |
+| `lg` | `size-10` | 40px |
+
+```tsx
+<Avatar>
+  <AvatarImage src="..." alt="..." />
+  <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
+    CM
+  </AvatarFallback>
+</Avatar>
+```
+
+**AvatarGroup** para multiples avatars superpuestos:
+```tsx
+<AvatarGroup>
+  <Avatar><AvatarFallback>A</AvatarFallback></Avatar>
+  <Avatar><AvatarFallback>B</AvatarFallback></Avatar>
+  <AvatarGroupCount>+5</AvatarGroupCount>
+</AvatarGroup>
+```
+
+---
+
+### 5.10 Checkbox
+
+**Import:** `@/components/ui/checkbox`
+
+- `size-4` (16px)
+- `rounded-[4px]`
+- Checked: `bg-primary text-primary-foreground`
+
+---
+
+### 5.11 Switch
+
+**Import:** `@/components/ui/switch`
+
+| Tamano | Track | Thumb |
+|--------|-------|-------|
+| `default` | `h-5 w-9` | `size-4` |
+| `sm` | `h-4 w-7` | `size-3` |
+
+---
+
+### 5.12 Skeleton
+
+**Import:** `@/components/ui/skeleton`
+
+- Clase: `animate-pulse rounded-md bg-muted`
+- Usar en loading states con dimensiones que simulen el contenido real
+
+---
+
+### 5.13 Separator
+
+**Import:** `@/components/ui/separator`
+
+- Horizontal (default): `h-px w-full bg-border`
+- Vertical: `className="mx-1.5 h-6 w-px"` (no soporta prop `orientation`)
+
+---
+
+### 5.14 Tooltip
+
+**Import:** `@/components/ui/tooltip`
+
+```tsx
+<Tooltip>
+  <TooltipTrigger asChild>
+    <Button size="icon" variant="ghost">
+      <Pencil className="h-3.5 w-3.5" />
+    </Button>
+  </TooltipTrigger>
+  <TooltipContent>Editar</TooltipContent>
+</Tooltip>
+```
+
+- Provider global en `layout.tsx` con `delayDuration={300}`
+- Estilo: fondo oscuro invertido (`bg-foreground text-background`)
+
+---
+
+### 5.15 DropdownMenu
+
+**Import:** `@/components/ui/dropdown-menu`
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="ghost" size="icon-sm">
+      <MoreHorizontal size={16} />
+    </Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent align="end">
+    <DropdownMenuItem>
+      <Pencil className="h-4 w-4" />
+      Editar
+    </DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem variant="destructive">
+      <Trash className="h-4 w-4" />
+      Eliminar
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+---
+
+### 5.16 Collapsible
+
+**Import:** `@/components/ui/collapsible`
+
+- Usado en sidebar para submenus
+- Transicion de `ChevronDown` con `rotate-180` cuando esta abierto
+
+---
+
+### 5.17 Sheet (Panel lateral)
+
+**Import:** `@/components/ui/sheet`
+
+- Usado para mobile sidebar
+- Soporta `side`: `top | right | bottom | left`
+- Default: `right`, ancho `w-3/4 sm:max-w-sm`
+
+---
+
+## 8. Iconos
+
+### 8.1 Libreria
+
+Todos los iconos provienen de `lucide-react`. No usar ninguna otra libreria de iconos.
+
+### 8.2 Tamanos Estandar
+
+| Contexto | Tamano | Clase |
+|----------|--------|-------|
+| Sidebar nav | 18x18 | `h-[18px] w-[18px]` |
+| Sidebar submenu | 14x14 | `h-3.5 w-3.5` |
+| Header actions | 18px | `size={18}` |
+| Botones con texto | 16px | `size={16}` |
+| Tabla acciones | 14x14 | `h-3.5 w-3.5` |
+| KPI cards | 18px | `size={18}` |
+| Indicadores inline | 14px | `size={14}` |
+| Hero / Login | 32x32 | `h-8 w-8` |
+
+### 8.3 Contenedores de Iconos
+
+```tsx
+// Contenedor cuadrado (KPI, feature cards)
+<div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+  <Icon size={18} className="text-primary" />
+</div>
+
+// Contenedor circular (empty states, avatars)
+<div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+  <Icon className="h-5 w-5 text-muted-foreground" />
+</div>
+
+// Contenedor circular pequeno (pasos, timeline)
+<div className="flex h-9 w-9 items-center justify-center rounded-full border bg-card text-muted-foreground">
+  <Icon className="h-4 w-4" />
+</div>
+```
+
+### 8.4 Iconos por Contexto
+
+| Accion | Icono | Import |
+|--------|-------|--------|
+| Crear/Agregar | `Plus` | `lucide-react` |
+| Editar | `Pencil` | `lucide-react` |
+| Eliminar/Desactivar | `Ban` o `Trash2` | `lucide-react` |
+| Buscar | `Search` | `lucide-react` |
+| Menu de acciones | `MoreHorizontal` | `lucide-react` |
+| Cerrar | `X` | `lucide-react` |
+| Cargando | `Loader2` con `animate-spin` | `lucide-react` |
+| Alerta/Error | `AlertTriangle` o `AlertCircle` | `lucide-react` |
+| Exito | `Check` o `CheckCircle` | `lucide-react` |
+| Expandir | `ChevronDown` con rotacion | `lucide-react` |
+| Link externo | `ArrowUpRight` | `lucide-react` |
+| Tendencia positiva | `TrendingUp` | `lucide-react` |
+| Tendencia negativa | `TrendingDown` | `lucide-react` |
+
+---
+
+## 9. Animaciones y Transiciones
+
+### 9.1 Micro-interacciones
+
+| Elemento | Propiedad | Valor |
+|----------|-----------|-------|
+| Cards hover | border + shadow | `transition-all hover:border-primary/20 hover:shadow-md` |
+| Card title hover | color | `transition-colors group-hover:text-primary` |
+| Botones | todos | `transition-all` (incluido en buttonVariants) |
+| Nav items | background + color | `transition-colors` |
+| Filas de tabla | background | `transition-colors hover:bg-muted/30` |
+| Chevron submenu | rotacion | `transition-transform duration-200` |
+| Inputs focus | ring | `transition-colors` |
+
+### 9.2 Animaciones de Entrada (tw-animate-css)
+
+```tsx
+// Filas de tabla con stagger
+<TableRow
+  className="animate-in fade-in slide-in-from-bottom-2 duration-300"
+  style={{ animationDelay: `${index * 50}ms`, animationFillMode: "backwards" }}
+/>
+
+// Elementos que aparecen
+className="animate-in fade-in duration-300"
+
+// Error messages
+className="animate-in fade-in slide-in-from-top-1"
+```
+
+### 9.3 Animaciones de Modales
+
+Los componentes Dialog y AlertDialog incluyen automaticamente:
+- `data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95`
+- `data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95`
+
+### 9.4 Animaciones Customizadas (Login)
+
+```css
+/* Orbes flotantes */
+.animate-float-slow    { animation: float-slow 20s ease-in-out infinite; }
+.animate-float-medium  { animation: float-medium 15s ease-in-out infinite; }
+.animate-float-fast    { animation: float-fast 12s ease-in-out infinite; }
+
+/* Fade up para entrada de pagina */
+.animate-fade-up { animation: fade-up 0.5s ease-out forwards; }
+```
+
+### 9.5 Loading States
+
+```tsx
+// Spinner en boton
+<Button disabled={loading}>
+  {loading ? (
+    <>
+      <Loader2 className="h-4 w-4 animate-spin" />
+      Procesando...
+    </>
+  ) : (
+    "Guardar"
+  )}
+</Button>
+
+// Spinner centrado en pagina
+<div className="flex items-center justify-center py-20">
+  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+</div>
+
+// Skeleton loading
+<LoadingSkeleton rows={5} />
+```
+
+---
+
+## 10. Layout y Navegacion
+
+### 10.1 Estructura del Dashboard
+
+```
++-------------------------------------------------------------------+
+| Sidebar (w-64)  |  Header (h-16, sticky)                         |
+| - Brand logo    |  [Mobile menu] [Breadcrumbs] ... [Search]      |
+| - Nav groups    |  [Theme] [Notifications] [User]                |
+| - Separators    |                                                 |
+|                 +------------------------------------------------+
+|                 |  Main content (p-4 md:p-6)                     |
+|                 |  - PageHeader                                  |
+|                 |  - Content area (space-y-6)                    |
+|                 |  - Footer                                      |
++-------------------------------------------------------------------+
+```
+
+### 10.2 Sidebar
+
+- Ancho fijo: `w-64`
+- Oculto en mobile (`hidden md:block`)
+- Mobile: usa `Sheet` (panel lateral)
+- Brand: icono `h-8 w-8 rounded-lg` + nombre `text-lg font-bold`
+- Grupos separados por `Separator` y labels `text-[10px] uppercase`
+- Items activos: `bg-sidebar-accent text-sidebar-accent-foreground`
+- Items hover: `hover:bg-sidebar-accent/50`
+- Submenus: `Collapsible` con borde izquierdo `border-l border-sidebar-border`
+- Scrollbar custom: `custom-scrollbar`
+
+### 10.3 Header
+
+- Altura: `h-16`
+- Sticky: `sticky top-0 z-30`
+- Background: `bg-card/80 backdrop-blur-sm`
+- Border: `border-b border-border`
+- Contenido: Breadcrumbs (izquierda) | Acciones (derecha)
+- Acciones: Buscador | Separator | ThemeToggle | Notificaciones | Separator | UserNav
+- Buscador: visible solo en `md:`
+- Separadores verticales: `Separator className="mx-1.5 h-6 w-px"`
+
+### 10.4 Breadcrumbs
+
+- Formato: `Dashboard / Seccion / Subseccion`
+- Separador: `/`
+- Link activo: `text-foreground font-medium`
+- Links anteriores: `text-muted-foreground hover:text-foreground`
+
+---
+
+## 15. Toasts y Notificaciones
+
+### 15.1 Posicion y Config
+
+- Posicion: `top-right`
+- Rich colors: habilitado
+- Close button: habilitado
+
+### 15.2 Patrones de Uso
+
+```tsx
+// Exito despues de crear
+toast.success(`${entityName} creado correctamente`);
+
+// Exito despues de editar
+toast.success(`${entityName} actualizado correctamente`);
+
+// Exito despues de eliminar
+toast.success(`${entityName} desactivado correctamente`);
+
+// Error
+toast.error("Error al guardar el registro");
+toast.error(state.error); // De server action
+```
+
+---
+
+## 16. Scrollbar Personalizado
+
+```css
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.3);
+}
+```
+
+Aplicar con `className="custom-scrollbar"` en contenedores con scroll.
+
+---
+
+## 17. Acciones en Tablas
+
+### 17.1 Patron con Tooltip + Icono
+
+```tsx
+<div className="flex justify-end gap-1">
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => handleEdit(item)}>
+        <Pencil className="h-3.5 w-3.5" />
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>Editar</TooltipContent>
+  </Tooltip>
+
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => handleDelete(item)}>
+        <Ban className="h-3.5 w-3.5" />
+      </Button>
+    </TooltipTrigger>
+    <TooltipContent>Desactivar</TooltipContent>
+  </Tooltip>
+</div>
+```
+
+### 17.2 Patron con DropdownMenu (mas de 2 acciones)
+
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="ghost" size="icon-sm">
+      <MoreHorizontal size={16} />
+    </Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent align="end">
+    <DropdownMenuItem onClick={() => handleEdit(item)}>
+      <Pencil className="h-4 w-4" />
+      Editar
+    </DropdownMenuItem>
+    <DropdownMenuItem onClick={() => handleView(item)}>
+      <Eye className="h-4 w-4" />
+      Ver detalle
+    </DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem variant="destructive" onClick={() => handleDelete(item)}>
+      <Trash2 className="h-4 w-4" />
+      Eliminar
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+**Regla**: Usar Tooltip+iconos cuando hay 1-2 acciones. Usar DropdownMenu cuando hay 3+ acciones.
+
+---
+
+## 18. Idioma y Textos
+
+- **Idioma por defecto**: espanol (es-MX)
+- **Preparado para i18n**: textos de UI, `aria-label`, `title`, `sr-only`, tooltips y validaciones deben poder traducirse.
+- **Formato de numeros**: usar locale activo (`new Intl.NumberFormat(locale)`), fallback `es-MX`.
+- **Formato de fechas**: locale activo (default `es-MX`), formato principal `dd/MM/yyyy`.
+- **Textos de botones**: Verbos en infinitivo ("Crear", "Editar", "Guardar", "Cancelar")
+- **Confirmaciones**: Pregunta + descripcion ("Desactivar registro?" + contexto)
+- **Mensajes vacios**: "Sin registros" + descripcion + accion opcional
+- **Loading text**: Gerundio ("Guardando...", "Procesando...", "Verificando...")

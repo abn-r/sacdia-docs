@@ -1,0 +1,162 @@
+---
+title: "Presentacion de Datos"
+description: "Patrones para KPIs, graficos, timelines, listas descriptivas y progress bars en el panel administrativo."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## 12. Patrones de Presentacion de Datos
+
+### 12.1 Tarjetas KPI / Estadisticas
+
+```tsx
+<Card className="group transition-all hover:border-primary/20">
+  <CardContent className="p-5">
+    <div className="flex items-center justify-between">
+      <p className="text-sm font-medium text-muted-foreground">{label}</p>
+      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+        <Icon size={18} className="text-primary" />
+      </div>
+    </div>
+    <div className="mt-3">
+      <p className="text-3xl font-bold text-foreground">{value}</p>
+      <div className="mt-2 flex items-center gap-1 text-xs font-medium">
+        <TrendingUp size={14} className="text-success" />
+        <span className="text-success">+12.5%</span>
+        <span className="ml-1 text-muted-foreground">vs mes anterior</span>
+      </div>
+    </div>
+  </CardContent>
+</Card>
+```
+
+---
+
+### 12.2 Progress Bars
+
+```tsx
+<div className="h-2 rounded-full bg-muted">
+  <div
+    className="h-full rounded-full transition-all duration-500"
+    style={{ width: `${percentage}%`, backgroundColor: color }}
+  />
+</div>
+```
+
+---
+
+### 12.3 Graficos (Recharts)
+
+- Usar CSS variables para colores: `var(--chart-1)`, `var(--chart-2)`, etc.
+- `CartesianGrid`: `className="stroke-border" strokeOpacity={0.5} strokeDasharray="3 3"`
+- Ejes: `tick={{ fill: "var(--muted-foreground)", fontSize: 12 }} axisLine={false} tickLine={false}`
+- Gradientes para areas: opacity 0.3 arriba -> 0 abajo
+- Tooltip custom con `bg-card border-border shadow-xl`
+
+```tsx
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+
+<ResponsiveContainer width="100%" height={300}>
+  <AreaChart data={data}>
+    <defs>
+      <linearGradient id="colorPrimary" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3} />
+        <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
+      </linearGradient>
+    </defs>
+    <CartesianGrid className="stroke-border" strokeOpacity={0.5} strokeDasharray="3 3" />
+    <XAxis
+      dataKey="mes"
+      tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+      axisLine={false}
+      tickLine={false}
+    />
+    <YAxis
+      tick={{ fill: "var(--muted-foreground)", fontSize: 12 }}
+      axisLine={false}
+      tickLine={false}
+    />
+    <Tooltip
+      contentStyle={{
+        backgroundColor: "var(--card)",
+        border: "1px solid var(--border)",
+        boxShadow: "0 20px 25px -5px rgba(0,0,0,0.1)",
+      }}
+    />
+    <Area
+      type="monotone"
+      dataKey="valor"
+      stroke="var(--chart-1)"
+      fill="url(#colorPrimary)"
+    />
+  </AreaChart>
+</ResponsiveContainer>
+```
+
+---
+
+### 12.4 Timeline / Pasos
+
+```tsx
+<div className="relative">
+  {/* Linea vertical */}
+  <div className="absolute left-[19px] top-3 h-[calc(100%-24px)] w-px bg-border" />
+  <div className="space-y-4">
+    {steps.map((step, i) => (
+      <div key={step.title} className="relative flex items-start gap-4 pl-1">
+        <div className="relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-card text-muted-foreground">
+          <Icon className="h-4 w-4" />
+        </div>
+        <div className="pt-1">
+          <Badge variant="outline" className="text-[10px]">Fase {i + 1}</Badge>
+          <p className="mt-1 text-sm font-medium">{step.title}</p>
+          <p className="text-xs text-muted-foreground">{step.description}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+```
+
+---
+
+### 12.5 Listas Descriptivas (Mobile Cards)
+
+```tsx
+<div className="rounded-xl border border-border bg-card p-4">
+  <div className="mb-2 flex items-center justify-between">
+    <Badge variant="success">Activo</Badge>
+    <div className="flex gap-1">
+      <Button size="sm" variant="ghost">Editar</Button>
+    </div>
+  </div>
+  <dl className="space-y-1.5">
+    <div className="flex items-baseline justify-between gap-2">
+      <dt className="shrink-0 text-xs text-muted-foreground">Campo</dt>
+      <dd className="truncate text-right text-sm">Valor</dd>
+    </div>
+  </dl>
+</div>
+```
+
+---
+
+### Patron dual Desktop/Mobile
+
+Para listas de datos se usa el patron dual: tabla en desktop, cards en mobile.
+
+```tsx
+{/* Vista desktop */}
+<div className="hidden overflow-x-auto rounded-xl border border-border bg-card shadow-sm md:block">
+  <Table>...</Table>
+</div>
+
+{/* Vista mobile */}
+<div className="space-y-3 md:hidden">
+  {items.map((item) => (
+    <div key={item.id} className="rounded-xl border border-border bg-card p-4">
+      ...
+    </div>
+  ))}
+</div>
+```

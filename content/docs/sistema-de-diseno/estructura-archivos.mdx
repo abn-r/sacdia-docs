@@ -1,0 +1,103 @@
+---
+title: "Estructura de Archivos"
+description: "Organizacion de carpetas, convenciones de naming y ubicacion de cada tipo de componente en el panel administrativo."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## 19. Estructura de Archivos
+
+```
+src/
+├── app/
+│   ├── (auth)/              # Rutas de autenticacion (login)
+│   │   ├── layout.tsx       # Layout con orbes animados
+│   │   └── login/page.tsx
+│   ├── dashboard/           # Rutas protegidas
+│   │   ├── layout.tsx       # Sidebar + Header + main
+│   │   ├── page.tsx         # Dashboard home
+│   │   ├── catalogs/        # Modulos CRUD de catalogos
+│   │   ├── rbac/            # Roles y permisos
+│   │   └── [modulo]/        # Cada modulo del sistema
+│   ├── layout.tsx           # Root layout (ThemeProvider, TooltipProvider, Toaster)
+│   └── globals.css          # Tokens de color, animaciones
+├── components/
+│   ├── ui/                  # Componentes base shadcn/Radix
+│   │   ├── alert-dialog.tsx
+│   │   ├── avatar.tsx
+│   │   ├── badge.tsx
+│   │   ├── breadcrumb.tsx
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── checkbox.tsx
+│   │   ├── collapsible.tsx
+│   │   ├── dialog.tsx
+│   │   ├── dropdown-menu.tsx
+│   │   ├── input.tsx
+│   │   ├── label.tsx
+│   │   ├── select.tsx
+│   │   ├── separator.tsx
+│   │   ├── sheet.tsx
+│   │   ├── skeleton.tsx
+│   │   ├── switch.tsx
+│   │   ├── table.tsx
+│   │   ├── textarea.tsx
+│   │   └── tooltip.tsx
+│   ├── shared/              # Componentes reutilizables
+│   │   ├── app-toaster.tsx
+│   │   ├── confirm-dialog.tsx
+│   │   ├── data-table.tsx
+│   │   ├── data-table-pagination.tsx
+│   │   ├── data-table-toolbar.tsx
+│   │   ├── empty-state.tsx
+│   │   ├── loading-skeleton.tsx
+│   │   ├── page-header.tsx
+│   │   └── status-badge.tsx
+│   ├── layout/              # Componentes de layout
+│   │   ├── app-sidebar.tsx
+│   │   ├── breadcrumbs.tsx
+│   │   ├── header.tsx
+│   │   ├── mobile-sidebar.tsx
+│   │   ├── nav-items.ts
+│   │   └── user-nav.tsx
+│   ├── catalogs/            # Componentes de catalogos CRUD
+│   │   ├── catalog-crud-page.tsx
+│   │   ├── catalog-form-dialog.tsx
+│   │   ├── catalog-delete-dialog.tsx
+│   │   └── ...
+│   ├── theme-provider.tsx
+│   └── theme-toggle.tsx
+└── lib/
+    ├── utils.ts             # cn() utility
+    ├── auth/                # Autenticacion JWT + Better Auth
+    ├── catalogs/            # Logica de catalogos
+    └── providers/           # React Query, etc.
+```
+
+---
+
+## Convenciones de Naming
+
+| Tipo | Convencion | Ejemplo |
+|------|-----------|---------|
+| Componentes | `kebab-case.tsx` | `page-header.tsx` |
+| Paginas | `page.tsx` (Next.js convention) | `app/dashboard/page.tsx` |
+| Layouts | `layout.tsx` (Next.js convention) | `app/dashboard/layout.tsx` |
+| Tipos/interfaces | `PascalCase` | `UserProfile`, `ClubMember` |
+| Variables y funciones | `camelCase` | `handleSubmit`, `isLoading` |
+| Constantes | `SCREAMING_SNAKE_CASE` | `MAX_FILE_SIZE` |
+| CSS custom props | `--kebab-case` | `--sidebar-accent` |
+
+---
+
+## Donde va cada componente
+
+| Si es... | Va en... |
+|----------|----------|
+| Componente shadcn/Radix instalado | `components/ui/` |
+| Componente reutilizable sin dominio | `components/shared/` |
+| Componente de layout (sidebar, header) | `components/layout/` |
+| Componente especifico de una feature | `components/[feature]/` |
+| Logica de datos o llamadas API | `lib/[dominio]/` |
+| Tipos TypeScript | `lib/types/` o co-locado con el feature |
+| Hooks personalizados | `lib/hooks/` |

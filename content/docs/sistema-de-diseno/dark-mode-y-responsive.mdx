@@ -1,0 +1,152 @@
+---
+title: "Dark Mode y Responsive"
+description: "Reglas de compatibilidad de colores en dark mode, configuracion de next-themes y estrategia mobile-first para el panel administrativo."
+author: "Abner Reyes"
+version: "1.0.0"
+---
+
+## 13. Dark Mode
+
+### 13.1 Configuracion
+
+```tsx
+// layout.tsx
+<ThemeProvider
+  attribute="class"
+  defaultTheme="dark"    // Dark por defecto
+  enableSystem={false}
+  disableTransitionOnChange
+/>
+```
+
+- Selector CSS: `@custom-variant dark (&:is(.dark *));`
+- Theme toggle: `next-themes` con `useTheme()`
+
+---
+
+### 13.2 Reglas de Compatibilidad
+
+```
+HACER:
+  bg-primary/10        -> Funciona en ambos modos
+  text-muted-foreground -> Se adapta automaticamente
+  bg-card              -> Blanco en light, navy en dark
+  border-border        -> Se adapta automaticamente
+
+EVITAR POR DEFECTO:
+  bg-blue-50           -> No se adapta a dark mode
+  text-gray-600        -> Usar text-muted-foreground
+  bg-white             -> Usar bg-card o bg-background
+  border-gray-200      -> Usar border-border
+  Colores hardcoded sin validacion en ambos temas
+
+EXCEPCION:
+  Se permiten colores hardcoded cuando se solicite explicitamente una mejora visual
+  y se valide en light/dark + contraste minimo.
+```
+
+---
+
+### 13.3 Patrones Dark Mode
+
+```tsx
+// Correcto: usar tokens semanticos
+className="bg-primary/10 text-primary"
+className="bg-destructive/10 text-destructive"
+className="bg-muted text-muted-foreground"
+
+// Evitar por defecto: colores que no se adaptan
+className="bg-blue-50 text-blue-600"
+className="bg-amber-100 text-amber-800"
+```
+
+---
+
+### 13.4 Login (Dark-only)
+
+La pagina de login siempre usa fondo oscuro (`bg-[#101022]`) con:
+- Card: `bg-[#16162c] border-white/10`
+- Texto: `text-white`, `text-slate-400`, `text-white/40`
+- Inputs: `border-slate-700 bg-slate-900/50 text-white`
+
+---
+
+## 14. Responsive Design
+
+### 14.1 Estrategia
+
+- **Mobile-first**: Clases base para mobile, `md:` para desktop
+- **Sidebar**: Oculto en mobile, Sheet como alternativa
+- **Tablas**: Desktop tabla / Mobile cards (patron dual)
+- **Grids**: 1 columna -> 2 columnas -> 3-4 columnas
+
+---
+
+### 14.2 Patrones Comunes
+
+```tsx
+// Grid responsive
+className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
+
+// Ocultar en mobile
+className="hidden md:block"
+className="hidden md:table-cell"
+
+// Mostrar solo en mobile
+className="md:hidden"
+
+// Header responsive
+className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+
+// Padding responsive
+className="p-4 md:p-6"
+```
+
+---
+
+### 14.3 Sidebar en Mobile
+
+En pantallas menores a `md` (768px), el sidebar se oculta y se expone mediante un `Sheet`:
+
+```tsx
+// Boton de menu mobile en el Header
+<Button variant="ghost" size="icon" className="md:hidden" onClick={() => setOpen(true)}>
+  <Menu className="h-5 w-5" />
+</Button>
+
+// Sheet con sidebar completo
+<Sheet open={open} onOpenChange={setOpen}>
+  <SheetContent side="left" className="w-3/4 p-0 sm:max-w-sm">
+    <AppSidebar onNavigate={() => setOpen(false)} />
+  </SheetContent>
+</Sheet>
+```
+
+---
+
+### 14.4 Patron Dual Desktop/Mobile para Tablas
+
+Las tablas de datos se muestran como tabla en desktop y como lista de cards en mobile:
+
+```tsx
+{/* Solo desktop */}
+<div className="hidden overflow-x-auto rounded-xl border border-border bg-card shadow-sm md:block">
+  <Table>
+    ...
+  </Table>
+</div>
+
+{/* Solo mobile */}
+<div className="space-y-3 md:hidden">
+  {items.map((item) => (
+    <div key={item.id} className="rounded-xl border border-border bg-card p-4">
+      <dl className="space-y-1.5">
+        <div className="flex items-baseline justify-between gap-2">
+          <dt className="shrink-0 text-xs text-muted-foreground">Nombre</dt>
+          <dd className="truncate text-right text-sm font-medium">{item.nombre}</dd>
+        </div>
+      </dl>
+    </div>
+  ))}
+</div>
+```

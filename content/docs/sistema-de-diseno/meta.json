@@ -1,0 +1,4 @@
+{
+  "title": "Sistema de Diseño",
+  "pages": ["index", "stack-y-paleta", "tipografia-y-espaciado", "componentes", "patrones-crud", "formularios", "presentacion-datos", "dark-mode-y-responsive", "estructura-archivos"]
+}
