@@ -140,7 +140,7 @@ El runtime vigente distingue permisos finos por familia sensible para sub-recurs
 - `health:read` / `health:update`;
 - `emergency_contacts:read` / `emergency_contacts:update`;
 - `legal_representative:read` / `legal_representative:update`;
-- `post_registration:read` / `post_registration:update`.
+- `post_registration:read` / `registration:complete`.
 
 Regla de enforcement:
 
@@ -151,7 +151,8 @@ Regla de enforcement:
 OR transicional vigente:
 
 - lecturas finas aceptan `family:read` O el legado de la familia `users:*` para lectura (`users:read_detail`);
-- escrituras finas aceptan `family:update` O el legado de la familia `users:*` para escritura (`users:update`).
+- escrituras finas aceptan `family:update` O el legado de la familia `users:*` para escritura (`users:update`);
+- excepción: `registration:complete` es un permiso global dedicado sin fallback legacy. Asignado a roles de campo (super_admin, admin, assistant-lf, director-lf y equivalentes union/dia por herencia). El owner siempre puede completar su propio registro sin este permiso.
 
 Esto existe para compatibilidad transicional y NO redefine el contrato objetivo de largo plazo.
 
@@ -174,7 +175,7 @@ Regla documental:
 
 ### Política cerrada - excepción mínima de terceros en post-registro
 
-El runtime vigente todavía permite que un actor no owner con permiso global `users:update` ejecute:
+El runtime vigente permite que un actor no owner con permiso global `registration:complete` ejecute:
 
 - `POST /users/:userId/post-registration/step-1/complete`;
 - `POST /users/:userId/post-registration/step-2/complete`;
@@ -183,8 +184,8 @@ El runtime vigente todavía permite que un actor no owner con permiso global `us
 La decisión funcional canónica queda cerrada así:
 
 - `GET /users/:userId/post-registration/status` permite lectura administrativa mínima de terceros con `post_registration:read` o fallback legacy `users:read_detail`;
-- `POST /users/:userId/post-registration/step-{1,2,3}/complete` permite completion administrativa mínima de terceros con `post_registration:update` o fallback legacy `users:update`;
-- ownership mantiene feedback detallado actual;
+- `POST /users/:userId/post-registration/step-{1,2,3}/complete` requiere `registration:complete` (permiso global dedicado, sin fallback a `users:update`). Roles asignados: super_admin, admin, assistant-lf, director-lf y equivalentes union/dia por herencia;
+- ownership mantiene feedback detallado actual y permite completar sin necesidad de `registration:complete`;
 - terceros no reciben en respuestas ni errores detalles sensibles del usuario objetivo.
 
 ## Ejemplo de `GET /auth/me`
