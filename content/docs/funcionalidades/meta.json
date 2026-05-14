@@ -12,7 +12,7 @@
     "carpetas-evidencias", "validacion-evidencias", "validacion-investiduras",
     "aprobaciones-masivas", "annual-folders-scoring",
     "---Administración---",
-    "finanzas", "inventario", "catalogos", "rbac",
+    "finanzas", "inventario", "materiales", "catalogos", "rbac", "audit-logs",
     "---Operaciones---",
     "sla-dashboard", "recursos", "comunicaciones"
   ]

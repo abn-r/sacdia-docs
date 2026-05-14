@@ -37,9 +37,11 @@ Los tokens FCM se gestionan por usuario y dispositivo, permitiendo que un usuari
 - Consume `POST /notifications/send`, `POST /notifications/broadcast`, `POST /notifications/club/:sectionId`
 
 ### App Movil
-- **No tiene screens de notificaciones** — No hay UI de bandeja o historial
+- **Tiene bandeja de notificaciones** (`lib/features/notifications/` — Clean Architecture completa: data/domain/presentation)
 - Firebase Messaging integrado para recepcion de push notifications
 - Registro/desregistro automatico de tokens FCM via providers
+- **Realtime cache invalidation**: `RealtimeInvalidationHandler` procesa silent push (`data.type == 'cache_invalidate'`) y dispara `ref.invalidate(...)` sobre providers Riverpod afectados
+- **iOS push pendiente** de configuracion infra (Xcode/Apple Dev/Firebase) — la bandeja funciona 95% sin esa config; el codigo del cliente esta correcto
 
 ### Base de datos
 - `user_fcm_tokens` — Tokens FCM por usuario/dispositivo
@@ -65,12 +67,10 @@ Los tokens FCM se gestionan por usuario y dispositivo, permitiendo que un usuari
 
 ## Gaps y pendientes
 
-- **Sin historial de notificaciones**: No hay tabla ni endpoint para consultar notificaciones enviadas; el envio es fire-and-forget
-- **Sin bandeja en app**: La app no tiene UI para ver notificaciones recibidas; solo muestra push del sistema operativo
 - **Sin preferencias**: Los usuarios no pueden configurar que tipo de notificaciones quieren recibir
 - **Sin programacion**: No hay capacidad para programar notificaciones futuras (ej: recordatorio de actividad 1 hora antes)
-- **Envio sincrono**: El broadcast a todos los usuarios es sincrono; para bases de usuarios grandes puede causar timeouts
 - **Sin notificaciones a roles**: No se puede enviar a un rol especifico (ej: todos los directores)
+- **iOS push setup pendiente** — config en Apple Developer + Firebase aun por completar
 
 ## Prioridad y siguiente accion
 
