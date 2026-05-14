@@ -1,0 +1,47 @@
+name: Drift check (PRs)
+
+# Verifica que los archivos auto-generados no esten desincronizados con sus fuentes.
+# Solo bloquea PRs que editan generators o quieren mergear cambios manuales en archivos auto-gen.
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/sync-*.ts'
+      - 'content/dev/api/endpoints.mdx'
+      - 'content/dev/base-de-datos/schema-reference/_generated-models.mdx'
+      - 'content/dev/estandares/stack-tecnologico/_generated-versions.mdx'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  drift-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for manual edits in auto-generated files
+        run: |
+          gen_files=(
+            "content/dev/api/endpoints.mdx"
+            "content/dev/base-de-datos/schema-reference/_generated-models.mdx"
+            "content/dev/estandares/stack-tecnologico/_generated-versions.mdx"
+          )
+          for f in "${gen_files[@]}"; do
+            if [[ -f "$f" ]]; then
+              if ! head -20 "$f" | grep -q "AUTO-GENERATED FILE"; then
+                echo "❌ $f missing AUTO-GENERATED banner — manual edits forbidden"
+                exit 1
+              fi
+            fi
+          done
+
+          changed=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- "${gen_files[@]}")
+          if [[ -n "$changed" ]]; then
+            echo "⚠️  Auto-generated files changed in this PR:"
+            echo "$changed"
+            echo ""
+            echo "These should only be regenerated via 'pnpm sync:all', not edited by hand."
+            echo "If you ran 'pnpm sync:all' locally, fine — this is just a warning, not a blocker."
+          fi

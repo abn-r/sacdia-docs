@@ -1,0 +1,107 @@
+name: Sync docs from source repos
+
+# Regenera endpoints.mdx, schema-reference y versions desde los repos hermanos
+# (sacdia-backend, sacdia-admin, sacdia-app). Abre un PR si hay drift.
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 6 * * 1'  # cada lunes 06:00 UTC
+  repository_dispatch:
+    types: [sacdia-source-changed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+    steps:
+      - name: Checkout sacdia-docs
+        uses: actions/checkout@v4
+        with:
+          path: sacdia-docs
+          fetch-depth: 0
+
+      - name: Checkout sacdia-backend
+        uses: actions/checkout@v4
+        with:
+          repository: abn-r/sacdia-backend
+          path: sacdia-backend
+          token: ${{ secrets.SACDIA_REPO_TOKEN }}
+
+      - name: Checkout sacdia-admin
+        uses: actions/checkout@v4
+        with:
+          repository: abn-r/sacdia-admin
+          path: sacdia-admin
+          token: ${{ secrets.SACDIA_REPO_TOKEN }}
+
+      - name: Checkout sacdia-app
+        uses: actions/checkout@v4
+        with:
+          repository: abn-r/sacdia-app
+          path: sacdia-app
+          token: ${{ secrets.SACDIA_REPO_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10'
+
+      - name: Install sacdia-docs deps
+        working-directory: sacdia-docs
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate OpenAPI spec from backend
+        working-directory: sacdia-backend
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm exec prisma generate
+          pnpm tsx scripts/generate-openapi.ts
+        env:
+          DATABASE_URL: postgres://stub:stub@localhost:5432/stub
+          BETTER_AUTH_SECRET: stub-secret-for-spec-generation-only
+
+      - name: Run sync scripts
+        working-directory: sacdia-docs
+        run: pnpm sync:all
+
+      - name: Detect drift
+        id: drift
+        working-directory: sacdia-docs
+        run: |
+          if [[ -n "$(git status --porcelain content/)" ]]; then
+            echo "drift=true" >> "$GITHUB_OUTPUT"
+            git status --short content/
+          else
+            echo "drift=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create PR with drift
+        if: steps.drift.outputs.drift == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          path: sacdia-docs
+          commit-message: 'docs: sync generated artifacts from source repos'
+          title: 'docs: sync generated artifacts'
+          body: |
+            Auto-generated PR from `sync-docs.yml`.
+
+            Updated files:
+            - `content/dev/api/endpoints.mdx` (from OpenAPI spec)
+            - `content/dev/base-de-datos/schema-reference/_generated-models.mdx` (from Prisma schema)
+            - `content/dev/estandares/stack-tecnologico/_generated-versions.mdx` (from package.json + pubspec.yaml)
+
+            Source repos:
+            - `abn-r/sacdia-backend`
+            - `abn-r/sacdia-admin`
+            - `abn-r/sacdia-app`
+          branch: docs/auto-sync
+          delete-branch: true
