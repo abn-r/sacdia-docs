@@ -25,7 +25,8 @@ sacdia/
 ### Modulos principales
 ```
 src/
-├── auth/                 # Autenticacion (Supabase JWT)
+├── auth/                 # Endpoints canonicos /auth/* (consume Better Auth)
+├── better-auth/          # BetterAuthModule self-hosted (Wave 3)
 ├── users/                # Usuarios, progreso de clases
 ├── catalogs/             # Catalogos (honores, medicinas, etc.)
 ├── clubs/                # Gestion de clubes
@@ -41,16 +42,22 @@ src/
 ├── admin/                # Endpoints de administracion
 ├── common/               # Guards, decorators, filtros, interceptores
 ├── investiture/          # Validacion de investiduras
-├── notifications/        # Firebase FCM + notificaciones
+├── notifications/        # Firebase FCM + realtime invalidation (BullMQ)
+├── evidence-review/      # Validacion de evidencias (7 endpoints)
+├── analytics/            # SLA dashboard y metricas operacionales
+├── resources/            # Categorias + recursos (presigned R2)
+├── materiales/           # Catalogo, ordenes, comprobantes, inventario
+├── audit-logs/           # Trazabilidad de cambios
 └── prisma/               # Migraciones, seeds, esquema
 ```
 
 ### Stack
-- **Runtime**: NestJS 11 + TypeScript
-- **ORM**: Prisma 7 → PostgreSQL (Supabase)
-- **Auth**: JWT via JWKS (ES256) desde Supabase
-- **Cache**: Redis (fallback in-memory)
-- **Push**: Firebase Cloud Messaging
+- **Runtime**: NestJS 11 + TypeScript 6 + Node 22 LTS
+- **ORM**: Prisma 7 → PostgreSQL 16 (Neon, 3 branches)
+- **Auth**: **Better Auth** self-hosted + JWT **HS256** firmado con `BETTER_AUTH_SECRET`
+- **Cache / Queue**: Redis (cache-aside + BullMQ + throttler distribuido)
+- **Storage**: Cloudflare R2 (presigned URLs)
+- **Push / Realtime**: Firebase Cloud Messaging (data-only silent multicast)
 - **Prefijo API**: `/api/v1/*`
 
 ### Convenciones
@@ -86,17 +93,22 @@ components/
 └── [otros features]/
 
 lib/
-├── supabase/             # Cliente Supabase (SSR)
-└── api/                  # Clientes HTTP para backend
+├── auth/                 # Better Auth client + cookies httpOnly
+├── api/                  # apiRequest wrapper + TanStack Query keys
+├── i18n/                 # next-intl config + helpers
+└── generic-catalogs-i18n/ # PhaseECatalogCrudPage helpers
 ```
 
 ### Stack
-- **Framework**: Next.js 16 (App Router)
-- **UI**: shadcn/ui + Tailwind CSS v4
+- **Framework**: Next.js 16 (App Router + `proxy.ts` reemplaza al viejo `middleware.ts`)
+- **UI**: shadcn/ui (registry `new-york`) + Radix UI + Tailwind CSS v4
 - **Icons**: lucide-react
-- **Forms**: React Hook Form + Zod
-- **Auth**: Supabase Auth (SSR con cookies)
-- **Design System**: Ver `DESIGN-SYSTEM.md` para detalles
+- **Forms**: React Hook Form + Zod + aria-invalid Form primitive
+- **Auth**: Better Auth (cookie `ACCESS_TOKEN_COOKIE` httpOnly; JWT HS256 backend-signed)
+- **Server state**: **TanStack Query v5** (no SWR)
+- **i18n**: next-intl 4 + 4 idiomas (es/en/fr/pt-BR)
+- **Testing**: Vitest + MSW + Testing Library
+- **Design System**: Ver `sacdia-admin/DESIGN-SYSTEM.md` (paleta Ember, Geist sans)
 
 ### Convenciones
 - Server Components por defecto; `'use client'` solo donde necesario
@@ -132,18 +144,22 @@ lib/
 ```
 
 ### Stack
-- **Framework**: Flutter 3.x
-- **Architecture**: Clean Architecture (3 capas)
-- **State**: Riverpod (DI + state)
-- **HTTP**: Dio
-- **Storage local**: Hive
-- **Auth**: Supabase Auth
+- **Framework**: Flutter 3.27+ / Dart 3.6+
+- **Architecture**: Clean Architecture (data / domain / presentation)
+- **State**: Riverpod (DI + state) + `flutter_hooks` NO se usa
+- **HTTP**: Dio + interceptors (auth + retry)
+- **Storage**: `flutter_secure_storage` (tokens) + `shared_preferences` (settings)
+- **Auth**: Better Auth (JWT HS256 emitido por SACDIA)
+- **Realtime**: FCM silent push → `RealtimeInvalidationHandler` invalida cache
+- **Observabilidad**: `sentry_flutter` + `secure_application` (PII scrub)
+- **i18n**: `easy_localization`
+- **Errors**: `dartz` (Either) en domain layer
 
 ### Convenciones
-- Dependency injection via Riverpod providers
-- Offline first: cache en Hive antes de red
-- JWT almacenado seguro en Hive
-- Async/await para operaciones de datos
+- DI via Riverpod providers
+- JWT en `flutter_secure_storage` (no Hive — Hive no esta en el pubspec)
+- Async/await + `dartz Either` en domain
+- HugeIcons typedef obligatorio para iconos (no IconData)
 
 ---
 
@@ -167,11 +183,11 @@ docs/
 │   └── [mas dominios]
 │
 ├── api/                  # Runtime de API
-│   └── ENDPOINTS-LIVE-REFERENCE.md (220 endpoints, autoridad)
+│   └── ENDPOINTS-LIVE-REFERENCE.md (362 endpoints, autoridad)
 │
 ├── database/             # Esquema y referencias
 │   ├── schema.prisma (fuente unica de verdad)
-│   └── SCHEMA-REFERENCE.md (~72 modelos)
+│   └── SCHEMA-REFERENCE.md (~152 modelos)
 │
 ├── steering/             # Convenciones operativas
 │   ├── source-of-truth.md (gobernanza)
@@ -194,7 +210,7 @@ docs/
 
 ### Convencion de autoridad
 1. **Canon** (`canon/*.md`): identidad y decisiones duraderas
-2. **API Live Reference** (`api/ENDPOINTS-LIVE-REFERENCE.md`): 220 endpoints
+2. **API Live Reference** (`api/ENDPOINTS-LIVE-REFERENCE.md`): 362 endpoints
 3. **Schema Prisma** (`schema.prisma`): fuente de verdad del modelo
 4. **Feature Specs** (`features/*.md`): 16 dominios completos
 5. **Steering** (`steering/*.md`): convenciones subordinadas
@@ -260,8 +276,8 @@ Ir a `docs/canon/decisiones-clave.md` o `docs/canon/arquitectura-sacdia.md`
 ```
 Backend API:     http://localhost:3000
 Admin web:       http://localhost:3001
-API Docs:        http://localhost:3000/api
-Supabase:        Configurar en .env de cada repo
+API Docs:        http://localhost:3000/api      (Swagger, gated por SWAGGER_ENABLED=true)
+Neon DB:         Configurar DATABASE_URL en .env de sacdia-backend
 ```
 
 ---

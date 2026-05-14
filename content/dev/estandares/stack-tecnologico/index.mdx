@@ -11,14 +11,15 @@ SACDIA es una plataforma full-stack compuesta por tres aplicaciones principales 
 
 | Componente | Tecnologia | Lenguaje |
 |---|---|---|
-| Backend API | NestJS 10.x | TypeScript 5.x |
-| Admin Web | Next.js 16 (App Router) | TypeScript 5.x |
-| App Movil | Flutter 3.x | Dart 3.3+ |
-| Base de Datos | PostgreSQL 15.x (Supabase) | SQL |
-| ORM | Prisma 5.x | - |
-| Auth | Supabase Auth | - |
-| Cache | Redis (Upstash) | - |
-| Storage | Supabase Storage / Cloudflare R2 | - |
+| Backend API | NestJS 11.x | TypeScript 6.x |
+| Admin Web | Next.js 16 (App Router + proxy.ts) | TypeScript 5.x |
+| App Movil | Flutter 3.27+ | Dart 3.6+ |
+| Base de Datos | PostgreSQL 16 (Neon, 3 branches) | SQL |
+| ORM | Prisma 7.x | - |
+| Auth | Better Auth self-hosted (HS256 JWT) | - |
+| Cache / Queue | Redis (BullMQ + cache-aside + throttler) | - |
+| Storage | Cloudflare R2 (presigned URLs) | - |
+| Observabilidad | Sentry + Firebase FCM | - |
 
 ## Metodologia
 

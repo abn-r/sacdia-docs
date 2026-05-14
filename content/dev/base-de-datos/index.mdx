@@ -5,7 +5,7 @@ author: "Abner Reyes"
 version: "1.0.0"
 ---
 
-SACDIA utiliza PostgreSQL hosteado en Supabase como base de datos principal. El acceso a la base de datos desde el backend se realiza exclusivamente a traves de Prisma ORM.
+SACDIA utiliza PostgreSQL hosteado en **Neon** como base de datos principal. Hay 1 proyecto Neon con 3 branches: `development`, `staging`, `production`. El acceso desde el backend se realiza exclusivamente a traves de Prisma ORM (v7).
 
 ## Autoridad del Schema
 
@@ -18,13 +18,16 @@ sacdia-backend/
     └── migrations/        ← Historial de migraciones Prisma
 ```
 
-## Estadisticas del Schema (2026-03-25)
+## Estadisticas del Schema
 
 | Metrica | Valor |
 |---|---|
-| Modelos | 83 |
-| Enums | 8 |
-| Ultima sincronizacion | 2026-03-25 |
+| Modelos | 152 |
+| Motor | PostgreSQL 16 (Neon) |
+| ORM | Prisma 7.x |
+| Branches | development / staging / production |
+
+> Las estadisticas exactas se actualizan via generator (`sacdia-docs/scripts/sync-schema.ts`) en cada build de CI. Si ves drift entre esta tabla y `sacdia-backend/prisma/schema.prisma`, el script no se ejecuto.
 
 ## Secciones
 

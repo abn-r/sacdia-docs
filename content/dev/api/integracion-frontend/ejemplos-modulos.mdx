@@ -79,10 +79,14 @@ Checklist de consistencia para frontend:
 
 ## Módulo: Actividades
 
+> **Nota**: Los actividades pueden ser conjuntas (`is_joint: true`). Una actividad conjunta crea multiples `activity_instances`, una por seccion participante. El backend valida autorizacion contra todas las secciones via `PermissionsGuard`.
+
 **Listar actividades del club**:
 
 ```typescript
-// Next.js
+// Next.js (TanStack Query)
+import { useQuery } from '@tanstack/react-query';
+
 export function useClubActivities(clubId: number, filters?: {
   clubTypeId?: number;
   active?: boolean;
@@ -91,14 +95,17 @@ export function useClubActivities(clubId: number, filters?: {
   const query = new URLSearchParams(filters as any).toString();
   const url = `/clubs/${clubId}/activities${query ? `?${query}` : ''}`;
 
-  return useSWR(url, fetcher);
+  return useQuery({
+    queryKey: ['club-activities', clubId, filters],
+    queryFn: () => apiRequest<Activity[]>(url),
+  });
 }
 
 // Uso
 const { data, isLoading } = useClubActivities(5, {
   clubTypeId: 2,
   active: true,
-  activityType: 'meeting'
+  activityType: 'meeting',
 });
 ```
 
@@ -135,7 +142,7 @@ export async function registerAttendance(
   activityId: number,
   userId: string
 ) {
-  const response = await apiClient.post(
+  const response = await apiRequest(
     `/activities/${activityId}/attendance`,
     { user_id: userId }
   );
@@ -161,11 +168,13 @@ Future<Attendance> registerAttendance(int activityId, String userId) async {
 **Obtener resumen financiero**:
 
 ```typescript
-// Next.js
+// Next.js (TanStack Query)
+import { useQuery } from '@tanstack/react-query';
+
 export function useFinancialSummary(
   clubId: number,
   year: number,
-  month?: number
+  month?: number,
 ) {
   const params = new URLSearchParams({
     year: year.toString(),
@@ -173,10 +182,12 @@ export function useFinancialSummary(
     clubTypeId: '2', // Conquistadores
   });
 
-  return useSWR(
-    `/clubs/${clubId}/finances/summary?${params}`,
-    fetcher
-  );
+  return useQuery({
+    queryKey: ['financial-summary', clubId, year, month],
+    queryFn: () => apiRequest<FinancialSummaryEnvelope>(
+      `/clubs/${clubId}/finances/summary?${params}`,
+    ),
+  });
 }
 
 // Uso en componente
@@ -219,7 +230,7 @@ export async function enrollInHonor(
   honorId: number,
   instructorId: string
 ) {
-  const response = await apiClient.post(
+  const response = await apiRequest(
     `/users/${userId}/honors/enroll`,
     {
       honor_id: honorId,

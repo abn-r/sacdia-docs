@@ -5,7 +5,7 @@ author: "Abner Reyes"
 version: "1.0.0"
 ---
 
-La API usa JWT (Bearer token) para autenticación. Los tokens se obtienen mediante login email/password o OAuth.
+La API usa JWT **HS256** (Bearer token) firmado por SACDIA con `BETTER_AUTH_SECRET`. **Better Auth** maneja la autenticación interna (Option C: Better Auth autentica, SACDIA firma el token al cliente). Los tokens se obtienen vía login email/password u OAuth Google/Apple.
 
 ## 1. Login con Email/Password
 
@@ -105,39 +105,36 @@ Future<void> signInWithGoogle() async {
 
 ## 3. Verificar Autenticación
 
-### Next.js Middleware
+### Next.js 16 Proxy (reemplaza al viejo `middleware.ts`)
 
 ```typescript
-// middleware.ts
+// src/proxy.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export async function middleware(req: NextRequest) {
-  const token = req.cookies.get('access_token')?.value;
+export const config = {
+  matcher: ['/', '/login', '/dashboard/:path*'],
+};
 
-  // Proteger rutas
-  if (!token && req.nextUrl.pathname.startsWith('/dashboard')) {
+export function proxy(req: NextRequest) {
+  const token = req.cookies.get('ACCESS_TOKEN_COOKIE')?.value;
+  const isLogin = req.nextUrl.pathname === '/login';
+
+  // Proteger rutas: sin token y no estás en /login → redirect a /login
+  if (!token && !isLogin) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  // Verificar token con la API
-  if (token) {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (!response.ok) {
-      return NextResponse.redirect(new URL('/login', req.url));
-    }
+  // Si ya estás autenticado, sacar de /login
+  if (token && isLogin) {
+    return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: ['/dashboard/:path*', '/clubs/:path*'],
-};
 ```
+
+> El proxy NO valida el token contra `/auth/me` en cada request — sería caro en edge. La validación efectiva ocurre en cada Server Component / Server Action al llamar al backend. Si el token expira, el backend devuelve 401 y el cliente decide refrescar o redirigir.
 
 ### Flutter Route Guard
 

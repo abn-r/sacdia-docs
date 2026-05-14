@@ -25,7 +25,8 @@ Si un documento legacy contradice este archivo, este archivo manda.
 
 El estado actual del runtime de auth es este:
 
-- la autenticación base depende de Supabase Auth;
+- la autenticación base depende de **Better Auth** self-hosted (módulo `src/better-auth/` en sacdia-backend);
+- SACDIA firma su propio JWT **HS256** con `BETTER_AUTH_SECRET` (Option C: Better Auth autentica, SACDIA firma);
 - el backend expone endpoints propios bajo `/api/v1/auth/*`;
 - `POST /auth/login` y `POST /auth/refresh` entregan tokens en camelCase;
 - `GET /auth/me` es la fuente canónica del bloque `authorization`;
@@ -35,14 +36,16 @@ El estado actual del runtime de auth es este:
 
 ## Componentes runtime
 
-### Supabase Auth
+### Better Auth (self-hosted)
+
+Vive en `sacdia-backend/src/better-auth/` (`BetterAuthModule` + `BetterAuthService`).
 
 Responsabilidades actuales:
 - autenticar credenciales con email y password;
-- emitir `accessToken` y `refreshToken`;
-- refrescar sesión;
 - soportar OAuth con Google y Apple;
-- soportar MFA con TOTP.
+- gestionar el ciclo de sesión Better Auth (sign-in / sign-out / refresh);
+- exponer endpoints internos consumidos por el módulo `auth` de SACDIA;
+- el JWT emitido al cliente final es firmado por SACDIA (HS256) usando `BETTER_AUTH_SECRET`, no por un proveedor externo.
 
 ### Backend NestJS
 
@@ -54,7 +57,7 @@ Responsabilidades actuales:
 - persistir y cambiar asignación activa de club;
 - ofrecer superficies auxiliares de MFA, OAuth y sesiones.
 
-### Prisma / Postgres
+### Prisma / Postgres (Neon)
 
 Responsabilidades actuales:
 - persistir usuario local en `users`;
@@ -222,11 +225,11 @@ Estado actual soportado:
 
 Flujo vigente resumido:
 1. cliente llama `POST /auth/oauth/{provider}`;
-2. backend devuelve una URL de Supabase OAuth;
+2. backend devuelve una URL de OAuth Better Auth;
 3. proveedor autentica al usuario;
 4. callback llega a `GET /auth/oauth/callback` con `access_token` y opcionalmente `refresh_token` en query;
-5. backend obtiene usuario desde Supabase;
-6. si es primera vez, crea usuario local y tracking mínimo;
+5. backend resuelve el usuario contra Better Auth y crea/replica usuario local en Prisma si es primera vez;
+6. SACDIA emite su propio JWT HS256 al cliente;
 7. backend responde en camelCase con tokens, usuario y `needsPostRegistration`.
 
 Notas vigentes:
@@ -236,7 +239,7 @@ Notas vigentes:
 
 ## MFA vigente
 
-Estado actual soportado: MFA con TOTP usando Supabase.
+Estado actual soportado: MFA con TOTP implementado en NestJS (servicio propio, no provider externo).
 
 Superficies vigentes:
 - enrolamiento de factor;
@@ -247,7 +250,7 @@ Superficies vigentes:
 
 Notas vigentes:
 - los endpoints MFA requieren JWT;
-- pueden aceptar `x-refresh-token` opcional para bind de sesión cuando Supabase lo requiere;
+- pueden aceptar `x-refresh-token` opcional para bind de sesión cuando el flujo lo requiere;
 - el runtime expone `aal1` y `aal2` a través de status MFA.
 
 Límite importante del estado actual:
@@ -275,7 +278,7 @@ Límite importante del estado actual:
 ## Registro y post-registro
 
 Estado actual:
-- `POST /api/v1/auth/register` crea usuario en Supabase y réplica local en Prisma;
+- `POST /api/v1/auth/register` crea usuario en Better Auth y réplica local en Prisma;
 - también crea tracking granular en `users_pr`;
 - asigna el rol global `user`;
 - `GET /api/v1/auth/profile/completion-status` expone el estado del post-registro.
@@ -297,7 +300,7 @@ Regla vigente:
 
 ## Seguridad runtime vigente
 
-- JWT autentica identidad;
+- JWT HS256 (firmado por SACDIA con `BETTER_AUTH_SECRET`) autentica identidad;
 - `JwtAuthGuard` protege endpoints autenticados;
 - `PermissionsGuard` y metadata de recurso endurecen autorización en rutas sensibles;
 - frontend no actúa como barrera de seguridad;

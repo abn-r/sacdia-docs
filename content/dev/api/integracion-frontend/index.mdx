@@ -23,8 +23,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 - **Versionado**: `/api/v1/` (URI-based)
 - **Formato**: JSON
-- **Autenticación**: JWT (Better Auth)
-- **Total endpoints**: 269
+- **Autenticación**: JWT **HS256** firmado por SACDIA (Option C: Better Auth autentica, SACDIA firma)
+- **Total endpoints**: 362 (ver `docs/api/ENDPOINTS-LIVE-REFERENCE.md`)
+- **Admin server state**: TanStack Query v5 (NO SWR)
+- **App mobile state**: Riverpod
+- **Admin edge**: `proxy.ts` (Next 16, ex `middleware.ts`)
 
 ## Secciones
 
@@ -32,11 +35,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 |--------|-----------|
 | [Setup](/dev/api/integracion-frontend/setup) | Instalación y configuración del cliente API en Next.js y Flutter |
 | [Autenticación](/dev/api/integracion-frontend/autenticacion) | Login email/password, OAuth con Google, verificación y guards |
-| [Consumo de Endpoints](/dev/api/integracion-frontend/endpoints) | Pattern Service Layer con SWR (Next.js) y Riverpod (Flutter) |
+| [Consumo de Endpoints](/dev/api/integracion-frontend/endpoints) | Pattern Service Layer con TanStack Query (Next.js) y Riverpod (Flutter) |
 | [Manejo de Errores](/dev/api/integracion-frontend/manejo-errores) | Códigos HTTP, error handlers en Next.js y Flutter |
 | [Ejemplos por Módulo](/dev/api/integracion-frontend/ejemplos-modulos) | Perfil de salud, actividades, finanzas, honors |
-| [Best Practices](/dev/api/integracion-frontend/best-practices) | Cache, optimistic updates, paginación, upload de archivos |
-| [Testing](/dev/api/integracion-frontend/testing) | Jest + RTL (Next.js), Mockito (Flutter) |
+| [Best Practices](/dev/api/integracion-frontend/best-practices) | Cache TanStack Query, optimistic updates, paginación, upload presigned R2 |
+| [Testing](/dev/api/integracion-frontend/testing) | Vitest + MSW + RTL (Next.js), Mockito (Flutter) |
 
 ## Actualización 2026-02-17 (Admin Panel)
 

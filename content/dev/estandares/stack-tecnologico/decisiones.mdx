@@ -31,44 +31,64 @@ Esta pagina documenta el razonamiento detras de cada decision tecnica importante
 
 ---
 
-## Por que Supabase
+## Por que Better Auth (self-hosted) sobre Supabase Auth
 
-**Pros**:
+**Contexto**: en Wave 3 migramos auth desde Supabase a Better Auth corriendo dentro del propio backend NestJS.
 
-- PostgreSQL real (no NoSQL limitado como Firebase)
-- Auth built-in (menos codigo custom, mantiene estandares)
-- Storage incluido (S3-compatible)
-- Real-time subscriptions (WebSocket management handled)
-- Free tier generosa para hobby (~500MB DB, 1GB storage, 2GB bandwidth)
-- BaaS pero con SQL completo (queries complejas, joins, triggers)
-- Supabase CLI para development local
+**Pros del modelo Option C (BA autentica, SACDIA firma JWT HS256)**:
 
-**Trade-offs**:
+- Sin vendor lock-in: todo el flujo corre en nuestro backend
+- Control total sobre el JWT (HS256 con `BETTER_AUTH_SECRET`), incluyendo claims custom y blacklist
+- OAuth Google + Apple listo sin escribir adapters
+- MFA TOTP implementado custom en NestJS (independencia del proveedor)
+- Costo $0 adicional vs Supabase (que cobra por usuarios activos al pasar de hobby)
 
-- Vendor lock-in moderado (pero PostgreSQL standard)
-- Menos control que DB self-hosted
+**Trade-offs aceptados**:
+
+- Mas codigo propio que mantener (`src/better-auth/`)
+- Responsabilidad de gestionar sesiones, refresh y blacklist en nuestra capa de cache (Redis)
 
 ---
 
-## Por que Vercel Serverless para Backend
+## Por que Neon sobre Supabase para DB
 
-**Pros para caso de uso (&lt;$20/mes)**:
+**Pros**:
 
-- Hobby tier gratis (100GB bandwidth, funciones ilimitadas)
-- Auto-scaling sin configuracion
-- Deploy automatico con GitHub (push to deploy)
-- Edge functions para mejor performance global
-- Mismo provider que Admin (simplifica billing y config)
-- Monorepo support nativo (backend + admin en un proyecto)
+- Branches copy-on-write — entornos efimeros para QA y migraciones
+- PITR (Point-in-Time Recovery) en planes pagos
+- PostgreSQL standard, sin lock-in propietario
+- Connection pooling integrado
 
-**Limitaciones**:
+**Trade-offs**:
 
-- Max 10s execution time (suficiente para APIs REST, pero no para jobs largos)
-- Cold starts (~500ms primera request, luego rapido)
-- No WebSockets persistentes (usar Supabase Realtime en su lugar)
-- Si creces mucho, evaluar Railway/Render (pay-as-you-go)
+- Shadow DB de Prisma no funciona contra branches (gotcha conocido — workaround: `prisma migrate diff --script` + psql).
+- Free tier compute pausa tras inactividad (cold start ~1-2s).
 
-Para MVP: Perfecto. Si creces, migrar es sencillo (NestJS es portable).
+---
+
+## Por que Cloudflare R2 sobre Supabase Storage
+
+**Pros**:
+
+- $0 egress (Cloudflare no cobra por download)
+- API S3-compatible — herramientas estandar funcionan
+- Presigned URLs para upload directo del cliente (no pasa por backend)
+
+---
+
+## Por que Render.com sobre Vercel para Backend
+
+**Contexto**: Vercel serverless tenia limites duros (10s execution, sin WebSockets persistentes, cold starts). Para un backend NestJS con BullMQ workers y operaciones largas, no encajaba.
+
+**Pros de Render**:
+
+- Web Service tradicional (proceso largo, sin limite de 10s)
+- Soporta workers BullMQ corriendo permanentemente
+- Pre-deploy hook ejecuta `prisma migrate deploy` automaticamente
+- Pay-as-you-go pero predecible
+- Sin cold starts en plan paid
+
+**Vercel se mantiene solo para el admin (Next.js)**: ahi serverless tiene sentido y aprovecha el edge.
 
 ---
 

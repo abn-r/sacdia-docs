@@ -49,10 +49,13 @@ Las capas documentadas del runtime son:
 
 Según la baseline técnica activa:
 
-- **Backend**: NestJS 10.x + Node.js 20.x + TypeScript 5.x
-- **Admin web**: Next.js 14+ + TypeScript + Tailwind + shadcn/ui
-- **App móvil**: Flutter 3.19+
-- **Datos**: PostgreSQL 15.x en Supabase + Prisma v5
+- **Backend**: NestJS 11.x + Node.js 22.x LTS + TypeScript 6.x
+- **Admin web**: Next.js 16 (App Router + `proxy.ts`) + TypeScript + Tailwind v4 + shadcn/ui
+- **App móvil**: Flutter 3.27+ / Dart 3.6+
+- **Datos**: PostgreSQL 16 en **Neon** (3 branches) + Prisma 7
+- **Auth**: Better Auth self-hosted (HS256 JWT firmado con `BETTER_AUTH_SECRET`)
+- **Storage**: Cloudflare R2 (presigned URLs)
+- **Realtime**: Firebase FCM (silent multicast → cache invalidation)
 - **Arquitectura técnica**: Backend REST API + múltiples clientes
 
 ## Fronteras canónicas del runtime
@@ -86,29 +89,35 @@ La fuente runtime API vigente es `docs/api/ENDPOINTS-LIVE-REFERENCE.md`.
 Características documentadas:
 
 - **Base URL**: `/api/v1`
-- **Total documentado**: 180 endpoints (de 198 implementados)
+- **Total**: 362 endpoints (live reference; ver `docs/api/ENDPOINTS-LIVE-REFERENCE.md`)
 
 ### Módulos API documentados
 
 El runtime documenta actualmente estos módulos:
 
-- `auth`
-- `users`
-- `activities`
-- `admin`
+- `auth` (login, refresh, logout, me, OAuth Google/Apple, MFA, sessions)
+- `users` (perfil, foto, sub-recursos clínicos)
+- `activities` (incluye `is_joint` para actividades conjuntas)
+- `admin` (geography, reference, users, catalogs, system-config)
+- `audit-logs` ⭐ nuevo
 - `camporees`
-- `catalogs`
+- `catalogs` (24 catálogos i18n-aware)
 - `certifications`
 - `classes`
 - `club-roles`
-- `clubs`
+- `clubs` (overview, leadership, history)
+- `evidence-review` ⭐ nuevo
 - `fcm-tokens`
 - `finances`
-- `folders`
+- `folders` (carpetas de evidencia anuales)
 - `health`
 - `honors`
 - `inventory`
+- `materiales` ⭐ nuevo (catalogo, ordenes, comprobantes, inventario, configuracion)
 - `notifications`
+- `rankings` ⭐ nuevo
+- `resources` ⭐ nuevo (presigned R2 upload)
+- `analytics` (SLA dashboard)
 - `root`
 
 ### Naturaleza del contrato
@@ -266,15 +275,15 @@ Roles de club documentados:
 
 La persistencia documentada usa:
 
-- PostgreSQL 15.x en Supabase;
-- Prisma como capa ORM;
+- PostgreSQL 16 en Neon (3 branches: development/staging/production);
+- Prisma 7 como capa ORM;
 - `active` como patrón frecuente de soft delete;
 - timestamps automáticos;
 - constraints relacionales para integridad.
 
 ### Categorización del universo de modelos
 
-El schema de persistencia contiene 72 modelos. Se categorizan así:
+El schema de persistencia contiene 152 modelos (Prisma). Se categorizan así:
 
 - **Modelos core de trayectoria**: `users`, `enrollments`, `users_classes`, `users_honors`, `member_insurances`, `legal_representatives`, `emergency_contacts`, `users_pr`, `users_roles`, `club_role_assignments`, `unit_members`, `units`, `weekly_records`.
 - **Modelos de catálogo (trayectoria)**: `classes`, `honors`, `honors_categories`, `master_honors`, `club_types`, `club_ideals`, `relationship_types`, `allergies`, `diseases`, `medicines`, `ecclesiastical_years`, `activity_types`, `inventory_categories`, `finances_categories`.
@@ -308,14 +317,14 @@ El schema de persistencia contiene 72 modelos. Se categorizan así:
 
 Las integraciones documentadas son:
 
-- **Supabase Auth** para autenticación;
-- **PostgreSQL en Supabase** para persistencia;
-- **Cloudflare R2 (S3-compatible)** como storage de archivos;
-- **Firebase Cloud Messaging** para push notifications;
-- **OAuth Google y Apple** como proveedores de autenticación;
-- **Upstash Redis** para blacklist de tokens y gestión de sesiones;
-- **Sentry** para monitoreo y error tracking;
-- **Vercel** como hosting para admin web y backend.
+- **Better Auth (self-hosted)** para autenticación + OAuth Google/Apple;
+- **PostgreSQL en Neon** (3 branches) para persistencia;
+- **Cloudflare R2 (S3-compatible)** como storage de archivos (presigned URLs);
+- **Firebase Cloud Messaging** para push notifications + realtime cache invalidation (silent multicast);
+- **Redis** (BullMQ + cache-aside + throttler distribuido + blacklist tokens + sessions);
+- **Sentry** para monitoreo y error tracking (backend y mobile);
+- **Render.com** como hosting para backend;
+- **Vercel** como hosting para admin web.
 
 ## Estado runtime canonizado de Wave 0
 

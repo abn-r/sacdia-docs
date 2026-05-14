@@ -104,7 +104,7 @@ src/
 │   ├── catalogs/                # Catálogos maestros
 │   └── files/                   # Gestión de archivos
 ├── common/
-│   ├── guards/                  # SupabaseGuard, RolesGuard
+│   ├── guards/                  # JwtAuthGuard, PermissionsGuard, ClubRolesGuard, OwnerOrAdminGuard
 │   ├── decorators/              # @Roles(), @Permissions(), @ClubRole()
 │   ├── interceptors/            # Response transformation
 │   ├── filters/                 # Exception handling
@@ -217,7 +217,7 @@ CREATE TABLE club_role_assignments (
 
 ```typescript
 @Controller("clubs/:clubId/activities")
-@UseGuards(SupabaseGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard, ClubRolesGuard)
 export class ActivitiesController {
   @Post()
   @Roles("director", "subdirector", "secretary")

@@ -1,153 +1,119 @@
 ---
 title: "Consumo de Endpoints"
-description: "Pattern recomendado de Service Layer para consumir la API en Next.js con SWR y en Flutter con Dio + Riverpod."
+description: "Service Layer para consumir la API en Next.js con TanStack Query y en Flutter con Dio + Riverpod."
 author: "Abner Reyes"
-version: "1.0.0"
+version: "2.0.0"
 ---
 
 ## Pattern Recomendado: API Service Layer
 
-El patrón recomendado es crear una capa de servicio que encapsula las llamadas a la API, expone hooks reutilizables en Next.js y use cases en Flutter.
+Encapsular llamadas en una capa de servicio que exponga hooks reutilizables en Next.js (TanStack Query) y use cases en Flutter (Riverpod + Either).
 
 ---
 
-## Next.js con SWR
+## Next.js con TanStack Query v5
 
 ```typescript
 // lib/api/services/clubs.service.ts
-import { apiClient } from '../client';
-import useSWR from 'swr';
+import { apiRequest } from '@/lib/api/apiRequest';
 
 export interface Club {
   club_id: number;
   name: string;
   local_field_id: number;
-  club_types: {
-    club_type_id: number;
-    name: string;
-  };
+  club_types: { club_type_id: number; name: string };
   active: boolean;
 }
 
-// Fetcher genérico
-const fetcher = (url: string) => apiClient.get(url).then((res) => res.data);
+export const clubsApi = {
+  list: () => apiRequest<Club[]>('/clubs'),
+  detail: (id: number) => apiRequest<Club>(`/clubs/${id}`),
+  create: (dto: Partial<Club>) => apiRequest<Club>('/clubs', { method: 'POST', body: dto }),
+  update: (id: number, dto: Partial<Club>) =>
+    apiRequest<Club>(`/clubs/${id}`, { method: 'PATCH', body: dto }),
+  remove: (id: number) => apiRequest(`/clubs/${id}`, { method: 'DELETE' }),
+};
+```
 
-// Hook para listar clubs
+```typescript
+// hooks/use-clubs.ts
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { clubsApi } from '@/lib/api/services/clubs.service';
+
 export function useClubs() {
-  const { data, error, isLoading, mutate } = useSWR<{
-    status: string;
-    data: Club[];
-  }>('/clubs', fetcher);
-
-  return {
-    clubs: data?.data,
-    isLoading,
-    isError: error,
-    mutate,
-  };
+  return useQuery({
+    queryKey: ['clubs'],
+    queryFn: clubsApi.list,
+  });
 }
 
-// Función para crear club
-export async function createClub(clubData: Partial<Club>) {
-  const response = await apiClient.post('/clubs', clubData);
-  return response.data;
-}
-
-// Función para actualizar club
-export async function updateClub(clubId: number, clubData: Partial<Club>) {
-  const response = await apiClient.patch(`/clubs/${clubId}`, clubData);
-  return response.data;
-}
-
-// Función para eliminar club
-export async function deleteClub(clubId: number) {
-  const response = await apiClient.delete(`/clubs/${clubId}`);
-  return response.data;
+export function useCreateClub() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: clubsApi.create,
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['clubs'] }),
+  });
 }
 ```
 
-**Uso en componente**:
+**Uso en componente** (Server Component que hace render inicial + Client Component que hidrata):
 
-```typescript
-// app/dashboard/clubs/page.tsx
+```tsx
+// app/dashboard/clubs/page.tsx (Server Component)
+import { ClubsList } from './_components/clubs-list';
+import { clubsApi } from '@/lib/api/services/clubs.service';
+
+export default async function ClubsPage() {
+  const clubs = await clubsApi.list(); // SSR initial fetch
+  return <ClubsList initialData={clubs} />;
+}
+```
+
+```tsx
+// _components/clubs-list.tsx (Client Component)
 'use client';
+import { useClubs } from '@/hooks/use-clubs';
 
-import { useClubs, createClub } from '@/lib/api/services/clubs.service';
-import { useState } from 'react';
-
-export default function ClubsPage() {
-  const { clubs, isLoading, isError, mutate } = useClubs();
-  const [isCreating, setIsCreating] = useState(false);
-
-  const handleCreate = async (data: any) => {
-    setIsCreating(true);
-    try {
-      await createClub(data);
-      mutate(); // Revalidar lista
-      toast.success('Club creado exitosamente');
-    } catch (error) {
-      toast.error('Error al crear club');
-    } finally {
-      setIsCreating(false);
-    }
-  };
-
-  if (isLoading) return <Spinner />;
-  if (isError) return <ErrorMessage />;
-
-  return (
-    <div>
-      <h1>Clubs</h1>
-      <ClubList clubs={clubs} />
-      <CreateClubForm onSubmit={handleCreate} isLoading={isCreating} />
-    </div>
-  );
+export function ClubsList({ initialData }: { initialData: Club[] }) {
+  const { data: clubs } = useClubs(); // hydrate from cache, refresca en background
+  return <div>{(clubs ?? initialData).map(c => <div key={c.club_id}>{c.name}</div>)}</div>;
 }
 ```
 
 ---
 
-## Flutter con Dio + Riverpod
+## Flutter con Dio + Riverpod + Either
 
 ```dart
 // lib/features/clubs/data/datasources/clubs_remote_datasource.dart
 class ClubsRemoteDataSource {
   final Dio dio;
+  ClubsRemoteDataSource(this.dio);
 
   Future<List<ClubModel>> getClubs() async {
-    try {
-      final response = await dio.get('/clubs');
-      final data = response.data['data'] as List;
-      return data.map((json) => ClubModel.fromJson(json)).toList();
-    } on DioException catch (e) {
-      throw ServerException(e.message ?? 'Error fetching clubs');
-    }
+    final response = await dio.get('/clubs');
+    final data = response.data['data'] as List;
+    return data.map((json) => ClubModel.fromJson(json)).toList();
   }
 
   Future<ClubModel> createClub(ClubModel club) async {
-    try {
-      final response = await dio.post('/clubs', data: club.toJson());
-      return ClubModel.fromJson(response.data['data']);
-    } on DioException catch (e) {
-      throw ServerException(e.message ?? 'Error creating club');
-    }
+    final response = await dio.post('/clubs', data: club.toJson());
+    return ClubModel.fromJson(response.data['data']);
   }
 }
 
 // lib/features/clubs/domain/usecases/get_clubs.dart
 class GetClubs {
   final ClubsRepository repository;
+  GetClubs(this.repository);
 
-  Future<Either<Failure, List<Club>>> call() async {
-    return await repository.getClubs();
-  }
+  Future<Either<Failure, List<Club>>> call() => repository.getClubs();
 }
 
 // lib/features/clubs/presentation/providers/clubs_provider.dart
-final clubsProvider = FutureProvider<List<Club>>((ref) async {
+final clubsProvider = FutureProvider.autoDispose<List<Club>>((ref) async {
   final useCase = ref.read(getClubsUseCaseProvider);
   final result = await useCase();
-
   return result.fold(
     (failure) => throw Exception(failure.message),
     (clubs) => clubs,
@@ -158,22 +124,17 @@ final clubsProvider = FutureProvider<List<Club>>((ref) async {
 **Uso en widget**:
 
 ```dart
-// lib/features/clubs/presentation/pages/clubs_page.dart
 class ClubsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final clubsAsync = ref.watch(clubsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Clubs')),
+      appBar: AppBar(title: const Text('Clubs')),
       body: clubsAsync.when(
         data: (clubs) => ClubsList(clubs: clubs),
-        loading: () => CircularProgressIndicator(),
-        error: (error, stack) => ErrorWidget(error.toString()),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, '/clubs/create'),
-        child: Icon(Icons.add),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Text('Error: $e'),
       ),
     );
   }
@@ -184,16 +145,15 @@ class ClubsPage extends ConsumerWidget {
 
 ## Envelope de respuesta
 
-Todas las respuestas de la API usan el envelope `{ status, data }`. Siempre acceder a `.data` para obtener el recurso:
+Todas las respuestas usan envelope `{ status, data }` (admin) o `{ status: 'success', data }`.
 
 ```typescript
-// Next.js
-const response = await apiClient.get('/clubs/1');
-const club = response.data.data; // response.data = { status, data: Club }
+// apiRequest ya hace .json() y devuelve el body completo.
+// Si tu endpoint envuelve en { data }, hacé:
+const { data } = await apiRequest<{ data: Club }>('/clubs/1');
 ```
 
 ```dart
-// Flutter
 final response = await dio.get('/clubs/1');
 final club = ClubModel.fromJson(response.data['data']);
 ```

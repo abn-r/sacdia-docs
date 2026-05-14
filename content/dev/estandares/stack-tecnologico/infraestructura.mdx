@@ -2,32 +2,35 @@
 title: "Infraestructura"
 description: "Hosting, contenedores, CI/CD y entorno de desarrollo local para SACDIA"
 author: "Abner Reyes"
-version: "1.0.0"
+version: "2.0.0"
 ---
 
 ## Hosting
 
-**Backend NestJS**: Vercel Serverless Functions (budget-friendly &lt;$20/mes)  
-**Admin Panel (Next.js)**: Vercel (mismo proyecto que backend)  
-**Database**: Supabase (PostgreSQL hosted) — Free tier para hobby  
-**Storage**: Supabase Storage — Free tier  
-**Redis**: Upstash (Serverless Redis) — Free tier  
-**Mobile App**: App Store + Google Play Store  
+**Backend NestJS**: **Render.com** (Web Service)
+**Admin Panel (Next.js 16)**: **Vercel**
+**Database**: **Neon** (PostgreSQL serverless) — 1 proyecto, 3 branches (development, staging, production)
+**Storage**: **Cloudflare R2** (presigned URLs para evidencias, comprobantes materiales, recursos)
+**Redis**: Upstash o equivalente (cache, BullMQ, throttler distribuido)
+**Mobile App**: App Store + Google Play Store
 
-**CDN**: Cloudflare (para assets estaticos)
+**CDN**: Cloudflare (assets estaticos + R2)
 
 ---
 
 ## Containers & Orchestration
 
-**Containerizacion**: Docker (para backend)  
-**Orchestration**: Docker Compose (dev) / Railway o Render (produccion simple)
+**Containerizacion**: Docker (para backend, opcional)
+**Dev local**: Docker Compose (PostgreSQL/Redis si no se usa branch remoto de Neon)
+**Produccion**: Render.com gestiona el runtime; no Kubernetes ni Docker Compose en prod.
 
 ---
 
 ## CI/CD
 
 **Platform**: GitHub Actions
+**Runtime CI**: Node 22.x + pnpm 10 + `actions/setup-node@v4`
+**Flag**: `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`
 
 ### Backend NestJS
 
@@ -35,24 +38,25 @@ version: "1.0.0"
 on: push
 jobs:
   test:
-    - Install dependencies
-    - Run linter (ESLint)
-    - Run tests (Jest)
-    - Run Prisma generate
+    - pnpm install
+    - pnpm run lint
+    - pnpm prisma generate
+    - pnpm run test          # bloqueante (sin continue-on-error)
+    - pnpm run test:e2e
   deploy:
-    - Build Docker image
-    - Push to registry
-    - Deploy to hosting (Railway/Render)
+    - Render.com hace deploy automatico al merge en preproduction/production
 ```
 
-### Admin Panel (Next.js)
+### Admin Panel (Next.js 16)
 
 ```yaml
 on: push to main
 jobs:
-  - Build Next.js app
-  - Run tests
-  - Deploy to Vercel (automatic)
+  - pnpm install
+  - pnpm run build (Next.js 16 con Turbopack)
+  - Vitest + MSW unit/integration tests
+  - scripts/e2e-smoke.mjs (e2e custom)
+  - Deploy automatico a Vercel
 ```
 
 ### Flutter App
@@ -60,10 +64,10 @@ jobs:
 ```yaml
 on: tag creation
 jobs:
-  - Run tests
+  - flutter test
   - Build APK (Android)
   - Build IPA (iOS)
-  - Upload to Play Console / App Store Connect
+  - Upload a Play Console / App Store Connect via Fastlane
 ```
 
 ---
@@ -72,42 +76,48 @@ jobs:
 
 ### Requisitos del Sistema
 
-**Node.js**: Version 20.x LTS  
-**Flutter**: Version 3.19+ (Stable)  
-**Docker**: Requerido para PostgreSQL y Redis locales  
-**Supabase CLI**: Para desarrollo local (opcional)
+**Node.js**: Version 22.x LTS
+**pnpm**: 10
+**Flutter**: 3.27+ (Stable)
+**Dart**: 3.6+
+**Docker**: Opcional (solo si no se conecta a branch remoto de Neon)
+**neonctl**: Para gestionar branches y obtener connection strings
 
 ### Setup Inicial
 
 ```bash
-# Clone repository
-git clone [repo-url]
+# Clone repos del monorepo
+git clone https://github.com/abn-r/sacdia-backend.git
+git clone https://github.com/abn-r/sacdia-admin.git
+git clone https://github.com/abn-r/sacdia-app.git
 
-# Install dependencies
-npm install
+# Backend
+cd sacdia-backend
+pnpm install
+cp .env.example .env       # llenar BETTER_AUTH_SECRET, DATABASE_URL (Neon), REDIS_URL, R2_*
+pnpm prisma migrate deploy
+pnpm run start:dev         # http://localhost:3000
 
-# Setup environment
-cp .env.example .env
-# Editar .env con tus valores
+# Admin
+cd ../sacdia-admin
+pnpm install
+cp .env.example .env       # NEXT_PUBLIC_API_URL=http://localhost:3000
+pnpm run dev               # http://localhost:3001
 
-# Run database (con Docker)
-docker-compose up -d postgres redis
-
-# Run migrations
-npm run migrate
-
-# Start dev server
-npm run dev
+# App
+cd ../sacdia-app
+flutter pub get
+flutter run
 ```
 
 ### Puertos Usados
 
 | Servicio | Puerto |
 | --- | --- |
-| Next.js Admin Panel | 3000 |
-| NestJS Backend API | 3001 |
-| PostgreSQL (Docker) | 5432 |
-| Redis (Docker) | 6379 |
+| NestJS Backend API | 3000 |
+| Next.js Admin Panel | 3001 |
+| PostgreSQL (Docker, opcional) | 5432 |
+| Redis (Docker, opcional) | 6379 |
 | Prisma Studio | 5555 |
 | Flutter App | Emulator/Device |
 
@@ -123,14 +133,14 @@ npm run dev
 
 ## Mobile Support
 
-- **iOS**: 13.0+ (Flutter requirement)
+- **iOS**: 13.0+
 - **Android**: API 21+ (Android 5.0 Lollipop)
 
 ## Versiones Minimas
 
-**Node.js**: 20.x LTS  
-**Flutter**: 3.19+  
-**Dart**: 3.3+
+**Node.js**: 22.x LTS
+**Flutter**: 3.27+
+**Dart**: 3.6+
 
 ---
 
@@ -138,12 +148,12 @@ npm run dev
 
 ### Performance
 
-- Bundle size maximo: Definir por proyecto
-- Time to Interactive: &lt; Y segundos
+- Bundle size: monitoreado en admin via `@next/bundle-analyzer`
 - Core Web Vitals: Cumplir umbrales "Good"
 
 ### Seguridad
 
 - TLS 1.3+ obligatorio
-- Todas las dependencias sin vulnerabilidades criticas/altas
-- Secrets nunca en codigo (usar secrets manager)
+- PII redaction global en logs de dev
+- Throttle en endpoints sensibles (`/auth/update-password`, etc.)
+- Secrets nunca en codigo; `.env.example` documenta nombres, valores en secret manager por entorno

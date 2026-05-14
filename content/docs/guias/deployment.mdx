@@ -21,25 +21,31 @@ version: "2.2.0"
 +----------------------------------------------------------+
 |                                                           |
 |  +--------------+  +--------------+  +--------------+   |
-|  |   Vercel     |  |   Vercel     |  | App Store /  |   |
+|  |  Render.com  |  |   Vercel     |  | App Store /  |   |
 |  |   (API)      |  |   (Admin)    |  | Google Play  |   |
-|  | NestJS       |  | Next.js 16   |  | Flutter      |   |
+|  | NestJS 11    |  | Next.js 16   |  | Flutter      |   |
 |  +------+-------+  +------+-------+  +------+-------+   |
 |         |                  |                  |           |
 |         +------------------+------------------+           |
 |                            |                              |
 |                  +---------v---------+                   |
-|                  |  Supabase Cloud   |                   |
-|                  |  - PostgreSQL 15  |                   |
-|                  |  - Auth           |                   |
-|                  |  - Storage        |                   |
-|                  +-------------------+                   |
-|                                                           |
+|                  |       Neon        |                   |
+|                  | PostgreSQL 16     |                   |
+|                  | dev/staging/prod  |                   |
+|                  +---------+---------+                   |
+|                            |                              |
+|         +------------------+------------------+           |
+|         |                  |                  |           |
+|  +------v------+  +-------v-------+  +------v-------+   |
+|  | Better Auth |  | Cloudflare R2 |  |    Redis     |   |
+|  | (in NestJS) |  |   (Storage)   |  | (BullMQ +    |   |
+|  +-------------+  +---------------+  |  cache)      |   |
+|                                       +--------------+   |
 |         +----------------+-----------------+             |
 |         |                |                 |             |
 |  +------v------+  +------v------+  +------v------+      |
-|  |   Upstash   |  |  Firebase  |  |   Sentry    |      |
-|  |   Redis     |  |    FCM     |  |  Monitoring |      |
+|  |   Firebase  |  |   Sentry   |  |   GitHub    |      |
+|  |   FCM       |  | Monitoring |  |  Actions    |      |
 |  +-------------+  +------------+  +-------------+      |
 +----------------------------------------------------------+
 ```
@@ -56,86 +62,87 @@ version: "2.2.0"
 
 ## Backend (NestJS)
 
-### Deployment en Vercel
+### Deployment en Render.com
 
-#### 1. Preparacion del Proyecto
+> El backend se despliega en **Render.com** (Web Service). Vercel fue removido del pipeline.
 
-**Archivo**: `vercel.json`
+#### 1. Configuracion del servicio
 
-```json
-{
-  "version": 2,
-  "builds": [
-    {
-      "src": "src/main.ts",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "src/main.ts",
-      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
-}
-```
+- **Runtime**: Node 22.x
+- **Build command**: `pnpm install && pnpm prisma generate && pnpm run build`
+- **Start command**: `pnpm run start:prod`
+- **Health check**: `/api/v1/health`
+- **Auto-deploy**: rama `preproduction` → staging service, `production` → production service.
 
-**Archivo**: `package.json` (scripts)
+**`package.json` (scripts relevantes)**:
 
 ```json
 {
   "scripts": {
     "build": "nest build",
-    "start": "nest start",
     "start:prod": "node dist/main",
-    "vercel-build": "npm run build"
+    "prisma:deploy": "prisma migrate deploy"
   }
 }
 ```
 
+Render corre `prisma migrate deploy` automaticamente como pre-deploy hook.
+
 ---
 
-#### 2. Variables de Entorno en Vercel
+#### 2. Variables de Entorno en Render
 
-**Dashboard -> Settings -> Environment Variables**:
+**Dashboard del servicio → Environment**:
 
 ```bash
-# Database
-DATABASE_URL="postgresql://..."
+# Database (Neon)
+DATABASE_URL="postgresql://<user>:<pwd>@ep-<branch>.us-east-1.aws.neon.tech/sacdia?sslmode=require"
 
-# Supabase
-SUPABASE_URL="https://xxx.supabase.co"
-SUPABASE_ANON_KEY="eyJ..."
-SUPABASE_SERVICE_ROLE_KEY="eyJ..."
+# Better Auth (Option C: BA autentica, SACDIA firma JWT con este secret)
+BETTER_AUTH_SECRET="<SECRET>"           # 32+ bytes random; mismo secret se usa para firmar JWT HS256
+BETTER_AUTH_URL="https://api.sacdia.app"
+
+# OAuth (Better Auth)
+GOOGLE_CLIENT_ID="..."
+GOOGLE_CLIENT_SECRET="<SECRET>"
+APPLE_CLIENT_ID="..."
+APPLE_CLIENT_SECRET="<SECRET>"
+APPLE_TEAM_ID="..."
+APPLE_KEY_ID="..."
+
+# Cloudflare R2 (Storage)
+R2_ACCOUNT_ID="..."
+R2_ACCESS_KEY_ID="..."
+R2_SECRET_ACCESS_KEY="<SECRET>"
+R2_BUCKET="sacdia-prod"
+R2_PUBLIC_URL="https://r2.sacdia.app"
+
+# R2 buckets adicionales (materiales)
+R2_MATERIALES_COMPROBANTES_BUCKET="sacdia-materiales-prod"
 
 # Firebase (FCM)
 FIREBASE_PROJECT_ID="sacdia-app"
 FIREBASE_CLIENT_EMAIL="firebase-adminsdk@..."
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 
-# Redis (Upstash)
-REDIS_URL="redis://..."
-
-# JWT
-JWT_SECRET="your-super-secret-key-change-in-production"
-JWT_EXPIRES_IN="15m"
+# Redis (BullMQ + cache-aside + throttler distribuido)
+REDIS_URL="redis://..."   # REQUERIDO en produccion — app falla si no esta disponible
 
 # CORS
 CORS_ORIGIN="https://admin.sacdia.app,https://sacdia.app"
 
-# Rate Limiting
-RATE_LIMIT_TTL="60"
-RATE_LIMIT_LIMIT="100"
+# Rate Limiting (Throttler)
+THROTTLER_TTL="60"
+THROTTLER_LIMIT="100"
 
-# Sentry (opcional)
+# Sentry
 SENTRY_DSN="https://..."
+
+# Swagger (opcional, default OFF en prod)
+SWAGGER_ENABLED="false"
 ```
 
-**IMPORTANTE**: Crear variables separadas para cada ambiente (Production, Preview, Development).
+> La fuente de verdad de los nombres de env vars es `sacdia-backend/.env.example`. Claves marcadas `# <SECRET>` viven en el secret manager de Render por ambiente; nunca se commitean.
 
 ---
 
@@ -268,13 +275,11 @@ railway up
 # API
 NEXT_PUBLIC_API_URL="https://api.sacdia.app/api/v1"
 
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL="https://xxx.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJ..."
-
 # Opcional: Analytics
 NEXT_PUBLIC_VERCEL_ANALYTICS_ID="xxx"
 ```
+
+> El admin **NO** usa `NEXT_PUBLIC_SUPABASE_*` ni nada de Supabase. La autenticacion vive en backend via Better Auth; el admin solo lee la cookie `ACCESS_TOKEN_COOKIE` (httpOnly) que emite el backend.
 
 ---
 
@@ -307,7 +312,10 @@ const nextConfig = {
 
   // Optimizacion de imagenes
   images: {
-    domains: ['storage.supabase.co'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'r2.sacdia.app' },
+      { protocol: 'https', hostname: '*.r2.cloudflarestorage.com' },
+    ],
     formats: ['image/avif', 'image/webp'],
   },
 
@@ -547,31 +555,27 @@ jobs:
 
 ## Base de Datos
 
-### Supabase
+### Neon
 
-**Ya esta en la nube**, no requiere deployment adicional.
+PostgreSQL hosteado en Neon. 1 proyecto con 3 branches: `development`, `staging`, `production`. Cada branch tiene su propio endpoint y connection string.
 
 **Migraciones**:
 
 ```bash
-# Desde local a produccion
-DATABASE_URL="postgresql://..." npx prisma migrate deploy
-
-# O usar Supabase CLI
-supabase db push
+# Aplicar migraciones a un branch especifico
+DATABASE_URL=$(neonctl connection-string --branch production) pnpm prisma migrate deploy
 ```
 
-**Backups automaticos**:
-- Supabase Free: Backups diarios (7 dias de retencion)
-- Supabase Pro: Backups diarios (30 dias de retencion) + Point-in-Time Recovery
+> **Gotcha conocido**: `prisma migrate dev` puede fallar contra Neon porque el shadow DB no se puede crear en una rama existente. Workaround: usar `prisma migrate diff --script` para generar SQL, aplicarlo via psql, y registrar la migracion en `_prisma_migrations` manualmente.
 
-**Backup manual**:
+**Backups**:
+- Neon: branch copy-on-write + Point-in-Time Recovery (PITR) configurable por plan.
+- Para snapshots manuales: `neonctl branches create --parent production --name backup-YYYYMMDD`.
+
+**Backup manual (export logico)**:
 
 ```bash
-# Exportar schema + data
 pg_dump $DATABASE_URL > backup_$(date +%Y%m%d).sql
-
-# Restaurar
 psql $DATABASE_URL < backup_20260204.sql
 ```
 
@@ -595,48 +599,36 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
-      - name: Install dependencies
-        run: npm install
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10'
 
-      - name: Run linter
-        run: npm run lint
-
-      - name: Run tests
-        run: npm run test
-
-      - name: Run E2E tests
-        run: npm run test:e2e
+      - run: pnpm install
+      - run: pnpm run lint
+      - run: pnpm prisma generate
+      - run: pnpm run test     # bloqueante
+      - run: pnpm run test:e2e
         env:
           DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
 
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/production'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
-
-      - name: Run Migrations
-        run: |
-          npx prisma migrate deploy
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      # Render.com auto-deploy en push a production — no requiere step adicional.
+      # Migraciones se aplican en el pre-deploy hook del servicio.
 ```
 
 ---
@@ -673,8 +665,6 @@ jobs:
         run: pnpm build
         env:
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
@@ -837,7 +827,7 @@ app.enableCors({
    adb logcat
    ```
 
-2. Verificar configuracion de Supabase en `main.dart`
+2. Verificar configuracion de Better Auth + base URL en `main.dart` (dart-define `API_URL`)
 3. Verificar permisos en `AndroidManifest.xml` / `Info.plist`
 
 ---

@@ -65,25 +65,31 @@ psql -U postgres -d sacdia -f migrations/script_01_organizacion.sql
 
 ---
 
-### Opcion 2: Desde Supabase Dashboard
+### Opcion 2: Desde Neon Console
 
-1. Ir a **SQL Editor** en Supabase Dashboard
-2. Copiar contenido del script
-3. Ejecutar
-4. Verificar resultados en **Table Editor**
+1. Abrir el proyecto Neon → seleccionar branch (`development` / `staging` / `production`)
+2. Ir a **SQL Editor**
+3. Copiar contenido del script y ejecutar
+4. Verificar resultados en **Tables**
+
+> Para entornos efimeros, crear branch nuevo con `neonctl branches create` y aplicar migraciones ahi.
 
 ---
 
 ### Opcion 3: Desde Prisma
 
 ```bash
+# Asegurate de que DATABASE_URL apunte al branch correcto de Neon
+neonctl connection-string --branch development > .env.development
+
 # Ejecutar un script SQL
 npx prisma db execute --file migrations/script_01_organizacion.sql
 
-# O desde el directorio especifico
-cd sacdia-backend
-npx prisma db execute --file ../docs/03-DATABASE/migrations/script_01_organizacion.sql
+# Para migraciones generadas por Prisma:
+pnpm prisma migrate deploy
 ```
+
+> **Gotcha conocido**: shadow DB de Prisma no funciona contra branches de Neon. Por eso `prisma migrate dev` puede fallar al validar contra shadow. Workaround: aplicar SQL manualmente via psql, o usar un branch dedicado de shadow.
 
 ---
 
@@ -173,11 +179,17 @@ ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name;
 
 ```bash
 # 1. Editar schema.prisma
-# 2. Crear migracion
-npx prisma migrate dev --name descripcion_del_cambio
+# 2. Crear migracion (puede fallar contra Neon si shadow DB rompe)
+pnpm prisma migrate dev --name descripcion_del_cambio
 
-# 3. La migracion se crea automaticamente en:
-# sacdia-backend/prisma/migrations/YYYYMMDDHHMMSS_descripcion_del_cambio/
+# 3. Si shadow DB falla en Neon, generar SQL manualmente:
+pnpm prisma migrate diff \
+  --from-schema-datasource prisma/schema.prisma \
+  --to-schema-datamodel prisma/schema.prisma \
+  --script > prisma/migrations/YYYYMMDDHHMMSS_descripcion/migration.sql
+
+# 4. Aplicar migracion en cada branch de Neon:
+pnpm prisma migrate deploy
 ```
 
 ### Manualmente
