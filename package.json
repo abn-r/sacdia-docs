@@ -6,6 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "sync:endpoints": "tsx scripts/sync-endpoints.ts",
+    "sync:schema": "tsx scripts/sync-schema.ts",
+    "sync:versions": "tsx scripts/sync-versions.ts",
+    "sync:all": "pnpm sync:endpoints && pnpm sync:schema && pnpm sync:versions",
     "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
@@ -26,6 +30,7 @@
     "@types/react-dom": "^19",
     "postcss": "^8",
     "tailwindcss": "^4",
+    "tsx": "^4.22.0",
     "typescript": "^5"
   }
 }
