@@ -7,10 +7,17 @@ version: "1.0.0"
 
 ## 6. Patrones de CRUD
 
-### 6.1 Crear / Editar -> Flujo por paginas (obligatorio)
+### 6.1 Crear / Editar -> Flujo por paginas (default)
 
-**REGLA**: Crear y Editar usan paginas dedicadas (`/new` y `/[id]`).  
-No usar `Dialog` como patron principal de CRUD.
+**REGLA**: Crear y Editar usan paginas dedicadas (`/new` y `/[id]`) por default.
+
+**Excepcion** (DS §6.1.1, decision 2026-05-11):
+- Dialog SE PERMITE solo si: ≤4 campos planos, sin relaciones, sin uploads, sin tabs.
+- Cualquier flujo con >4 campos O con relaciones / imagenes / tabs DEBE usar pagina dedicada.
+
+**Helpers existentes**:
+- `<CatalogCrudPage>` — pagina CRUD generica con tabla + form
+- `<PhaseECatalogCrudPage>` — wrapper para los 24+ catalogos i18n-aware (gestiona `TranslationsTabsField` + `<entity>_translations` overlay automaticamente)
 
 ```tsx
 // Listado -> alta
