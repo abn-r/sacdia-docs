@@ -2,6 +2,7 @@
   "title": "Schema Reference",
   "pages": [
     "index",
+    "_generated-models",
     "users-auth",
     "organizacion",
     "clubs",

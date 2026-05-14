@@ -1,4 +1,4 @@
 {
   "title": "Stack Tecnologico",
-  "pages": ["index", "frontend", "backend", "mobile", "infraestructura", "servicios", "decisiones"]
+  "pages": ["index", "_generated-versions", "frontend", "backend", "mobile", "infraestructura", "servicios", "decisiones"]
 }
