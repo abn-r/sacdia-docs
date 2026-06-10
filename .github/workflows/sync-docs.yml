@@ -25,6 +25,7 @@ jobs:
         with:
           path: sacdia-docs
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Checkout sacdia-backend
         uses: actions/checkout@v4
@@ -32,6 +33,7 @@ jobs:
           repository: abn-r/sacdia-backend
           path: sacdia-backend
           token: ${{ secrets.SACDIA_REPO_TOKEN }}
+          persist-credentials: false
 
       - name: Checkout sacdia-admin
         uses: actions/checkout@v4
@@ -39,6 +41,7 @@ jobs:
           repository: abn-r/sacdia-admin
           path: sacdia-admin
           token: ${{ secrets.SACDIA_REPO_TOKEN }}
+          persist-credentials: false
 
       - name: Checkout sacdia-app
         uses: actions/checkout@v4
@@ -46,6 +49,7 @@ jobs:
           repository: abn-r/sacdia-app
           path: sacdia-app
           token: ${{ secrets.SACDIA_REPO_TOKEN }}
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
@@ -62,7 +66,7 @@ jobs:
       - name: Generate OpenAPI spec from backend
         working-directory: sacdia-backend
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install --frozen-lockfile --ignore-scripts
           pnpm exec prisma generate
           pnpm tsx scripts/generate-openapi.ts
         env:

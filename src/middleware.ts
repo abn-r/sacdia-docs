@@ -3,10 +3,16 @@ import { NextRequest, NextResponse } from 'next/server';
 export function middleware(request: NextRequest) {
   const user = process.env.DEV_DOCS_USER;
   const password = process.env.DEV_DOCS_PASSWORD;
+  const devDocsPublic = process.env.DEV_DOCS_PUBLIC === 'true';
 
-  // If no credentials configured, allow access (local dev)
+  // Local/dev opt-out must be explicit. In hosted environments, missing
+  // credentials fail closed instead of exposing /dev docs anonymously.
   if (!user || !password) {
-    return NextResponse.next();
+    if (devDocsPublic) {
+      return NextResponse.next();
+    }
+
+    return unauthorized();
   }
 
   const authHeader = request.headers.get('authorization');
@@ -24,6 +30,10 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  return unauthorized();
+}
+
+function unauthorized() {
   return new NextResponse('Authentication required', {
     status: 401,
     headers: {
