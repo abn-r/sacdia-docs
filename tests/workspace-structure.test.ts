@@ -115,4 +115,12 @@ describe('documentation workspace', () => {
     expect(`${drift}\n${sync}`).not.toContain('content/dev');
     expect(`${drift}\n${sync}`).toContain('apps/tecnico/src/content/docs');
   });
+
+  it('imports shared Astro components through package exports without duplicate extensions', () => {
+    for (const portal of ['operativo', 'administrativo', 'tecnico']) {
+      const landing = readFileSync(`apps/${portal}/src/content/docs/index.mdx`, 'utf8');
+      expect(landing).not.toMatch(/@sacdia\/docs-ui\/components\/[A-Za-z]+\.astro/);
+      expect(landing).toContain('@sacdia/docs-ui/components/LandingHero');
+    }
+  });
 });
