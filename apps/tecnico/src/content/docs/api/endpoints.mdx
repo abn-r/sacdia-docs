@@ -1,0 +1,387 @@
+---
+title: "Endpoints — Live Reference"
+description: "Referencia completa de endpoints REST de SACDIA API. Generado automaticamente desde el OpenAPI spec del backend."
+surface: technical
+documentType: reference
+module: api
+status: published
+owners:
+  - "Auto-generated"
+lastReviewedAt: 2026-08-20
+generated: true
+---
+{/*
+  AUTO-GENERATED FILE — DO NOT EDIT MANUALLY.
+  Source: sacdia-backend/sacdia-api-spec.json (via SwaggerModule.createDocument)
+  Generator: sacdia-docs/scripts/sync-endpoints.ts
+  Regenerate:
+    cd sacdia-backend && pnpm tsx scripts/generate-openapi.ts
+    cd ../sacdia-docs && pnpm tsx scripts/sync-endpoints.ts
+*/}
+
+## Resumen
+
+| Metrica | Valor |
+| --- | --- |
+| API version | `2.2.0` |
+| Total endpoints | **189** |
+| Autenticados (Bearer) | 158 |
+| Tags / modulos | 27 |
+| Generado | 2026-05-14 |
+| Spec fuente | `sacdia-backend/sacdia-api-spec.json` |
+
+> Esta pagina se regenera desde el OpenAPI spec del backend. Si ves drift contra el codigo, regenera con `pnpm sync:endpoints`. La autoridad final es `SwaggerModule.createDocument` corriendo sobre el codigo NestJS.
+
+## Indice de modulos
+
+- [auth](#auth) — 16 endpoints
+- [users](#users) — 10 endpoints
+- [clubs](#clubs) — 11 endpoints
+- [activities](#activities) — 7 endpoints
+- [admin-geography](#admin-geography) — 20 endpoints
+- [admin-reference](#admin-reference) — 16 endpoints
+- [admin-users](#admin-users) — 2 endpoints
+- [App](#app) — 1 endpoints
+- [camporees](#camporees) — 8 endpoints
+- [catalogs](#catalogs) — 14 endpoints
+- [certifications](#certifications) — 7 endpoints
+- [classes](#classes) — 3 endpoints
+- [club-roles](#club-roles) — 2 endpoints
+- [emergency-contacts](#emergency-contacts) — 5 endpoints
+- [FCM Tokens](#fcm-tokens) — 4 endpoints
+- [finances](#finances) — 7 endpoints
+- [folders](#folders) — 7 endpoints
+- [health](#health) — 1 endpoints
+- [honors](#honors) — 4 endpoints
+- [inventory](#inventory) — 6 endpoints
+- [legal-representatives](#legal-representatives) — 4 endpoints
+- [Notifications](#notifications) — 3 endpoints
+- [OAuth](#oauth) — 5 endpoints
+- [post-registration](#post-registration) — 4 endpoints
+- [rbac](#rbac) — 10 endpoints
+- [user-classes](#user-classes) — 4 endpoints
+- [user-honors](#user-honors) — 8 endpoints
+
+
+## auth
+
+- 🔓 `POST /api/v1/auth/login` — Iniciar sesión
+- 🔓 `POST /api/v1/auth/logout` — Cerrar sesión
+- 🔒 `GET /api/v1/auth/me` — Obtener perfil del usuario autenticado
+- 🔒 `PATCH /api/v1/auth/me/context` — Cambiar contexto activo de club/instancia del usuario
+- 🔒 `POST /api/v1/auth/mfa/enroll` — Iniciar enrolamiento de 2FA
+- 🔒 `GET /api/v1/auth/mfa/factors` — Listar factores MFA configurados
+- 🔒 `GET /api/v1/auth/mfa/status` — Verificar estado de 2FA
+- 🔒 `DELETE /api/v1/auth/mfa/unenroll` — Deshabilitar 2FA
+- 🔒 `POST /api/v1/auth/mfa/verify` — Verificar y activar 2FA
+- 🔓 `POST /api/v1/auth/password/reset-request` — Solicitar recuperación de contraseña
+- 🔒 `GET /api/v1/auth/profile/completion-status` — Obtener estado del post-registro
+- 🔓 `POST /api/v1/auth/refresh` — Refrescar sesión con refresh token
+- 🔓 `POST /api/v1/auth/register` — Registrar nuevo usuario
+- 🔒 `GET /api/v1/auth/sessions` — Listar sesiones activas
+- 🔒 `DELETE /api/v1/auth/sessions` — Cerrar todas las sesiones
+- 🔒 `DELETE /api/v1/auth/sessions/{sessionId}` — Cerrar una sesión específica
+
+---
+
+## users
+
+- 🔒 `GET /api/v1/users/{userId}` — Obtener información de un usuario
+- 🔒 `PATCH /api/v1/users/{userId}` — Actualizar información personal del usuario
+- 🔒 `GET /api/v1/users/{userId}/age` — Calcular edad del usuario
+- 🔒 `PUT /api/v1/users/{userId}/allergies` — Guardar alergias del usuario
+- 🔒 `DELETE /api/v1/users/{userId}/allergies/{allergyId}` — Eliminar alergia del usuario (borrado lógico)
+- 🔒 `PUT /api/v1/users/{userId}/diseases` — Guardar enfermedades del usuario
+- 🔒 `DELETE /api/v1/users/{userId}/diseases/{diseaseId}` — Eliminar enfermedad del usuario (borrado lógico)
+- 🔒 `POST /api/v1/users/{userId}/profile-picture` — Subir foto de perfil
+- 🔒 `DELETE /api/v1/users/{userId}/profile-picture` — Eliminar foto de perfil
+- 🔒 `GET /api/v1/users/{userId}/requires-legal-representative` — Verificar si el usuario requiere representante legal
+
+---
+
+## clubs
+
+- 🔒 `GET /api/v1/clubs` `?localFieldId?&districtId?&churchId?&active?&page?&limit?` — Listar clubs
+- 🔒 `POST /api/v1/clubs` — Crear nuevo club
+- 🔒 `GET /api/v1/clubs/{clubId}` — Obtener club por ID
+- 🔒 `PATCH /api/v1/clubs/{clubId}` — Actualizar club (requiere rol director o deputy director)
+- 🔒 `DELETE /api/v1/clubs/{clubId}` — Desactivar club (requiere rol director)
+- 🔒 `GET /api/v1/clubs/{clubId}/instances` — Obtener instancias del club
+- 🔒 `POST /api/v1/clubs/{clubId}/instances` — Crear instancia de club (requiere director o deputy director)
+- 🔒 `GET /api/v1/clubs/{clubId}/instances/{type}` — Obtener instancia por tipo
+- 🔒 `PATCH /api/v1/clubs/{clubId}/instances/{type}/{instanceId}` — Actualizar instancia (requiere director, deputy director o secretary)
+- 🔒 `GET /api/v1/clubs/{clubId}/instances/{type}/{instanceId}/members` — Listar miembros de la instancia
+- 🔒 `POST /api/v1/clubs/{clubId}/instances/{type}/{instanceId}/roles` — Asignar rol a un miembro (requiere director, deputy director o secretary)
+
+---
+
+## activities
+
+- 🔒 `GET /api/v1/activities/{activityId}` — Obtener actividad por ID
+- 🔒 `PATCH /api/v1/activities/{activityId}` — Actualizar actividad
+- 🔒 `DELETE /api/v1/activities/{activityId}` — Desactivar actividad
+- 🔒 `GET /api/v1/activities/{activityId}/attendance` — Obtener asistencia
+- 🔒 `POST /api/v1/activities/{activityId}/attendance` — Registrar asistencia
+- 🔒 `GET /api/v1/clubs/{clubId}/activities` `?clubTypeId?&active?&activityTypeId?&page?&limit?` — Listar actividades del club
+- 🔒 `POST /api/v1/clubs/{clubId}/activities` — Crear actividad
+
+---
+
+## admin-geography
+
+- 🔒 `GET /api/v1/admin/churches` `?districtId?` — List churches for admin management
+- 🔒 `POST /api/v1/admin/churches` — Create church
+- 🔒 `PATCH /api/v1/admin/churches/{churchId}` — Update church
+- 🔒 `DELETE /api/v1/admin/churches/{churchId}` — Soft delete church
+- 🔒 `GET /api/v1/admin/countries` — List countries for admin management
+- 🔒 `POST /api/v1/admin/countries` — Create country
+- 🔒 `PATCH /api/v1/admin/countries/{countryId}` — Update country
+- 🔒 `DELETE /api/v1/admin/countries/{countryId}` — Soft delete country
+- 🔒 `GET /api/v1/admin/districts` `?localFieldId?` — List districts for admin management
+- 🔒 `POST /api/v1/admin/districts` — Create district
+- 🔒 `PATCH /api/v1/admin/districts/{districtId}` — Update district
+- 🔒 `DELETE /api/v1/admin/districts/{districtId}` — Soft delete district
+- 🔒 `GET /api/v1/admin/local-fields` `?unionId?` — List local fields for admin management
+- 🔒 `POST /api/v1/admin/local-fields` — Create local field
+- 🔒 `PATCH /api/v1/admin/local-fields/{localFieldId}` — Update local field
+- 🔒 `DELETE /api/v1/admin/local-fields/{localFieldId}` — Soft delete local field
+- 🔒 `GET /api/v1/admin/unions` `?countryId?` — List unions for admin management
+- 🔒 `POST /api/v1/admin/unions` — Create union
+- 🔒 `PATCH /api/v1/admin/unions/{unionId}` — Update union
+- 🔒 `DELETE /api/v1/admin/unions/{unionId}` — Soft delete union
+
+---
+
+## admin-reference
+
+- 🔒 `GET /api/v1/admin/allergies` — List allergies for admin management
+- 🔒 `POST /api/v1/admin/allergies` — Create allergy
+- 🔒 `PATCH /api/v1/admin/allergies/{allergyId}` — Update allergy
+- 🔒 `DELETE /api/v1/admin/allergies/{allergyId}` — Soft delete allergy
+- 🔒 `GET /api/v1/admin/diseases` — List diseases for admin management
+- 🔒 `POST /api/v1/admin/diseases` — Create disease
+- 🔒 `PATCH /api/v1/admin/diseases/{diseaseId}` — Update disease
+- 🔒 `DELETE /api/v1/admin/diseases/{diseaseId}` — Soft delete disease
+- 🔒 `GET /api/v1/admin/ecclesiastical-years` — List ecclesiastical years for admin management
+- 🔒 `POST /api/v1/admin/ecclesiastical-years` — Create ecclesiastical year
+- 🔒 `PATCH /api/v1/admin/ecclesiastical-years/{yearId}` — Update ecclesiastical year
+- 🔒 `DELETE /api/v1/admin/ecclesiastical-years/{yearId}` — Soft delete ecclesiastical year
+- 🔒 `GET /api/v1/admin/relationship-types` — List relationship types for admin management
+- 🔒 `POST /api/v1/admin/relationship-types` — Create relationship type
+- 🔒 `PATCH /api/v1/admin/relationship-types/{relationshipTypeId}` — Update relationship type
+- 🔒 `DELETE /api/v1/admin/relationship-types/{relationshipTypeId}` — Soft delete relationship type
+
+---
+
+## admin-users
+
+- 🔒 `GET /api/v1/admin/users` `?page?&limit?&search?&role?&active?&unionId?&localFieldId?` — Listar usuarios administrativos con alcance por rol (ALL/UNION/LOCAL_FIELD)
+- 🔒 `GET /api/v1/admin/users/{userId}` — Obtener detalle de usuario validando alcance por rol del actor
+
+---
+
+## App
+
+- 🔓 `GET /api/v1` — AppController_getHello_v1
+
+---
+
+## camporees
+
+- 🔒 `GET /api/v1/camporees` `?active?&page?&limit?` — Listar camporees
+- 🔒 `POST /api/v1/camporees` — Crear camporee
+- 🔒 `GET /api/v1/camporees/{camporeeId}` — Obtener camporee por ID
+- 🔒 `PATCH /api/v1/camporees/{camporeeId}` — Actualizar camporee
+- 🔒 `DELETE /api/v1/camporees/{camporeeId}` — Desactivar camporee
+- 🔒 `GET /api/v1/camporees/{camporeeId}/members` — Listar miembros del camporee
+- 🔒 `DELETE /api/v1/camporees/{camporeeId}/members/{userId}` — Remover miembro del camporee
+- 🔒 `POST /api/v1/camporees/{camporeeId}/register` — Registrar miembro en camporee
+
+---
+
+## catalogs
+
+- 🔓 `GET /api/v1/catalogs/activity-types` — Obtener tipos de actividad
+- 🔓 `GET /api/v1/catalogs/allergies` — Obtener catálogo de alergias
+- 🔓 `GET /api/v1/catalogs/churches` `?districtId?` — Obtener iglesias
+- 🔓 `GET /api/v1/catalogs/club-ideals` `?clubTypeId?` — Obtener ideales de club
+- 🔓 `GET /api/v1/catalogs/club-types` — Obtener tipos de club
+- 🔓 `GET /api/v1/catalogs/countries` — Obtener países
+- 🔓 `GET /api/v1/catalogs/diseases` — Obtener catálogo de enfermedades
+- 🔓 `GET /api/v1/catalogs/districts` `?localFieldId?` — Obtener distritos
+- 🔓 `GET /api/v1/catalogs/ecclesiastical-years` — Obtener años eclesiásticos
+- 🔓 `GET /api/v1/catalogs/ecclesiastical-years/current` — Obtener año eclesiástico actual
+- 🔓 `GET /api/v1/catalogs/local-fields` `?unionId?` — Obtener campos locales
+- 🔓 `GET /api/v1/catalogs/relationship-types` — Obtener tipos de relación
+- 🔓 `GET /api/v1/catalogs/roles` `?category?` — Obtener roles disponibles
+- 🔓 `GET /api/v1/catalogs/unions` `?countryId?` — Obtener uniones
+
+---
+
+## certifications
+
+- 🔒 `GET /api/v1/certifications/certifications` `?page?&limit?` — Listar todas las certificaciones disponibles
+- 🔒 `GET /api/v1/certifications/certifications/{id}` — Obtener detalles de una certificación
+- 🔒 `GET /api/v1/certifications/users/{userId}/certifications` — Listar certificaciones del usuario
+- 🔒 `DELETE /api/v1/certifications/users/{userId}/certifications/{certificationId}` — Abandonar una certificación
+- 🔒 `GET /api/v1/certifications/users/{userId}/certifications/{certificationId}/progress` — Ver progreso detallado de una certificación
+- 🔒 `PATCH /api/v1/certifications/users/{userId}/certifications/{certificationId}/progress` — Actualizar progreso de una sección
+- 🔒 `POST /api/v1/certifications/users/{userId}/certifications/enroll` — Inscribirse en una certificación
+
+---
+
+## classes
+
+- 🔓 `GET /api/v1/classes` `?clubTypeId?&page?&limit?` — Listar clases
+- 🔓 `GET /api/v1/classes/{classId}` — Obtener clase por ID
+- 🔓 `GET /api/v1/classes/{classId}/modules` — Obtener módulos de una clase
+
+---
+
+## club-roles
+
+- 🔒 `PATCH /api/v1/club-roles/{assignmentId}` — Actualizar asignación de rol
+- 🔒 `DELETE /api/v1/club-roles/{assignmentId}` — Remover rol de miembro
+
+---
+
+## emergency-contacts
+
+- 🔒 `GET /api/v1/users/{userId}/emergency-contacts` — Listar contactos de emergencia del usuario
+- 🔒 `POST /api/v1/users/{userId}/emergency-contacts` — Crear contacto de emergencia (máximo 5)
+- 🔒 `GET /api/v1/users/{userId}/emergency-contacts/{contactId}` — Obtener un contacto específico
+- 🔒 `PATCH /api/v1/users/{userId}/emergency-contacts/{contactId}` — Actualizar contacto de emergencia
+- 🔒 `DELETE /api/v1/users/{userId}/emergency-contacts/{contactId}` — Eliminar contacto de emergencia (soft delete)
+
+---
+
+## FCM Tokens
+
+- 🔒 `GET /api/v1/fcm-tokens` — Get current user FCM tokens
+- 🔒 `POST /api/v1/fcm-tokens` — Register FCM token
+- 🔒 `DELETE /api/v1/fcm-tokens/{token}` — Unregister FCM token
+- 🔒 `GET /api/v1/fcm-tokens/user/{userId}` — Get FCM tokens by user ID (owner/admin only)
+
+---
+
+## finances
+
+- 🔒 `GET /api/v1/clubs/{clubId}/finances` `?year?&month?&clubTypeId?&categoryId?&page?&limit?` — Listar movimientos financieros del club
+- 🔒 `POST /api/v1/clubs/{clubId}/finances` — Crear movimiento financiero
+- 🔒 `GET /api/v1/clubs/{clubId}/finances/summary` `?year?&month?` — Resumen financiero del club
+- 🔒 `GET /api/v1/finances/{financeId}` — Obtener movimiento por ID
+- 🔒 `PATCH /api/v1/finances/{financeId}` — Actualizar movimiento
+- 🔒 `DELETE /api/v1/finances/{financeId}` — Desactivar movimiento
+- 🔒 `GET /api/v1/finances/categories` `?type?` — Listar categorías financieras
+
+---
+
+## folders
+
+- 🔒 `GET /api/v1/folders/folders` `?club_type?&page?&limit?` — Listar templates de carpetas disponibles
+- 🔒 `GET /api/v1/folders/folders/{id}` — Obtener detalles de un template de carpeta
+- 🔒 `GET /api/v1/folders/users/{userId}/folders` — Listar carpetas asignadas del usuario
+- 🔒 `DELETE /api/v1/folders/users/{userId}/folders/{folderId}` — Abandonar una carpeta
+- 🔒 `POST /api/v1/folders/users/{userId}/folders/{folderId}/enroll` — Inscribirse en una carpeta
+- 🔒 `PATCH /api/v1/folders/users/{userId}/folders/{folderId}/modules/{moduleId}/sections/{sectionId}` — Actualizar progreso de una sección
+- 🔒 `GET /api/v1/folders/users/{userId}/folders/{folderId}/progress` — Ver progreso detallado de una carpeta
+
+---
+
+## health
+
+- 🔓 `GET /api/v1/health` — Check API status
+
+---
+
+## honors
+
+- 🔓 `GET /api/v1/honors` `?categoryId?&clubTypeId?&skillLevel?&page?&limit?` — Listar honores
+- 🔓 `GET /api/v1/honors/{honorId}` — Obtener honor por ID
+- 🔓 `GET /api/v1/honors/categories` — Listar categorías de honores
+- 🔓 `GET /api/v1/honors/grouped-by-category` `?categoryId?&clubTypeId?&skillLevel?` — Listar honores agrupados por categoría
+
+---
+
+## inventory
+
+- 🔒 `GET /api/v1/inventory/catalogs/inventory-categories` — Listar categorías de inventario
+- 🔒 `GET /api/v1/inventory/clubs/{clubId}/inventory` `?instanceType&category?` — Listar items del inventario de un club
+- 🔒 `POST /api/v1/inventory/clubs/{clubId}/inventory` — Agregar nuevo item al inventario
+- 🔒 `GET /api/v1/inventory/inventory/{id}` — Obtener detalles de un item del inventario
+- 🔒 `PATCH /api/v1/inventory/inventory/{id}` — Actualizar un item del inventario
+- 🔒 `DELETE /api/v1/inventory/inventory/{id}` — Eliminar un item del inventario
+
+---
+
+## legal-representatives
+
+- 🔒 `GET /api/v1/users/{userId}/legal-representative` — Obtener representante legal del usuario
+- 🔒 `POST /api/v1/users/{userId}/legal-representative` — Registrar representante legal (solo para menores de 18)
+- 🔒 `PATCH /api/v1/users/{userId}/legal-representative` — Actualizar representante legal
+- 🔒 `DELETE /api/v1/users/{userId}/legal-representative` — Eliminar representante legal
+
+---
+
+## Notifications
+
+- 🔒 `POST /api/v1/notifications/broadcast` — Send notification to all users
+- 🔒 `POST /api/v1/notifications/club/{instanceType}/{instanceId}` — Send notification to club members
+- 🔒 `POST /api/v1/notifications/send` — Send notification to specific user
+
+---
+
+## OAuth
+
+- 🔒 `DELETE /api/v1/auth/oauth/{provider}` — Desconectar un provider
+- 🔓 `POST /api/v1/auth/oauth/apple` — Iniciar autenticación con Apple
+- 🔓 `POST /api/v1/auth/oauth/callback` — Finalizar callback de OAuth
+- 🔓 `POST /api/v1/auth/oauth/google` — Iniciar autenticación con Google
+- 🔒 `GET /api/v1/auth/oauth/providers` — Obtener providers conectados
+
+---
+
+## post-registration
+
+- 🔒 `GET /api/v1/users/{userId}/post-registration/status` — Obtener estado del post-registro
+- 🔒 `POST /api/v1/users/{userId}/post-registration/step-1/complete` — Completar Paso 1: Foto de perfil
+- 🔒 `POST /api/v1/users/{userId}/post-registration/step-2/complete` — Completar Paso 2: Información personal
+- 🔒 `POST /api/v1/users/{userId}/post-registration/step-3/complete` — Completar Paso 3: Selección de club
+
+---
+
+## rbac
+
+- 🔒 `GET /api/v1/admin/rbac/permissions` — Listar todos los permisos
+- 🔒 `POST /api/v1/admin/rbac/permissions` — Crear un nuevo permiso
+- 🔒 `GET /api/v1/admin/rbac/permissions/{id}` — Obtener un permiso por ID
+- 🔒 `PATCH /api/v1/admin/rbac/permissions/{id}` — Actualizar un permiso
+- 🔒 `DELETE /api/v1/admin/rbac/permissions/{id}` — Desactivar un permiso
+- 🔒 `GET /api/v1/admin/rbac/roles` — Listar roles con sus permisos
+- 🔒 `GET /api/v1/admin/rbac/roles/{id}` — Obtener rol con sus permisos
+- 🔒 `POST /api/v1/admin/rbac/roles/{id}/permissions` — Asignar permisos a un rol
+- 🔒 `PUT /api/v1/admin/rbac/roles/{id}/permissions` — Sincronizar permisos de un rol (reemplaza todos)
+- 🔒 `DELETE /api/v1/admin/rbac/roles/{id}/permissions/{permissionId}` — Remover un permiso de un rol
+
+---
+
+## user-classes
+
+- 🔒 `GET /api/v1/users/{userId}/classes` `?yearId?` — Obtener inscripciones del usuario
+- 🔒 `GET /api/v1/users/{userId}/classes/{classId}/progress` — Obtener progreso del usuario en una clase
+- 🔒 `PATCH /api/v1/users/{userId}/classes/{classId}/progress` — Actualizar progreso de sección
+- 🔒 `POST /api/v1/users/{userId}/classes/enroll` — Inscribir usuario en clase
+
+---
+
+## user-honors
+
+- 🔒 `GET /api/v1/users/{userId}/honors` `?validated?` — Obtener honores del usuario
+- 🔒 `POST /api/v1/users/{userId}/honors` — Registrar honor con datos iniciales
+- 🔒 `POST /api/v1/users/{userId}/honors/{honorId}` — Iniciar un honor
+- 🔒 `PATCH /api/v1/users/{userId}/honors/{honorId}` — Actualizar progreso de honor
+- 🔒 `DELETE /api/v1/users/{userId}/honors/{honorId}` — Abandonar honor
+- 🔒 `POST /api/v1/users/{userId}/honors/{honorId}/files` — Subir evidencias del honor
+- 🔒 `POST /api/v1/users/{userId}/honors/bulk` — Registrar honores de usuario de forma masiva
+- 🔒 `GET /api/v1/users/{userId}/honors/stats` — Obtener estadísticas de honores del usuario
+

@@ -1,0 +1,164 @@
+---
+title: "Infraestructura"
+description: "Hosting, contenedores, CI/CD y entorno de desarrollo local para SACDIA"
+surface: technical
+documentType: reference
+module: estandares
+status: published
+owners:
+  - "Abner Reyes"
+lastReviewedAt: 2026-08-20
+generated: false
+---
+## Hosting
+
+**Backend NestJS**: **Render.com** (Web Service)
+**Admin Panel (Next.js 16)**: **Vercel**
+**Database**: **Neon** (PostgreSQL serverless) — 1 proyecto, 3 branches (development, staging, production)
+**Storage**: **Cloudflare R2** (presigned URLs para evidencias, comprobantes materiales, recursos)
+**Redis**: Upstash o equivalente (cache, BullMQ, throttler distribuido)
+**Mobile App**: App Store + Google Play Store
+
+**CDN**: Cloudflare (assets estaticos + R2)
+
+---
+
+## Containers & Orchestration
+
+**Containerizacion**: Docker (para backend, opcional)
+**Dev local**: Docker Compose (PostgreSQL/Redis si no se usa branch remoto de Neon)
+**Produccion**: Render.com gestiona el runtime; no Kubernetes ni Docker Compose en prod.
+
+---
+
+## CI/CD
+
+**Platform**: GitHub Actions
+**Runtime CI**: Node 22.x + pnpm 10 + `actions/setup-node@v4`
+**Flag**: `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`
+
+### Backend NestJS
+
+```yaml
+on: push
+jobs:
+  test:
+    - pnpm install
+    - pnpm run lint
+    - pnpm prisma generate
+    - pnpm run test          # bloqueante (sin continue-on-error)
+    - pnpm run test:e2e
+  deploy:
+    - Render.com hace deploy automatico al merge en preproduction/production
+```
+
+### Admin Panel (Next.js 16)
+
+```yaml
+on: push to main
+jobs:
+  - pnpm install
+  - pnpm run build (Next.js 16 con Turbopack)
+  - Vitest + MSW unit/integration tests
+  - scripts/e2e-smoke.mjs (e2e custom)
+  - Deploy automatico a Vercel
+```
+
+### Flutter App
+
+```yaml
+on: tag creation
+jobs:
+  - flutter test
+  - Build APK (Android)
+  - Build IPA (iOS)
+  - Upload a Play Console / App Store Connect via Fastlane
+```
+
+---
+
+## Desarrollo Local
+
+### Requisitos del Sistema
+
+**Node.js**: Version 22.x LTS
+**pnpm**: 10
+**Flutter**: 3.27+ (Stable)
+**Dart**: 3.6+
+**Docker**: Opcional (solo si no se conecta a branch remoto de Neon)
+**neonctl**: Para gestionar branches y obtener connection strings
+
+### Setup Inicial
+
+```bash
+# Clone repos del monorepo
+git clone https://github.com/abn-r/sacdia-backend.git
+git clone https://github.com/abn-r/sacdia-admin.git
+git clone https://github.com/abn-r/sacdia-app.git
+
+# Backend
+cd sacdia-backend
+pnpm install
+cp .env.example .env       # llenar BETTER_AUTH_SECRET, DATABASE_URL (Neon), REDIS_URL, R2_*
+pnpm prisma migrate deploy
+pnpm run start:dev         # http://localhost:3000
+
+# Admin
+cd ../sacdia-admin
+pnpm install
+cp .env.example .env       # NEXT_PUBLIC_API_URL=http://localhost:3000
+pnpm run dev               # http://localhost:3001
+
+# App
+cd ../sacdia-app
+flutter pub get
+flutter run
+```
+
+### Puertos Usados
+
+| Servicio | Puerto |
+| --- | --- |
+| NestJS Backend API | 3000 |
+| Next.js Admin Panel | 3001 |
+| PostgreSQL (Docker, opcional) | 5432 |
+| Redis (Docker, opcional) | 6379 |
+| Prisma Studio | 5555 |
+| Flutter App | Emulator/Device |
+
+---
+
+## Browser Support
+
+- Chrome: Ultimas 2 versiones
+- Firefox: Ultimas 2 versiones
+- Safari: Ultimas 2 versiones
+- Edge: Ultimas 2 versiones
+- IE11: No soportado
+
+## Mobile Support
+
+- **iOS**: 13.0+
+- **Android**: API 21+ (Android 5.0 Lollipop)
+
+## Versiones Minimas
+
+**Node.js**: 22.x LTS
+**Flutter**: 3.27+
+**Dart**: 3.6+
+
+---
+
+## Restricciones Tecnicas
+
+### Performance
+
+- Bundle size: monitoreado en admin via `@next/bundle-analyzer`
+- Core Web Vitals: Cumplir umbrales "Good"
+
+### Seguridad
+
+- TLS 1.3+ obligatorio
+- PII redaction global en logs de dev
+- Throttle en endpoints sensibles (`/auth/update-password`, etc.)
+- Secrets nunca en codigo; `.env.example` documenta nombres, valores en secret manager por entorno

@@ -1,0 +1,165 @@
+---
+title: "Setup Inicial"
+description: "Configuracion del cliente API en Next.js 16 (Admin) y Flutter (App movil) para consumir la REST API de SACDIA."
+surface: technical
+documentType: reference
+module: api
+status: published
+owners:
+  - "Abner Reyes"
+lastReviewedAt: 2026-08-20
+generated: false
+---
+## Next.js Admin Panel (16)
+
+**Dependencias** (ya vienen en el repo):
+
+```bash
+pnpm add @tanstack/react-query zod
+```
+
+> **NO usar SWR**. La fuente de server state es TanStack Query.
+
+**Wrapper de fetch** (`lib/api/apiRequest.ts`) — patron real del admin:
+
+```typescript
+// lib/api/apiRequest.ts
+import { cookies } from 'next/headers';
+
+export async function apiRequest<T>(
+  path: string,
+  init?: { method?: string; body?: unknown; headers?: Record<string, string> }
+): Promise<T> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('ACCESS_TOKEN_COOKIE')?.value;
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
+    method: init?.method ?? 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...init?.headers,
+    },
+    body: init?.body ? JSON.stringify(init.body) : undefined,
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({ message: res.statusText }));
+    throw new ApiError(res.status, error);
+  }
+
+  return res.json();
+}
+```
+
+**Proxy edge** (`src/proxy.ts` — reemplaza al viejo `middleware.ts` en Next 16):
+
+```typescript
+// src/proxy.ts
+import { NextResponse, type NextRequest } from 'next/server';
+
+export const config = {
+  matcher: ['/', '/login', '/dashboard/:path*'],
+};
+
+export function proxy(req: NextRequest) {
+  const token = req.cookies.get('ACCESS_TOKEN_COOKIE')?.value;
+  const isLogin = req.nextUrl.pathname === '/login';
+
+  if (!token && !isLogin) return NextResponse.redirect(new URL('/login', req.url));
+  if (token && isLogin) return NextResponse.redirect(new URL('/dashboard', req.url));
+
+  return NextResponse.next();
+}
+```
+
+**Provider de TanStack Query** (`app/providers.tsx`):
+
+```typescript
+'use client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  const [qc] = useState(() => new QueryClient({
+    defaultOptions: { queries: { staleTime: 30_000, refetchOnWindowFocus: false } },
+  }));
+  return <QueryClientProvider client={qc}>{children}</QueryClientProvider>;
+}
+```
+
+---
+
+## Flutter Mobile App
+
+**Dependencias** (`pubspec.yaml` — fuente de verdad):
+
+```yaml
+dependencies:
+  dio: ^5.4.0
+  flutter_secure_storage: ^9.0.0
+  sentry_flutter: ^9.19.0
+  hugeicons: ^0.0.x
+  dartz: ^0.10.1
+```
+
+**Cliente API** (`lib/core/network/api_client.dart`):
+
+```dart
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+class ApiClient {
+  late final Dio _dio;
+  final _storage = const FlutterSecureStorage();
+
+  ApiClient() {
+    _dio = Dio(BaseOptions(
+      baseUrl: const String.fromEnvironment('API_URL', defaultValue: ''),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
+      headers: {'Content-Type': 'application/json'},
+    ));
+
+    _dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final token = await _storage.read(key: 'access_token');
+        if (token != null) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+        return handler.next(options);
+      },
+      onError: (error, handler) async {
+        if (error.response?.statusCode == 401) {
+          await _refreshOrLogout();
+        }
+        return handler.next(error);
+      },
+    ));
+  }
+
+  Dio get dio => _dio;
+}
+```
+
+> El token es JWT **HS256** emitido por SACDIA (no por Better Auth). Refresh sigue el contrato `POST /auth/refresh` con body `{ refreshToken }`.
+
+---
+
+## Variables de Entorno
+
+### Next.js (`.env.local`)
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:3000/api/v1
+```
+
+> El admin NO usa `NEXT_PUBLIC_SUPABASE_*` ni nada similar. Auth corre vía cookies httpOnly emitidas por el backend.
+
+### Flutter
+
+```bash
+flutter run --dart-define=API_URL=http://localhost:3000/api/v1
+flutter build apk --dart-define=API_URL=https://api.sacdia.app/api/v1
+```

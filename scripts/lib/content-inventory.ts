@@ -59,6 +59,15 @@ export function detectMdxRisk(source: string): MdxRisk {
 
 export function classifyLegacyDocument(sourcePath: string): Classification {
   const normalized = sourcePath.replaceAll('\\', '/');
+
+  if (normalized === 'content/dev/index.mdx') {
+    return { targetPortal: 'tecnico', targetPath: 'referencia/index.mdx' };
+  }
+
+  if (normalized === 'content/docs/index.mdx') {
+    return { targetPortal: 'revisar', targetPath: 'revision/legacy-documentation-index.mdx' };
+  }
+
   const mappings: Array<[string, string]> = [
     ['content/dev/', ''],
     ['content/docs/autorizacion/', 'seguridad/autorizacion/'],

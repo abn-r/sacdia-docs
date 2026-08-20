@@ -1,0 +1,155 @@
+---
+title: "Testing de Integracion Frontend"
+description: "Tests de integracion con la API en Next.js (Vitest + MSW + RTL) y Flutter (Mockito + Dio mock)."
+surface: technical
+documentType: reference
+module: api
+status: draft
+owners:
+  - "Abner Reyes"
+lastReviewedAt: 2026-08-20
+generated: false
+---
+## Next.js Tests (Vitest + MSW + RTL)
+
+El admin usa **Vitest** como runner y **MSW** (Mock Service Worker) para interceptar fetch. No usamos Jest ni Playwright.
+
+```typescript
+// tests/setup.ts
+import { afterAll, afterEach, beforeAll } from 'vitest';
+import { setupServer } from 'msw/node';
+import { http, HttpResponse } from 'msw';
+
+export const server = setupServer(
+  http.get('*/api/v1/clubs', () =>
+    HttpResponse.json({ status: 'success', data: [{ club_id: 1, name: 'Test Club' }] }),
+  ),
+);
+
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+```
+
+```typescript
+// tests/hooks/use-clubs.test.tsx
+import { describe, it, expect } from 'vitest';
+import { renderHook, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useClubs } from '@/hooks/use-clubs';
+
+function wrapper({ children }: { children: React.ReactNode }) {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return <QueryClientProvider client={qc}>{children}</QueryClientProvider>;
+}
+
+describe('useClubs', () => {
+  it('returns clubs from API', async () => {
+    const { result } = renderHook(() => useClubs(), { wrapper });
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data).toEqual([{ club_id: 1, name: 'Test Club' }]);
+  });
+});
+```
+
+### Test de error handling
+
+```typescript
+import { http, HttpResponse } from 'msw';
+import { server } from '../setup';
+
+it('handles 401 by redirecting to login', async () => {
+  server.use(
+    http.get('*/api/v1/clubs', () =>
+      HttpResponse.json({ status: 'error', message: 'Unauthorized' }, { status: 401 }),
+    ),
+  );
+
+  // Assert that the error boundary or interceptor redirects to /login
+});
+```
+
+### Form primitive tests
+
+El admin tiene `aria-invalid` wired en el primitive `<Form />`. Tests verifican que campos invalidos exponen `aria-invalid="true"` para a11y.
+
+### E2E smoke
+
+Script: `sacdia-admin/scripts/e2e-smoke.mjs` (Node, NO Playwright).
+
+```bash
+set -a; source .env.e2e.local; set +a; pnpm test:e2e:smoke
+E2E_ENABLE_WRITE=1 pnpm test:e2e:smoke   # incluye create/edit
+```
+
+El script:
+- Verifica endpoints criticos.
+- Maneja fallback `localhost -> 127.0.0.1` (IPv4/IPv6).
+- Reporta degradacion si hay 429 sin bloquear toda la corrida.
+
+---
+
+## Flutter Tests (Mockito + Dio mock)
+
+```dart
+// test/features/clubs/data/datasources/clubs_remote_datasource_test.dart
+@GenerateMocks([Dio])
+void main() {
+  late ClubsRemoteDataSource dataSource;
+  late MockDio mockDio;
+
+  setUp(() {
+    mockDio = MockDio();
+    dataSource = ClubsRemoteDataSource(mockDio);
+  });
+
+  test('returns list of clubs on success', () async {
+    when(mockDio.get('/clubs')).thenAnswer(
+      (_) async => Response(
+        data: { 'status': 'success', 'data': [{ 'club_id': 1, 'name': 'Test Club' }] },
+        statusCode: 200,
+        requestOptions: RequestOptions(path: '/clubs'),
+      ),
+    );
+
+    final result = await dataSource.getClubs();
+    expect(result.length, 1);
+    expect(result.first.name, 'Test Club');
+  });
+
+  test('throws ServerException on 500', () async {
+    when(mockDio.get('/clubs')).thenThrow(
+      DioException(
+        requestOptions: RequestOptions(path: '/clubs'),
+        response: Response(statusCode: 500, requestOptions: RequestOptions(path: '/clubs')),
+      ),
+    );
+
+    expect(() => dataSource.getClubs(), throwsA(isA<ServerException>()));
+  });
+}
+```
+
+### Test de autenticacion
+
+```dart
+test('returns AuthTokens on successful login', () async {
+  when(mockDio.post('/auth/login', data: anyNamed('data'))).thenAnswer(
+    (_) async => Response(
+      data: {
+        'status': 'success',
+        'data': {
+          'accessToken': 'token123',
+          'refreshToken': 'refresh123',
+          'expiresAt': '2026-12-31T00:00:00Z',
+        },
+      },
+      statusCode: 200,
+      requestOptions: RequestOptions(path: '/auth/login'),
+    ),
+  );
+
+  final result = await dataSource.login('test@test.com', 'password123');
+  expect(result.accessToken, 'token123');
+});
+```

@@ -1,0 +1,185 @@
+---
+title: "Best Practices"
+description: "Practicas recomendadas para consumir la API: TanStack Query, optimistic updates, paginacion, upload de archivos (presigned R2)."
+surface: technical
+documentType: reference
+module: api
+status: published
+owners:
+  - "Abner Reyes"
+lastReviewedAt: 2026-08-20
+generated: false
+---
+## 1. Cache y Revalidacion
+
+**Next.js con TanStack Query v5** (patron canonico del admin):
+
+```typescript
+// hooks/use-clubs.ts
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+
+export function useClubs() {
+  return useQuery({
+    queryKey: ['clubs'],
+    queryFn: () => apiRequest<Club[]>('/clubs'),
+    staleTime: 5 * 60_000, // 5 min
+    refetchOnWindowFocus: false,
+  });
+}
+
+export function useCreateClub() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (dto: CreateClubDto) => apiRequest('/clubs', { method: 'POST', body: dto }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['clubs'] }),
+  });
+}
+```
+
+> **NO usar SWR**. El admin migró completo a TanStack Query en 2026-04.
+
+**Flutter con Riverpod**:
+
+```dart
+final clubsProvider = FutureProvider.autoDispose<List<Club>>((ref) async {
+  final useCase = ref.read(getClubsUseCaseProvider);
+  final result = await useCase();
+  return result.fold(
+    (failure) => throw Exception(failure.message),
+    (clubs) => clubs,
+  );
+});
+
+// Invalidar manualmente (ej. tras crear/borrar)
+ref.invalidate(clubsProvider);
+```
+
+> Para realtime, ver `RealtimeInvalidationHandler` en `lib/core/realtime/`. Recibe FCM silent push y llama `ref.invalidate(...)` segun el `resource` que cambio.
+
+---
+
+## 2. Optimistic Updates
+
+**Next.js con TanStack Query**:
+
+```typescript
+const qc = useQueryClient();
+
+const deleteActivity = useMutation({
+  mutationFn: (id: number) => apiRequest(`/activities/${id}`, { method: 'DELETE' }),
+
+  onMutate: async (id) => {
+    await qc.cancelQueries({ queryKey: ['activities'] });
+    const prev = qc.getQueryData<Activity[]>(['activities']);
+    qc.setQueryData<Activity[]>(['activities'], (old) =>
+      old?.filter((a) => a.activity_id !== id),
+    );
+    return { prev };
+  },
+
+  onError: (_err, _id, ctx) => {
+    qc.setQueryData(['activities'], ctx?.prev); // rollback
+  },
+
+  onSettled: () => qc.invalidateQueries({ queryKey: ['activities'] }),
+});
+```
+
+---
+
+## 3. Paginacion
+
+**Next.js**:
+
+```typescript
+export function useActivitiesPaginated(clubId: number, page = 1, limit = 20) {
+  return useQuery({
+    queryKey: ['activities', clubId, page, limit],
+    queryFn: () => apiRequest<Paginated<Activity>>(
+      `/clubs/${clubId}/activities?page=${page}&limit=${limit}`,
+    ),
+    placeholderData: (prev) => prev, // keep previous page mientras carga
+  });
+}
+```
+
+**Flutter** (StateNotifier):
+
+```dart
+class ActivitiesPaginationNotifier extends StateNotifier<AsyncValue<PaginatedActivities>> {
+  int currentPage = 1;
+  final int limit = 20;
+
+  Future<void> loadMore() async {
+    currentPage++;
+    final result = await getActivities(page: currentPage, limit: limit);
+    // Agregar a lista existente
+  }
+}
+```
+
+---
+
+## 4. Upload de Archivos
+
+El admin/app usa **presigned R2 URLs** para evitar pasar el archivo por el backend. Patron:
+
+1. Cliente pide URL presignada al backend (`POST /resources/presign` o equivalente del modulo).
+2. Cliente sube el archivo directo a R2 con `PUT` y la URL.
+3. Cliente confirma con el backend (`POST /resources` con el `objectKey`).
+
+**Next.js**:
+
+```typescript
+async function uploadEvidence(file: File, folderId: number) {
+  // 1. Pedir presigned URL
+  const { uploadUrl, objectKey } = await apiRequest<{ uploadUrl: string; objectKey: string }>(
+    `/folders/${folderId}/evidence/presign`,
+    { method: 'POST', body: { filename: file.name, contentType: file.type } },
+  );
+
+  // 2. Subir directo a R2
+  await fetch(uploadUrl, { method: 'PUT', body: file, headers: { 'Content-Type': file.type } });
+
+  // 3. Confirmar con el backend
+  return apiRequest(`/folders/${folderId}/evidence`, {
+    method: 'POST',
+    body: { objectKey, filename: file.name },
+  });
+}
+```
+
+> Endpoints que aun reciben multipart (`/users/:userId/honors/:honorId/files`, etc.) siguen aceptando `Content-Type: multipart/form-data` por compatibilidad legacy, pero los nuevos modulos (materiales, resources, evidence) usan presigned.
+
+---
+
+## 5. Manejo de Contexto de Club
+
+`PATCH /api/v1/auth/me/context` cambia la asignacion activa sin re-login. La respuesta trae `authorization` recalculado:
+
+```typescript
+const switchContext = useMutation({
+  mutationFn: (assignment_id: string) =>
+    apiRequest('/auth/me/context', { method: 'PATCH', body: { assignment_id } }),
+  onSuccess: () => qc.invalidateQueries(), // invalida TODO (RBAC cambió)
+});
+```
+
+---
+
+## 6. Typing con TypeScript
+
+```typescript
+// types/api.ts
+export interface ApiResponse<T> {
+  status: 'success' | 'error';
+  data: T;
+  meta?: {
+    timestamp?: string;
+    pagination?: { page: number; limit: number; total: number; totalPages: number };
+  };
+}
+
+// Uso
+const data = await apiRequest<Club[]>('/clubs');
+```

@@ -1,0 +1,171 @@
+---
+title: "Backend — NestJS API"
+description: "Stack del backend API: NestJS 11, Prisma 7, PostgreSQL (Neon), Better Auth (HS256 JWT) y seguridad"
+surface: technical
+documentType: reference
+module: estandares
+status: published
+owners:
+  - "Abner Reyes"
+lastReviewedAt: 2026-08-20
+generated: false
+---
+## Framework Principal
+
+**Framework**: NestJS
+**Version**: 11.x (`@nestjs/core ^11.1.19`)
+**Por que lo elegimos**: Arquitectura modular, TypeScript nativo, decorators, excelente para APIs enterprise, integracion con Prisma
+
+## Lenguaje
+
+**Lenguaje**: Node.js con TypeScript
+**Version**: Node 22.x LTS / TypeScript 6.x
+
+**Librerias NestJS**:
+
+- `@nestjs/config` — Configuracion
+- `@nestjs/jwt` — Firma/verificacion JWT (HS256)
+- `@nestjs/passport` — Autenticacion
+- `@nestjs/throttler` — Rate limiting con storage Redis distribuido
+- `@nestjs/bullmq` — Cola asincrona (notificaciones, realtime invalidation)
+- `class-validator` + `class-transformer` — Validacion de DTOs
+- `@nestjs/swagger` — Documentacion API (gated por `SWAGGER_ENABLED=true`)
+
+---
+
+## Base de Datos
+
+### Database Principal
+
+**Tipo**: Relacional
+**Motor**: PostgreSQL (hosted en **Neon**)
+**Branches**: development, staging, production (1 proyecto Neon, 3 ramas)
+**Version**: PostgreSQL 16
+**ORM**: Prisma (v7.x — `prisma ^7.8.0`)
+
+**Prisma Features usados**:
+
+- Prisma Client — Type-safe queries
+- Prisma Migrate — Migraciones aplicadas manualmente via `psql` contra Neon (shadow DB no soportada en branches)
+- Prisma Studio — GUI para DB (dev)
+
+### Bases de Datos Adicionales
+
+- **Cache**: Redis (cache-aside para 14 catalogos, sessions, rate limiting). En produccion es requerido; la app falla al arrancar si `REDIS_URL` no esta disponible.
+- **Search**: PostgreSQL full-text search (no servicio externo)
+- **Queue**: BullMQ + Redis (notificaciones FCM, realtime invalidation jobs)
+- **Storage**: **Cloudflare R2** (archivos/imagenes/evidencias/comprobantes materiales) — presigned URLs
+
+---
+
+## Autenticacion
+
+**Provider**: **Better Auth** self-hosted (`src/better-auth/` en sacdia-backend)
+**Modelo**: Option C — Better Auth maneja autenticacion (login/signup/OAuth/MFA); SACDIA firma su propio JWT con `BETTER_AUTH_SECRET`.
+**Algoritmo JWT**: **HS256** (simetrico, NO ES256, NO JWKS)
+**OAuth**: Google y Apple configurados via Better Auth
+**MFA**: TOTP implementado en NestJS (no depende de proveedor externo)
+
+---
+
+## APIs
+
+**Estilo de API**: REST
+
+**Detalles**:
+
+- Versionado: URL-based (`/api/v1/`)
+- Autenticacion: JWT HS256 (Better Auth → SACDIA)
+- Response format: JSON
+- Status codes: Estandar HTTP
+- Respuesta admin: `{ status, data }`
+- Rate limiting: `@nestjs/throttler` con storage Redis distribuido (3 tiers)
+- Security headers: Helmet (CSP, HSTS, X-Frame-Options)
+- Session management: Limite de 5 sesiones por usuario
+- Token blacklist: Revocacion de JWT antes de expiracion
+- IP whitelist: Para endpoints admin (soporte CIDR)
+- Swagger: `/api` (solo con `SWAGGER_ENABLED=true`)
+
+---
+
+## Testing Backend
+
+- **Unit**: Jest (built-in NestJS)
+- **Integration**: Supertest + Test DB PostgreSQL
+- **DB Testing**: Docker PostgreSQL container para tests
+- **CI**: Node 22 + pnpm 10. Unit tests bloqueantes. `prisma generate` corre antes de tests. `transformIgnorePatterns: []` para paquetes ESM.
+
+**Ejemplo de test NestJS**:
+
+```typescript
+describe("UserService", () => {
+  let service: UserService;
+  let prisma: PrismaService;
+
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
+      providers: [UserService, PrismaService],
+    }).compile();
+
+    service = module.get<UserService>(UserService);
+  });
+
+  it("should create user", async () => {
+    // Use Jest + mock Prisma
+  });
+});
+```
+
+---
+
+## Convenciones del Backend
+
+- Respuesta admin: `{ status, data }`
+- Guards: `JwtAuthGuard`, `GlobalRolesGuard`, `OwnerOrAdminGuard`, `PermissionsGuard`, `ClubRolesGuard`
+- Async/await para todas las operaciones
+- Validacion de entrada via decoradores de NestJS (`class-validator`)
+- Prefijo API: `/api/v1/*`
+- Errores en logs con redaccion global de PII en dev
+
+## Observabilidad
+
+- **Sentry**: Reporte de errores en backend
+- **Firebase FCM**: Notificaciones push + realtime invalidation (silent multicast)
+- **Health**: `GET /api/v1/health`
+
+## Notas para IA
+
+**SIEMPRE usa estas tecnologias (backend)**:
+
+- NestJS 11 con TypeScript 6
+- Prisma 7 para queries (no raw SQL directo, salvo migraciones)
+- class-validator + class-transformer para DTOs
+- @nestjs/swagger para documentacion
+- NO Express directo, NO TypeORM, NO Sequelize, NO Supabase client
+
+**Queries correctas con Prisma**:
+
+```typescript
+// Bien
+const users = await this.prisma.user.findMany({
+  where: { email: { contains: query } },
+  include: { orders: true },
+});
+
+// Mal (raw SQL sin type safety)
+const users = await this.prisma.$queryRaw`
+  SELECT * FROM users WHERE email LIKE '%${query}%'
+`;
+```
+
+**Flujo de autenticacion (Option C)**:
+
+```
+1. User login → Better Auth (/api/auth/sign-in/email | /sign-in/social)
+2. Better Auth valida credenciales y emite sesion
+3. SACDIA firma JWT HS256 propio con BETTER_AUTH_SECRET
+4. Admin: cookie httpOnly ACCESS_TOKEN_COOKIE (Next.js proxy)
+5. App movil: flutter_secure_storage (Dio interceptor inyecta token)
+6. Backend NestJS: JwtAuthGuard valida HS256 con el mismo secret
+7. PermissionsGuard / ClubRolesGuard / OwnerOrAdminGuard segun endpoint
+```

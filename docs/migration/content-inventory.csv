@@ -42,7 +42,7 @@ content/dev/estandares/stack-tecnologico/index.mdx,tecnico,estandares/stack-tecn
 content/dev/estandares/stack-tecnologico/infraestructura.mdx,tecnico,estandares/stack-tecnologico/infraestructura.mdx,false,low,ready,Abner Reyes,
 content/dev/estandares/stack-tecnologico/mobile.mdx,tecnico,estandares/stack-tecnologico/mobile.mdx,false,low,ready,Abner Reyes,
 content/dev/estandares/stack-tecnologico/servicios.mdx,tecnico,estandares/stack-tecnologico/servicios.mdx,false,low,ready,Abner Reyes,
-content/dev/index.mdx,tecnico,index.mdx,false,low,ready,Abner Reyes,
+content/dev/index.mdx,tecnico,referencia/index.mdx,false,low,ready,Abner Reyes,
 content/dev/testing/index.mdx,tecnico,testing/index.mdx,false,low,ready,Abner Reyes,
 content/dev/testing/usuarios-prueba.mdx,tecnico,testing/usuarios-prueba.mdx,false,low,ready,Abner Reyes,
 content/docs/autorizacion/contrato-canonico.mdx,tecnico,seguridad/autorizacion/contrato-canonico.mdx,false,low,ready,Abner Reyes,
@@ -87,7 +87,7 @@ content/docs/guias/deployment.mdx,tecnico,guias/deployment.mdx,false,high,review
 content/docs/guias/developer-workflow.mdx,tecnico,guias/developer-workflow.mdx,false,low,ready,Abner Reyes,
 content/docs/guias/idea-to-spec.mdx,tecnico,guias/idea-to-spec.mdx,false,low,ready,Abner Reyes,
 content/docs/guias/index.mdx,tecnico,guias/index.mdx,false,low,ready,Abner Reyes,
-content/docs/index.mdx,revisar,revisar/docs/index.mdx,false,low,review,Abner Reyes,Requiere clasificación editorial; no publicar automáticamente.
+content/docs/index.mdx,revisar,revision/legacy-documentation-index.mdx,false,low,review,Abner Reyes,Requiere clasificación editorial; no publicar automáticamente.
 content/docs/sistema-de-diseno/componentes.mdx,tecnico,frontend/sistema-de-diseno/componentes.mdx,false,low,ready,Abner Reyes,
 content/docs/sistema-de-diseno/dark-mode-y-responsive.mdx,tecnico,frontend/sistema-de-diseno/dark-mode-y-responsive.mdx,false,low,ready,Abner Reyes,
 content/docs/sistema-de-diseno/estructura-archivos.mdx,tecnico,frontend/sistema-de-diseno/estructura-archivos.mdx,false,low,ready,Abner Reyes,

@@ -1,0 +1,124 @@
+---
+title: "Stack y Paleta de Color"
+description: "Stack UI y paleta Ember (OKLCH) con tokens semanticos para light/dark mode."
+surface: technical
+documentType: reference
+module: frontend
+status: draft
+owners:
+  - "Abner Reyes"
+lastReviewedAt: 2026-08-20
+generated: false
+---
+> **Fuente canonica**: `sacdia-admin/DESIGN-SYSTEM.md` (auditado 2026-04-16). Esta pagina espeja la seccion 1-2 del DS. Si hay drift, manda el DS del admin.
+
+## 1. Stack de UI
+
+| Capa | Tecnologia | Version |
+|------|-----------|---------|
+| Framework | Next.js (App Router + `proxy.ts`) | 16.x |
+| Componentes | shadcn/ui (estilo `new-york`) | latest |
+| Primitivos | Radix UI (`radix-ui`) | 1.4.x |
+| Estilos | Tailwind CSS v4 + `tw-animate-css` | 4.x |
+| Iconos | `lucide-react` | 0.563+ |
+| Graficos | Recharts | 3.x |
+| Formularios | React Hook Form + Zod | 7.x / 4.x |
+| Toasts | Sonner | 2.x |
+| Temas | next-themes | 0.4.x |
+| Server state | TanStack Query v5 | 5.x |
+| i18n | next-intl | 4.x |
+| Utilidad CSS | `cn()` de `clsx` + `tailwind-merge` | - |
+
+**Regla absoluta**: toda interfaz usa componentes de `@/components/ui/*` (shadcn/Radix). Si falta, instalar con `npx shadcn@latest add <componente>`.
+
+**Excepciones permitidas**:
+- `<input type="hidden">` para forms/server actions
+- Elementos nativos requeridos por APIs del navegador
+- Casos documentados en PR con justificacion tecnica
+
+---
+
+## 2. Paleta Ember (OKLCH)
+
+El sistema usa CSS custom properties en OKLCH para precision perceptual. La paleta actual es **Ember**: naranja cobre como primary, stone calido como base. Cambio desde paleta violeta original aplicado en commits Fase 1-4 del rediseño.
+
+### 2.1 Tokens de Superficie
+
+| Token | Light Mode | Dark Mode | Uso |
+|-------|-----------|-----------|-----|
+| `--background` | `oklch(0.975 0.004 75)` | `oklch(0.155 0.012 60)` | Fondo general (stone calido) |
+| `--foreground` | `oklch(0.18 0.015 60)` | `oklch(0.96 0.005 75)` | Texto principal |
+| `--card` | `oklch(1 0 0)` | `oklch(0.19 0.014 60)` | Fondo tarjetas |
+| `--card-foreground` | `oklch(0.18 0.015 60)` | `oklch(0.96 0.005 75)` | Texto en tarjetas |
+| `--popover` | `oklch(1 0 0)` | `oklch(0.21 0.015 60)` | Fondo popovers/menus |
+| `--muted` | `oklch(0.96 0.008 75)` | `oklch(0.23 0.015 60)` | Superficies secundarias |
+| `--muted-foreground` | `oklch(0.52 0.012 60)` | `oklch(0.68 0.012 60)` | Texto auxiliar |
+| `--accent` | `oklch(0.94 0.015 70)` | `oklch(0.26 0.018 60)` | Hover backgrounds |
+| `--secondary` | `oklch(0.96 0.008 75)` | `oklch(0.23 0.015 60)` | Botones secundarios |
+
+### 2.2 Colores Semanticos
+
+| Token | Light | Dark | Uso |
+|-------|-------|------|-----|
+| `--primary` | `oklch(0.66 0.21 42)` | `oklch(0.72 0.19 42)` | **Naranja cobre Ember** (~#F05A28). Acciones principales, brand. |
+| `--destructive` | `oklch(0.58 0.22 27)` | `oklch(0.67 0.22 27)` | Errores, eliminaciones |
+| `--success` | `oklch(0.56 0.15 152)` | `oklch(0.66 0.16 152)` | Estados activos, confirmaciones |
+| `--warning` | `oklch(0.75 0.15 80)` | `oklch(0.78 0.14 80)` | Pendientes, alertas suaves |
+| `--info` | `oklch(0.6 0.15 240)` | `oklch(0.7 0.15 240)` | Informacion neutra |
+
+### 2.3 Bordes e Input
+
+| Token | Light | Dark |
+|-------|-------|------|
+| `--border` | `oklch(0.92 0.006 60)` | `oklch(0.32 0.012 60)` |
+| `--input` | igual a `--border` | igual a `--border` |
+| `--ring` | `oklch(0.66 0.21 42)` | `oklch(0.72 0.19 42)` |
+
+### 2.4 Charts (orden Ember)
+
+| Token | Uso |
+|-------|-----|
+| `--chart-1` | Serie primaria (= primary) |
+| `--chart-2` | Serie secundaria |
+| `--chart-3` | Serie terciaria |
+| `--chart-4` | Serie cuaternaria (warning-like) |
+| `--chart-5` | Serie quinaria (purpura/cool) |
+
+### 2.5 Sidebar
+
+| Token | Uso |
+|-------|-----|
+| `--sidebar` | Fondo (claro en light, oscuro en dark) |
+| `--sidebar-foreground` | Texto normal |
+| `--sidebar-primary` | Pill naranja en item activo (estilo Finexy) |
+| `--sidebar-accent` | Hover background |
+| `--sidebar-border` | Borde del sidebar |
+
+### 2.6 Badge variants (Ember)
+
+Badge soporta variantes "soft tinted" para status:
+
+- `default`, `secondary`, `outline`, `link`, `destructive`
+- `soft`, `soft-info`, `soft-success`, `soft-warning` (fondos tenues con foreground tonal)
+
+Componente unificado: `<StatusBadge>` con 9 intents incluyendo `progress-1/2/3` para pipelines ordenados.
+
+### 2.7 Reglas de uso de color
+
+```
+HACER:
+  bg-primary/10          -> Fondo tenue para iconos o badges
+  bg-destructive/10      -> Fondo tenue para estados de error
+  bg-success/10          -> Fondo tenue para estados activos
+  bg-warning/10          -> Fondo tenue para estados pendientes
+  text-muted-foreground  -> Texto auxiliar, labels secundarios
+  bg-muted               -> Fondos neutros (skeletons, placeholders)
+
+EVITAR POR DEFECTO:
+  bg-blue-50, bg-red-100, bg-amber-50  -> Colores hardcoded de Tailwind
+  text-blue-600, text-red-500          -> Usar tokens semanticos
+
+EXCEPCION:
+  Se permiten colores hardcoded SOLO si hay solicitud explicita de mejora visual
+  y se valida compatibilidad en dark mode.
+```

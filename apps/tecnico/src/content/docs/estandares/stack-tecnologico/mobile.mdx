@@ -1,0 +1,215 @@
+---
+title: "App Movil — Flutter"
+description: "Stack de la aplicacion movil Flutter con Clean Architecture, Riverpod, Dio, Better Auth y FCM realtime"
+surface: technical
+documentType: reference
+module: estandares
+status: published
+owners:
+  - "Abner Reyes"
+lastReviewedAt: 2026-08-20
+generated: false
+---
+## Framework Principal
+
+**Framework**: Flutter
+**Version Flutter**: 3.27+ (Stable channel)
+**Version Dart**: 3.6+ (sdk: `^3.6.1` en `pubspec.yaml`)
+**Por que**: Cross-platform iOS + Android con un solo codigo, performance casi nativo, gran productividad
+
+> La fuente de verdad de versiones y dependencias es `sacdia-app/pubspec.yaml`. Esta pagina se sincroniza via generator (`sacdia-docs/scripts/sync-versions.ts`); si ves drift, el script no se ejecuto.
+
+---
+
+## Arquitectura
+
+**Patron**: Clean Architecture (3 capas) + Riverpod para DI/state.
+
+**Layout**:
+
+```
+lib/
+├── core/                  # Utilidades, errores, network, realtime
+│   ├── constants/
+│   ├── errors/            # Failures (Either<Failure, T>)
+│   ├── network/           # Dio client + interceptors
+│   ├── realtime/          # RealtimeInvalidationHandler (FCM silent)
+│   └── theme/             # Tema Material 3 + colores Ember
+│
+├── features/              # Bounded contexts
+│   └── [feature]/
+│       ├── data/          # data sources + models + repository impls
+│       ├── domain/        # entities + repository contracts + usecases
+│       └── presentation/  # pages + widgets + providers
+│
+└── shared/                # Widgets globales reutilizables
+```
+
+**Reglas**:
+- `domain/` NO depende de Flutter ni de Dio.
+- `domain/usecases/*` devuelven `Either<Failure, T>` (paquete `dartz`).
+- `presentation/` consume via Riverpod providers — nunca data sources directos.
+- Modelos (DTOs) en `data/models/`; entidades (puros) en `domain/entities/`.
+
+---
+
+## Autenticacion
+
+**Provider**: Better Auth (self-hosted en backend).
+**Token**: JWT **HS256** firmado por SACDIA con `BETTER_AUTH_SECRET`.
+**Storage**: `flutter_secure_storage` ^9.2.4 (keychain en iOS, EncryptedSharedPreferences en Android).
+**Refresh**: `POST /api/v1/auth/refresh` con body `{ refreshToken }`.
+**OAuth**: Google + Apple via backend (`POST /auth/oauth/{provider}` → redirectUrl).
+
+> **NO usar Supabase Flutter SDK**. Fue removido en Wave 3.
+
+---
+
+## State Management
+
+**Riverpod**: `flutter_riverpod` ^2.6.1
+
+- DI via providers (`Provider`, `FutureProvider`, `StreamProvider`, `StateNotifierProvider`)
+- `autoDispose` para limpiar estado cuando una page se cierra
+- `ref.invalidate(provider)` para invalidacion manual tras mutaciones
+- Realtime cache invalidation: `RealtimeInvalidationHandler` recibe FCM silent push (`data.type == 'cache_invalidate'`) y llama `ref.invalidate(...)` segun el `resource` afectado
+
+> **NO se usa `flutter_hooks`**, `bloc`, ni `provider` clasico.
+
+---
+
+## HTTP & Network
+
+- **Dio**: `dio` ^5.8.0+1 — cliente HTTP principal con interceptors (auth, retry, error logging)
+- **Connectivity**: `connectivity_plus` ^6.1.4 — chequea online/offline antes de operaciones criticas
+- **Lightweight HTTP**: `http` ^1.2.2 — solo para fetch de avatar en `pdf` builder
+
+---
+
+## Storage Local
+
+- **Secure (tokens, refresh)**: `flutter_secure_storage` ^9.2.4
+- **Settings, flags**: `shared_preferences` ^2.5.3
+- **Archivos temporales**: `path_provider` ^2.1.0
+
+> **NO se usa Hive ni Drift** (no estan en pubspec, aunque docs viejas los mencionaban).
+
+---
+
+## UI Stack
+
+- **Icons**: `hugeicons` ^1.1.5 (NO usar `Icons.*` de Material para iconos custom — usar `HugeIconData` typedef)
+- **SVG**: `flutter_svg` ^2.2.0
+- **Charts**: `fl_chart` ^0.69.0
+- **Animation loaders**: `loading_animation_widget` ^1.3.0
+- **Imagenes cacheadas**: `cached_network_image` ^3.4.1
+- **QR**: `qr_flutter` ^4.1.0 + `mobile_scanner` ^7.2.0
+- **PDF**: `pdf` ^3.11.1 + `printing` ^5.13.0 (rendering + share sheet nativo)
+- **Brillo / Wakelock**: `screen_brightness`, `wakelock_plus` (QR fullscreen + SOS)
+- **Galeria**: `gal` ^2.3.0 (guardar QR desde long-press)
+- **Compartir**: `share_plus` ^10.1.4
+
+---
+
+## Routing
+
+- **Router**: `go_router` ^15.2.0
+- **Navegacion stateful**: `StatefulShellRoute` para persona-nav (tabs con stack independiente + bottom-sheet "Mas")
+
+---
+
+## Mapas
+
+- **Google Maps**: `google_maps_flutter` ^2.10.0
+- **Geocoding**: `geocoding` ^3.0.0
+- **GPS**: `geolocator` ^13.0.2
+
+---
+
+## Permisos & Auth biometrica
+
+- **Permisos del dispositivo**: `permission_handler` ^11.3.0
+- **Biometric**: `local_auth` ^2.3.0 + `local_auth_android` + `local_auth_darwin`
+
+---
+
+## Seguridad
+
+- **`secure_application`** ^4.1.0 — Android `FLAG_SECURE` + iOS app-switcher blur (oculta credencial en multitasking)
+- **Firebase App Check** ^0.3.1+4 — bloquea trafico desde clientes no legitimos
+
+---
+
+## Notifications
+
+- **FCM**: `firebase_messaging` ^15.1.6 — push + silent realtime invalidation
+- **Firebase Core**: `firebase_core` ^3.8.0
+- **iOS push**: requiere configuracion en Xcode/Apple Dev/Firebase (pendiente — inbox funciona sin push 95%)
+
+> **NO se usa `flutter_local_notifications` ni `workmanager`** (no estan en pubspec).
+
+---
+
+## i18n
+
+- **`easy_localization`** ^3.0.7 — JSON files por locale
+
+---
+
+## Errores & utilidades
+
+- **`dartz`** ^0.10.1 — `Either<Failure, T>` en domain layer
+- **`equatable`** ^2.0.7 — value-equality en entities
+- **`freezed` + `json_serializable`** — codegen de models inmutables y serialization
+- **`intl`** ^0.20.1 — formateo de fechas/numbers
+
+---
+
+## Observabilidad
+
+- **Sentry**: `sentry_flutter` ^9.19.0 + `sentry_dart_plugin` (dev)
+- PII scrub configurado en el `beforeSend` hook (no envia tokens ni emails)
+
+> **NO se usa Firebase Crashlytics** — Sentry es el unico canal.
+
+---
+
+## Testing
+
+- `flutter_test` (unit + widget)
+- `integration_test`
+- `mockito` ^5.4.4 (`@GenerateMocks` + `build_runner`)
+
+---
+
+## Linting
+
+- `flutter_lints` ^6.0.0 (regla `prefer_relative_imports` activa)
+
+---
+
+## Convenciones
+
+- **Inmutabilidad**: usar `freezed` para models/entities con multiples campos
+- **Either en domain**: cada usecase devuelve `Future<Either<Failure, T>>`
+- **Riverpod autoDispose**: por defecto en pages, salvo state global (auth, theme)
+- **`HugeIconData`** typedef obligatorio para iconos HugeIcons (no `dynamic`, no `IconData`)
+- **NO commits de archivos `.dart_tool/`, `build/`, `*.g.dart` salvo intencion explicita**
+
+---
+
+## Notas para IA
+
+**SIEMPRE usa estas tecnologias (app movil)**:
+
+- Flutter 3.27+ / Dart 3.6+
+- Clean Architecture + Riverpod (NO bloc, NO provider clasico, NO flutter_hooks)
+- Dio para HTTP (NO `http` directo salvo casos puntuales)
+- `flutter_secure_storage` para tokens (NO Hive, NO Drift)
+- HugeIcons para iconos custom (NO `Icons.*` salvo Material default)
+- `dartz Either` en domain
+- `freezed` para models/entities
+- Sentry para reporting (NO Crashlytics)
+- `easy_localization` para i18n
+- FCM para push + realtime invalidation (NO local_notifications, NO workmanager)
+- Better Auth (NO Supabase, NO Auth0)

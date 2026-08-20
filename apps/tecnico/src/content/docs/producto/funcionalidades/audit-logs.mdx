@@ -1,0 +1,77 @@
+---
+title: "Audit Logs"
+description: "Trazabilidad de cambios en entidades criticas (clubs, ordenes, evidencias) — tabla audit_logs y endpoints de consulta."
+surface: technical
+documentType: reference
+module: producto
+status: published
+owners:
+  - "Abner Reyes"
+lastReviewedAt: 2026-08-20
+generated: false
+---
+## Proposito
+
+Registrar quien hizo que, en que entidad y cuando. Soporta auditoria operativa y compliance basico. No reemplaza event sourcing pero da timeline consultable.
+
+## Tabla `audit_logs`
+
+| Campo | Tipo | Notas |
+|-------|------|-------|
+| `audit_log_id` | BigInt | PK autoincrement |
+| `entity_type` | VARCHAR(50) | Ej: `club`, `materiales_order`, `evidence`, `user_role_assignment` |
+| `entity_id` | VARCHAR(64) | ID del registro afectado (UUID o int como string) |
+| `action` | VARCHAR(20) | `created`, `updated`, `deleted`, `approved`, `rejected`, etc. |
+| `club_id` | Int? | Scope de club si aplica (FK `clubs`, `ON DELETE SET NULL`) |
+| `actor_user_id` | UUID? | Quien hizo la accion |
+| `summary` | VARCHAR(500)? | Descripcion humana del cambio |
+| `changes` | Json? | Diff estructurado de campos relevantes |
+| `created_at` | TIMESTAMPTZ | Default `now()` |
+
+**Indices**:
+- `(club_id, created_at DESC)` — para timeline por club
+- `(entity_type, entity_id)` — para historial de un registro especifico
+
+## Endpoints
+
+| Method | Path | Permiso |
+|--------|------|---------|
+| GET | `/api/v1/clubs/:clubId/history` | `clubs:read_detail` |
+| GET | `/api/v1/audit-logs?entity_type=X&entity_id=Y` | `audit_logs:read` |
+
+## Modulo backend
+
+`src/audit-logs/` — `AuditLogsModule` + `AuditLogsService`. Otros servicios llaman `AuditLogsService.log(...)` para registrar acciones.
+
+## Patron de uso (en otros servicios)
+
+```typescript
+await this.auditLogs.log({
+  entity_type: 'club',
+  entity_id: clubId.toString(),
+  action: 'updated',
+  club_id: clubId,
+  actor_user_id: userId,
+  summary: `Director cambiado de ${prev.name} a ${next.name}`,
+  changes: { director: { from: prev, to: next } },
+});
+```
+
+## Donde se genera
+
+Servicios que registran audit hoy:
+- `clubs` (cambios de director, leadership, status)
+- `materiales` (transiciones de orden, aprobaciones de comprobantes)
+- `investitures` (validaciones)
+- `evidence-review` (aprobaciones/rechazos de evidencias)
+- `rbac` (asignaciones de roles)
+
+## UI admin
+
+`app/(dashboard)/dashboard/clubs/[clubId]/history` muestra timeline filtrable por `entity_type` y rango de fechas.
+
+## Limites actuales
+
+- No es event sourcing — solo registra resumen.
+- `changes` no esta normalizado entre servicios (cada uno decide que diff guardar).
+- Sin TTL — la tabla crece indefinidamente. Plan futuro: rotacion mensual a cold storage.

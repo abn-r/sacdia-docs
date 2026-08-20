@@ -28,6 +28,11 @@ describe('legacy content inventory', () => {
       targetPortal: 'tecnico',
       targetPath: 'seguridad/autorizacion/roles.mdx',
     });
+    expect(classifyLegacyDocument('content/dev/index.mdx').targetPath).toBe('referencia/index.mdx');
+    expect(classifyLegacyDocument('content/docs/index.mdx')).toMatchObject({
+      targetPortal: 'revisar',
+      targetPath: 'revision/legacy-documentation-index.mdx',
+    });
     expect(classifyLegacyDocument('content/docs/desconocido.mdx').targetPortal).toBe('revisar');
   });
 

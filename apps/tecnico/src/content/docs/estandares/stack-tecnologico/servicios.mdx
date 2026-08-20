@@ -1,0 +1,122 @@
+---
+title: "Servicios de Terceros"
+description: "Servicios externos integrados en SACDIA: Better Auth, Neon, R2, FCM, Sentry"
+surface: technical
+documentType: reference
+module: estandares
+status: published
+owners:
+  - "Abner Reyes"
+lastReviewedAt: 2026-08-20
+generated: false
+---
+## Servicios Esenciales
+
+| Servicio | Proposito | Provider | Alternativa |
+| --- | --- | --- | --- |
+| Authentication | Auth de usuarios, OAuth, MFA | **Better Auth** (self-hosted en NestJS) | Auth0, Clerk |
+| Database | PostgreSQL | **Neon** (3 branches: dev/staging/prod) | RDS, Supabase, Render Postgres |
+| Storage | Archivos/imagenes/evidencias | **Cloudflare R2** (presigned URLs) | AWS S3, Cloudinary |
+| Cache / Queue | Cache-aside, BullMQ, throttler | Redis (Upstash o equivalente) | DragonflyDB |
+| Email | Emails transaccionales | Resend | SendGrid, AWS SES |
+| Push Notifications | Notif. moviles + realtime invalidation | Firebase Cloud Messaging (FCM) | OneSignal |
+| Monitoring | Error tracking | **Sentry** (backend + mobile) | Datadog, Rollbar |
+
+## Servicios Opcionales
+
+| Servicio | Proposito | Provider |
+| --- | --- | --- |
+| Analytics | User analytics | Google Analytics 4 |
+| Logs | Log aggregation | Render logs + (opcional Better Stack) |
+| Hosting Web | Admin panel | Vercel |
+| Hosting API | Backend NestJS | Render.com |
+
+---
+
+## Better Auth (Auth)
+
+**Tipo**: Self-hosted dentro del backend NestJS (`src/better-auth/`)
+**Uso**: Login email/password, OAuth (Google + Apple), MFA TOTP
+**Modelo**: Option C — Better Auth autentica y mantiene la sesion interna; SACDIA firma su propio JWT **HS256** con `BETTER_AUTH_SECRET` para entregar al cliente.
+
+**Pros**:
+- Sin vendor lock-in (todo corre en nuestro propio backend)
+- Costo $0 adicional
+- OAuth Google/Apple listo
+- Sesiones, refresh, blacklist gestionadas internamente
+
+**Notas**:
+- App movil y admin reciben JWT HS256 firmado por SACDIA, no por Better Auth ni por OAuth providers.
+- MFA TOTP es implementacion propia en NestJS (no la libreria stock de Better Auth).
+
+---
+
+## Neon (DB)
+
+**Tipo**: PostgreSQL serverless
+**Branches**: 1 proyecto, 3 branches (`development`, `staging`, `production`).
+**Conexion**: connection strings emitidos via `neonctl connection-string --branch <name>`.
+
+**Pros**:
+- Branching copy-on-write (ideal para entornos de testing efimeros)
+- PITR (Point-in-Time Recovery)
+- Postgres standard, sin lock-in propietario
+
+**Gotcha conocido**: Prisma `migrate dev` shadow DB no funciona en Neon. Workaround: usar `prisma migrate diff --script` + psql manual, o aplicar via `prisma migrate deploy` y registrar en `_prisma_migrations`.
+
+---
+
+## Cloudflare R2 (Storage)
+
+**Uso**: Storage de archivos (evidencias, comprobantes materiales, recursos, fotos de perfil)
+**Patron**: Backend genera URLs presignadas (PUT) con TTL corto; el cliente sube directo a R2; luego confirma con el backend pasando `objectKey`.
+
+**Buckets actuales**:
+- `sacdia-prod` — evidencias, recursos, fotos de perfil
+- `sacdia-materiales-prod` — comprobantes de materiales (modulo pedidos)
+
+---
+
+## Resend (Email)
+
+**Uso**: Emails transaccionales (notificaciones, confirmaciones, invitaciones masivas)
+
+**Por que Resend**:
+- $0/mes para 3,000 emails
+- React Email integration (templates en React)
+- Logs y analytics incluidos
+
+---
+
+## Pagos (futuro)
+
+**Stripe**: Internacional, mejor DX
+**PayPal**: Usuarios sin tarjeta
+**MercadoPago**: Latinoamerica
+
+> Pagos no estan activos hoy en SACDIA. Se documenta como referencia para futuras iteraciones.
+
+---
+
+## Firebase Cloud Messaging (FCM)
+
+**Uso**:
+1. Push notifications visibles a usuarios (inbox movil — ver `lib/features/notifications/`)
+2. **Realtime invalidation**: silent multicast (`data.type == 'cache_invalidate'`) hacia secciones de club afectadas por mutaciones. El backend lo dispara fire-and-forget desde modulos como `ActivitiesService.create/update/remove`. La app lo procesa en `RealtimeInvalidationHandler` y llama `ref.invalidate(...)` sobre los providers Riverpod correspondientes.
+
+**Libreria**: `firebase_messaging` ^15.1.6 (mobile)
+**Backend SDK**: Firebase Admin SDK + BullMQ queue `notifications`
+
+**Tokens**: almacenados en tabla `user_fcm_tokens`, filtrados por `users.club_role_assignments.club_section_id` + grants activos.
+
+---
+
+## Sentry
+
+**Uso**: Error tracking + reporting en backend NestJS y app Flutter.
+**SDK mobile**: `sentry_flutter` ^9.19.0 + `sentry_dart_plugin` (dev)
+**SDK backend**: `@sentry/node`
+
+**PII scrub**: configurado en `beforeSend` para no enviar tokens ni emails al servicio externo.
+
+> **NO se usa Firebase Crashlytics**. Sentry es el unico canal de error reporting.

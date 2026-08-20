@@ -67,7 +67,19 @@ describe('documentation workspace', () => {
     expect(manifest.name).toBe('@sacdia/docs-tecnico');
     expect(config).toContain("output: 'static'");
     expect(config).toContain("content: 'noindex,nofollow'");
-    for (const directory of ['api', 'arquitectura', 'base-de-datos', 'seguridad', 'integracion', 'estandares']) {
+    for (const directory of [
+      'api',
+      'arquitectura',
+      'base-de-datos',
+      'seguridad',
+      'integracion',
+      'estandares',
+      'producto',
+      'frontend',
+      'guias',
+      'testing',
+      'referencia',
+    ]) {
       expect(config).toContain(`directory: '${directory}'`);
     }
     expect(headers).toContain('X-Robots-Tag: noindex, nofollow');

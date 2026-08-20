@@ -1,0 +1,90 @@
+---
+title: "Materiales"
+description: "Modulo de pedidos de materiales: catalogo de productos, ordenes, comprobantes de pago y control de inventario."
+surface: technical
+documentType: reference
+module: producto
+status: published
+owners:
+  - "Abner Reyes"
+lastReviewedAt: 2026-08-20
+generated: false
+---
+## Proposito
+
+Permitir a clubes realizar pedidos de materiales (uniformes, insignias, recursos) al campo local. Cubre catalogo de productos, ciclo de orden (creacion → aprobacion → entrega), comprobantes de pago R2 y control de stock por variante.
+
+## Submodulos backend (NestJS)
+
+| Modulo | Endpoints clave | RBAC |
+|--------|-----------------|------|
+| `materiales/catalogo` | CRUD productos + variants | `materiales:catalogo:*` |
+| `materiales/ordenes` | Create, list, detail, historial, approve (con folio + asignacion de stock), patch line availability, cancel, deliver | `materiales:orders:*` |
+| `materiales/comprobantes` | Upload (presigned R2), list, approve, reject | `materiales:comprobantes:*` |
+| `materiales/inventario` | CRUD productos + stock por variante | `materiales:inventario:*` |
+| `materiales/configuracion` | Settings por campo local | `materiales:config:*` |
+
+## Flujo principal
+
+```
+Club crea orden
+  ↓
+Orden en estado PENDIENTE
+  ↓
+Club sube comprobante de pago (presigned PUT a R2)
+  ↓
+Admin de campo revisa y aprueba comprobante
+  ↓
+Admin genera folio y asigna stock por linea
+  ↓
+Orden en estado APROBADA
+  ↓
+Entrega registrada → estado ENTREGADA
+```
+
+## Cancel + revisado por linea
+
+- Lineas pueden marcarse no-disponibles (PATCH) y los totales se recalculan automaticamente.
+- Cancel revierte stock asignado si la orden ya fue aprobada.
+
+## R2 buckets
+
+- `R2_MATERIALES_COMPROBANTES_BUCKET` — comprobantes de pago
+- `R2_BUCKET` — imagenes de catalogo
+
+## Admin (sacdia-admin)
+
+Vistas en `app/(dashboard)/dashboard/materiales/*`:
+- `catalogo/` — CRUD productos + variants con uploads a R2
+- `ordenes/` — Listado + detalle con timeline de estados
+- `comprobantes/` — Cola de aprobacion
+- `inventario/` — Ajustes manuales de stock por variante
+- `configuracion/` — Settings por campo local (precios, disponibilidad)
+
+## App movil
+
+Vistas en `lib/features/materiales/`:
+- Catalogo navegable con filtros
+- Carrito + checkout
+- Subida de comprobante con `image_picker` + presigned R2
+- Historial de pedidos con estados
+
+## RBAC
+
+Roles que pueden operar:
+- `super_admin`, `admin` — todo
+- Coordinator de campo local — gestion en su scope
+- **Assistant-LF** — coordinacion (commit `8f0d686` swap: coordinator → assistant-lf en grants)
+- Director / Subdirector / Secretary — crear ordenes para su club
+
+## Persistencia
+
+Modelos Prisma: `materiales_products`, `materiales_product_variants`, `materiales_orders`, `materiales_order_items`, `materiales_comprobantes`, `materiales_configuracion`, etc. Ver `dev/base-de-datos/schema-reference/_generated-models#materiales`.
+
+## Audit
+
+Cada cambio de estado de orden genera entrada en `audit_logs` (ver [Audit Logs](/docs/funcionalidades/audit-logs)).
+
+## Realtime
+
+Mutaciones en ordenes disparan FCM silent push (`type: 'cache_invalidate'`, `resource: 'materiales-orders'`) a la seccion de club afectada. La app invalida providers Riverpod relevantes en el `RealtimeInvalidationHandler`.
