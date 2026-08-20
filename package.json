@@ -2,15 +2,22 @@
   "name": "sacdia-docs",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.29.3",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "pnpm dev:operativo",
+    "dev:operativo": "pnpm --filter @sacdia/docs-operativo dev",
+    "dev:administrativo": "pnpm --filter @sacdia/docs-administrativo dev",
+    "dev:tecnico": "pnpm --filter @sacdia/docs-tecnico dev",
+    "build": "pnpm -r --filter './apps/*' build",
+    "check": "pnpm -r --if-present check",
+    "check:operativo": "pnpm --filter @sacdia/docs-operativo check",
+    "check:administrativo": "pnpm --filter @sacdia/docs-administrativo check",
+    "check:tecnico": "pnpm --filter @sacdia/docs-tecnico check",
+    "test": "vitest run",
     "sync:endpoints": "tsx scripts/sync-endpoints.ts",
     "sync:schema": "tsx scripts/sync-schema.ts",
     "sync:versions": "tsx scripts/sync-versions.ts",
-    "sync:all": "pnpm sync:endpoints && pnpm sync:schema && pnpm sync:versions",
-    "postinstall": "fumadocs-mdx"
+    "sync:all": "pnpm sync:endpoints && pnpm sync:schema && pnpm sync:versions"
   },
   "dependencies": {
     "fumadocs-core": "latest",
@@ -31,6 +38,7 @@
     "postcss": "^8",
     "tailwindcss": "^4",
     "tsx": "^4.22.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.11"
   }
 }
