@@ -1,0 +1,23 @@
+---
+import { PORTALS, type PortalId } from '@sacdia/docs-config';
+
+interface Props {
+  current: PortalId;
+  urls?: Partial<Record<PortalId, string>>;
+}
+
+const { current, urls = {} } = Astro.props;
+---
+
+<nav class="sacdia-portal-switcher" aria-label="Cambiar portal de documentación">
+  {
+    Object.values(PORTALS).map((portal) => (
+      <a
+        href={urls[portal.id] ?? portal.localUrl}
+        aria-current={portal.id === current ? 'page' : undefined}
+      >
+        {portal.shortName}
+      </a>
+    ))
+  }
+</nav>

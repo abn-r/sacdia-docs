@@ -1,0 +1,15 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  summary: string;
+}
+
+const { eyebrow, title, summary } = Astro.props;
+---
+
+<section class="sacdia-landing-hero" aria-labelledby="portal-title">
+  <p class="sacdia-landing-hero__eyebrow">{eyebrow}</p>
+  <h1 id="portal-title">{title}</h1>
+  <p class="sacdia-landing-hero__summary">{summary}</p>
+</section>

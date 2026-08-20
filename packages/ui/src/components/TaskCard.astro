@@ -1,0 +1,14 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+}
+
+const { href, title, description } = Astro.props;
+---
+
+<a class="sacdia-task-card" href={href}>
+  <strong>{title}</strong>
+  <span>{description}</span>
+</a>

@@ -1,0 +1,15 @@
+---
+interface Props {
+  module: string;
+  owner: string;
+  reviewedAt: string;
+}
+
+const { module, owner, reviewedAt } = Astro.props;
+---
+
+<aside class="sacdia-document-meta" aria-label="Metadatos del documento">
+  <span><strong>Módulo:</strong> {module}</span>
+  <span><strong>Responsable:</strong> {owner}</span>
+  <span><strong>Revisado:</strong> <time datetime={reviewedAt}>{reviewedAt}</time></span>
+</aside>

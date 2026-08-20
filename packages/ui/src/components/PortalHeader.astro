@@ -1,0 +1,24 @@
+---
+import { PORTALS, type PortalId } from '@sacdia/docs-config';
+import PortalSwitcher from './PortalSwitcher.astro';
+
+interface Props {
+  current: PortalId;
+  homeUrl?: string;
+  urls?: Partial<Record<PortalId, string>>;
+}
+
+const { current, homeUrl = '/', urls } = Astro.props;
+const portal = PORTALS[current];
+---
+
+<div class="sacdia-site-title">
+  <a class="sacdia-brand" href={homeUrl} aria-label={`Inicio — ${portal.name}`}>
+    <span class="sacdia-brand__mark" aria-hidden="true">S</span>
+    <span class="sacdia-brand__label">
+      <span class="sacdia-brand__product">SACDIA</span>
+      <span class="sacdia-brand__portal">{portal.shortName}</span>
+    </span>
+  </a>
+  <PortalSwitcher current={current} urls={urls} />
+</div>

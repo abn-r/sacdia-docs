@@ -1,0 +1,235 @@
+@import './tokens.css';
+
+:root {
+  --sl-font: var(--sacdia-font-sans);
+  --sl-font-mono: var(--sacdia-font-mono);
+  --sl-color-accent-low: color-mix(in srgb, var(--portal-accent, var(--sacdia-ember)) 16%, transparent);
+  --sl-color-accent: var(--portal-accent, var(--sacdia-ember));
+  --sl-color-accent-high: var(--sacdia-navy);
+  --sl-color-white: var(--sacdia-ink);
+  --sl-color-gray-1: color-mix(in srgb, var(--sacdia-ink) 92%, var(--sacdia-paper));
+  --sl-color-gray-2: color-mix(in srgb, var(--sacdia-ink) 78%, var(--sacdia-paper));
+  --sl-color-gray-3: color-mix(in srgb, var(--sacdia-ink) 58%, var(--sacdia-paper));
+  --sl-color-gray-4: color-mix(in srgb, var(--sacdia-ink) 34%, var(--sacdia-paper));
+  --sl-color-gray-5: color-mix(in srgb, var(--sacdia-ink) 15%, var(--sacdia-paper));
+  --sl-color-gray-6: color-mix(in srgb, var(--sacdia-ink) 7%, var(--sacdia-paper));
+  --sl-color-black: var(--sacdia-paper);
+}
+
+body {
+  background:
+    linear-gradient(90deg, transparent 0 92%, color-mix(in srgb, var(--portal-accent, var(--sacdia-ember)) 7%, transparent) 92%),
+    radial-gradient(circle at 88% 4%, color-mix(in srgb, var(--portal-accent, var(--sacdia-ember)) 14%, transparent), transparent 28rem),
+    var(--sacdia-paper);
+}
+
+body::before {
+  position: fixed;
+  z-index: 100;
+  inset: 0 0 auto;
+  height: 0.24rem;
+  content: '';
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--sacdia-ember), var(--sacdia-mint), var(--sacdia-navy));
+}
+
+.header {
+  border-bottom-color: color-mix(in srgb, var(--sacdia-navy) 12%, transparent);
+  background: color-mix(in srgb, var(--sacdia-paper) 88%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.sacdia-site-title {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sacdia-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--sacdia-ink);
+  text-decoration: none;
+}
+
+.sacdia-brand__mark {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 0.7rem 0.7rem 0.7rem 0.18rem;
+  color: var(--sacdia-white);
+  background: var(--portal-accent, var(--sacdia-ember));
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--portal-accent, var(--sacdia-ember)) 28%, transparent);
+  font-weight: 850;
+  letter-spacing: -0.06em;
+}
+
+.sacdia-brand__label {
+  display: grid;
+  line-height: 1.05;
+}
+
+.sacdia-brand__product {
+  font-size: 0.68rem;
+  color: var(--sl-color-gray-3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sacdia-brand__portal {
+  font-size: 0.94rem;
+  font-weight: 760;
+}
+
+.sacdia-portal-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.22rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sacdia-paper) 82%, transparent);
+}
+
+.sacdia-portal-switcher a {
+  padding: 0.34rem 0.58rem;
+  border-radius: 999px;
+  color: var(--sl-color-gray-2);
+  font-size: 0.72rem;
+  font-weight: 680;
+  text-decoration: none;
+  transition: color 180ms ease, background 180ms ease, transform 180ms var(--sacdia-motion);
+}
+
+.sacdia-portal-switcher a:hover,
+.sacdia-portal-switcher a:focus-visible {
+  color: var(--sacdia-ink);
+  background: var(--sl-color-gray-6);
+  transform: translateY(-1px);
+}
+
+.sacdia-portal-switcher a[aria-current='page'] {
+  color: var(--sacdia-white);
+  background: var(--portal-accent, var(--sacdia-ember));
+}
+
+.sacdia-landing-hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2rem, 6vw, 5.8rem);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: var(--sacdia-radius-lg);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--portal-accent, var(--sacdia-ember)) 15%, transparent), transparent 56%),
+    var(--sacdia-paper);
+  box-shadow: var(--sacdia-shadow-soft);
+}
+
+.sacdia-landing-hero::after {
+  position: absolute;
+  top: -5rem;
+  right: -4rem;
+  width: 16rem;
+  height: 16rem;
+  border: 2.2rem solid color-mix(in srgb, var(--portal-accent, var(--sacdia-ember)) 12%, transparent);
+  border-radius: 50%;
+  content: '';
+}
+
+.sacdia-landing-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+.sacdia-landing-hero__eyebrow {
+  margin: 0 0 0.8rem;
+  color: var(--portal-accent, var(--sacdia-ember));
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.sacdia-landing-hero h1 {
+  max-width: 17ch;
+  margin: 0;
+  font-size: clamp(2.25rem, 7vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.sacdia-landing-hero__summary {
+  max-width: 62ch;
+  margin: 1.4rem 0 0;
+  color: var(--sl-color-gray-2);
+  font-size: clamp(1rem, 2vw, 1.18rem);
+  line-height: 1.65;
+}
+
+.sacdia-task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
+  margin-block: 2rem;
+}
+
+.sacdia-task-card {
+  display: grid;
+  min-height: 10rem;
+  align-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: var(--sacdia-radius-md);
+  color: var(--sacdia-ink);
+  background: color-mix(in srgb, var(--sacdia-paper) 94%, var(--portal-accent, var(--sacdia-ember)));
+  text-decoration: none;
+  transition: transform 220ms var(--sacdia-motion), box-shadow 220ms var(--sacdia-motion), border-color 220ms ease;
+}
+
+.sacdia-task-card:hover,
+.sacdia-task-card:focus-visible {
+  border-color: var(--portal-accent, var(--sacdia-ember));
+  box-shadow: var(--sacdia-shadow-lifted);
+  transform: translateY(-4px);
+}
+
+.sacdia-task-card strong {
+  font-size: 1.08rem;
+}
+
+.sacdia-task-card span {
+  color: var(--sl-color-gray-3);
+  line-height: 1.5;
+}
+
+.sacdia-document-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
+  border-inline-start: 0.22rem solid var(--portal-accent, var(--sacdia-ember));
+  color: var(--sl-color-gray-2);
+  background: var(--sl-color-gray-6);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 72rem) {
+  .sacdia-portal-switcher {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
