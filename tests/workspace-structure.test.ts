@@ -20,4 +20,21 @@ describe('documentation workspace', () => {
       'check:tecnico': expect.any(String),
     });
   });
+
+  it('configures the operational portal as a public static Spanish site', () => {
+    const manifest = JSON.parse(readFileSync('apps/operativo/package.json', 'utf8')) as {
+      name: string;
+      scripts: Record<string, string>;
+    };
+    const config = readFileSync('apps/operativo/astro.config.mjs', 'utf8');
+
+    expect(manifest.name).toBe('@sacdia/docs-operativo');
+    expect(config).toContain("output: 'static'");
+    expect(config).toContain('locales: {');
+    expect(config).toContain("root: { label: 'Español', lang: 'es' }");
+    expect(config).toContain('items: [{ autogenerate:');
+    expect(config).toContain('pagefind: true');
+    expect(config).not.toContain('middleware');
+    expect(manifest.scripts.check).toContain('ASTRO_TELEMETRY_DISABLED=1');
+  });
 });

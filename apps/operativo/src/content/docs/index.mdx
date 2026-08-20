@@ -1,0 +1,45 @@
+---
+title: Manual operativo de SACDIA
+description: Encuentra rápidamente cómo completar tus tareas desde la aplicación móvil de SACDIA.
+surface: app
+documentType: concept
+module: home
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-20
+template: splash
+sidebar:
+  hidden: true
+---
+
+import LandingHero from '@sacdia/docs-ui/components/LandingHero.astro';
+import TaskCard from '@sacdia/docs-ui/components/TaskCard.astro';
+
+<LandingHero
+  eyebrow="Aplicación móvil"
+  title="Resuelve tu siguiente tarea"
+  summary="Manuales claros para registrar información, dar seguimiento a tu club y completar procesos desde la aplicación."
+/>
+
+<div class="sacdia-task-grid">
+  <TaskCard
+    href="/primeros-pasos/"
+    title="Comenzar con SACDIA"
+    description="Conoce el acceso, tu perfil y la navegación principal."
+  />
+  <TaskCard
+    href="/pantallas/"
+    title="Buscar una pantalla"
+    description="Encuentra qué hace cada sección de la aplicación."
+  />
+  <TaskCard
+    href="/procesos/"
+    title="Completar un proceso"
+    description="Sigue recorridos completos sin perder el contexto."
+  />
+</div>
+
+## Documentación en crecimiento
+
+Estamos construyendo un manual por pantalla y una guía por cada proceso continuo. El contenido se publicará solamente después de validar el comportamiento real de SACDIA.
