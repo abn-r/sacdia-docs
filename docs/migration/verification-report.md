@@ -52,6 +52,24 @@ De la evidencia visual se observó:
 
 La barra flotante oscura de algunas capturas pertenece al toolbar de desarrollo de Astro y no al diseño del portal. No se ejecutó una auditoría WCAG automatizada ni comparación cross-browser de producción.
 
+### Guías operativas y administrativas
+
+Después de producir los manuales se revisaron directamente en navegador las
+guías **Finanzas del club**, **Finanzas de clubes**, **Solicitar, pagar y recibir
+materiales** y **Registrar y supervisar finanzas**.
+
+- escritorio a 1440 × 1000 en ambos portales;
+- móvil a 390 × 844 en ambos portales;
+- modo oscuro del portal operativo;
+- menú móvil y selector de tema;
+- foco visible del enlace **Ir al contenido**;
+- ancho de documento igual al viewport (`390/390`), sin overflow horizontal;
+- consola sin errores ni warnings en las páginas revisadas.
+
+Esta comprobación valida la presentación y navegación de muestras
+representativas; no sustituye una revisión editorial humana de cada uno de los
+96 archivos de guía.
+
 ## Cobertura de contenido
 
 | Métrica | Cantidad |
