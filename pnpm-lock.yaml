@@ -64,6 +64,34 @@ importers:
         specifier: ^4.1.11
         version: 4.1.11(@types/node@22.19.15)(vite@8.0.3(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@22.19.15)(esbuild@0.27.4)(jiti@2.6.1)(tsx@4.22.0)(yaml@2.9.0))
 
+  apps/administrativo:
+    dependencies:
+      '@astrojs/starlight':
+        specifier: ^0.41.7
+        version: 0.41.7(@astrojs/markdown-remark@7.2.4)(astro@7.2.4(@astrojs/markdown-remark@7.2.4)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@24.13.3)(jiti@2.6.1)(tsx@4.22.0)(yaml@2.9.0))(typescript@5.9.3)
+      '@sacdia/docs-config':
+        specifier: workspace:*
+        version: link:../../packages/config
+      '@sacdia/docs-content':
+        specifier: workspace:*
+        version: link:../../packages/content
+      '@sacdia/docs-ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      astro:
+        specifier: ^7.2.4
+        version: 7.2.4(@astrojs/markdown-remark@7.2.4)(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)(@types/node@24.13.3)(jiti@2.6.1)(tsx@4.22.0)(yaml@2.9.0)
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
+    devDependencies:
+      '@astrojs/check':
+        specifier: ^0.9.10
+        version: 0.9.10(prettier@3.9.6)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   apps/operativo:
     dependencies:
       '@astrojs/starlight':

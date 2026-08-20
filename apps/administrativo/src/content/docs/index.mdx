@@ -1,0 +1,33 @@
+---
+title: Manual administrativo de SACDIA
+description: Encuentra cómo completar tareas y procesos desde el panel administrativo.
+surface: admin
+documentType: concept
+module: home
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-20
+template: splash
+sidebar:
+  hidden: true
+---
+
+import LandingHero from '@sacdia/docs-ui/components/LandingHero.astro';
+import TaskCard from '@sacdia/docs-ui/components/TaskCard.astro';
+
+<LandingHero
+  eyebrow="Panel administrativo"
+  title="Gestiona SACDIA con claridad"
+  summary="Manuales privados para administrar clubes, finanzas, materiales, investiduras y configuración."
+/>
+
+<div class="sacdia-task-grid">
+  <TaskCard href="/primeros-pasos/" title="Comenzar en el panel" description="Entiende el alcance y la organización del manual." />
+  <TaskCard href="/finanzas/" title="Gestionar finanzas" description="Consulta los manuales de las pantallas financieras." />
+  <TaskCard href="/procesos/" title="Completar un proceso" description="Sigue recorridos que conectan varias áreas del sistema." />
+</div>
+
+## Acceso privado
+
+Este portal está dirigido a personas autorizadas a utilizar el panel administrativo. Cloudflare Access controla el acceso; las cabeceras del sitio solo evitan la indexación accidental.

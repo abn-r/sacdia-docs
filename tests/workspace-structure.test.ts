@@ -37,4 +37,21 @@ describe('documentation workspace', () => {
     expect(config).not.toContain('middleware');
     expect(manifest.scripts.check).toContain('ASTRO_TELEMETRY_DISABLED=1');
   });
+
+  it('configures the administrative portal as a private static site', () => {
+    const manifest = JSON.parse(readFileSync('apps/administrativo/package.json', 'utf8')) as {
+      name: string;
+      scripts: Record<string, string>;
+    };
+    const config = readFileSync('apps/administrativo/astro.config.mjs', 'utf8');
+    const headers = readFileSync('apps/administrativo/public/_headers', 'utf8');
+
+    expect(manifest.name).toBe('@sacdia/docs-administrativo');
+    expect(config).toContain("output: 'static'");
+    expect(config).toContain("content: 'noindex,nofollow'");
+    expect(config).toContain("directory: 'finanzas'");
+    expect(headers).toContain('X-Robots-Tag: noindex, nofollow');
+    expect(`${config}\n${headers}`).not.toMatch(/(password|secret|token)\s*[:=]\s*['"][^'"]+/i);
+    expect(manifest.scripts.check).toContain('ASTRO_TELEMETRY_DISABLED=1');
+  });
 });

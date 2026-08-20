@@ -1,0 +1,7 @@
+:root {
+  --portal-accent: var(--sacdia-ember);
+}
+
+.sl-markdown-content > h2 {
+  letter-spacing: -0.025em;
+}
