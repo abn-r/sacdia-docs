@@ -1,0 +1,76 @@
+---
+title: Gestión de seguros
+description: Registrar coberturas, vigencias, evidencias y configuración de seguros por sección.
+surface: admin
+documentType: screen
+module: insurance
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-20
+---
+
+Registrar coberturas, vigencias, evidencias y configuración de seguros por sección.
+
+## Resultado esperado
+
+Al terminar este recorrido, podrás registrar coberturas, vigencias, evidencias y configuración de seguros por sección.
+
+## Acceso requerido
+
+- insurance:read
+- insurance:configure para configuración
+- field-payment-orders:configure según flujo
+
+El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso ni reemplaza la autorización del backend.
+
+## Rutas incluidas
+
+| Ruta | Uso |
+|---|---|
+| `/dashboard/insurance` | Seguros por sección. |
+| `/dashboard/insurance/config` | Configuración del módulo. |
+| `/dashboard/insurance/expiring` | Elementos próximos a vencer. |
+
+## Antes de comenzar
+
+- Confirma la cuenta, el alcance territorial y el periodo que vas a operar.
+- Busca el registro antes de crearlo para evitar duplicados.
+- Si no ves una acción, no intentes saltar el control mediante una URL directa.
+
+## Tareas principales
+
+- Seleccionar club o sección.
+- Registrar o editar seguro por miembro.
+- Revisar comprobante y vigencia.
+- Desactivar una cobertura.
+- Consultar próximos vencimientos y configuración.
+
+## Flujo recomendado
+
+1. Abre **Seguros > Por sección**.
+2. Selecciona el contexto y localiza al miembro.
+3. Pulsa **Registrar** o **Editar** y completa tipo, póliza, fechas y evidencia.
+4. Guarda y revisa el estado.
+5. Usa **Por vencer** para priorizar renovaciones.
+
+## Cómo verificarlo
+
+La cobertura aparece con fechas correctas y entra al tablero de vencimientos según la ventana configurada.
+
+## Errores frecuentes
+
+| Problema | Qué hacer |
+|---|---|
+| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
+| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
+| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
+| El registro está fuera de alcance | Revisa el filtro territorial y la cuenta activa. El panel limita los datos al alcance autorizado. |
+
+## Procesos relacionados
+
+- [Abrir la guía del proceso](/procesos/seguro-y-orden-pago/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-20 con las rutas, componentes, permisos de navegación y documentación canónica del módulo `insurance`.

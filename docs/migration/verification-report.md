@@ -18,7 +18,7 @@ Los tres comparten identidad visual, configuración tipada, schema editorial y n
 
 | Validación | Resultado |
 | --- | --- |
-| `pnpm test` | 10 archivos, 36 pruebas aprobadas |
+| `pnpm test` | 11 archivos, 43 pruebas aprobadas |
 | `pnpm check` | 3 portales, 0 errores, 0 warnings y 0 hints |
 | `git diff --check development...HEAD` | Sin errores de whitespace |
 | Schema de contenido | Las 102 entradas actuales del portal técnico sincronizan correctamente |
@@ -60,11 +60,17 @@ La barra flotante oscura de algunas capturas pertenece al toolbar de desarrollo 
 | Páginas listas según reglas automáticas | 93 |
 | Páginas que requieren revisión editorial/MDX | 5 |
 | Archivos generados | 3 |
-| Pantallas administrativas sin manual específico | 133 |
-| Features móviles sin manual específico | 37 |
-| Superficies faltantes totales | 170 |
+| Rutas administrativas cubiertas | 133 de 133 |
+| Features móviles cubiertas | 37 de 37 |
+| Superficies cubiertas totales | 170 de 170 |
+| Manuales operativos de pantalla | 37 |
+| Manuales administrativos | 31 archivos para 32 módulos |
+| Procesos transversales | 14, disponibles en ambos portales |
 
-La migración preserva el contenido existente, pero **no inventa manuales operativos ni administrativos**. `surface-coverage.csv` es la línea base para producirlos y validarlos contra el sistema real.
+Los manuales se agrupan por recorrido funcional, pero cada superficie conserva su
+trazabilidad en `surface-coverage.csv`. La prueba `manual-coverage.test.ts` exige
+que las 170 filas permanezcan cubiertas, que sus archivos existan y que los
+enlaces internos de ambos portales resuelvan a contenido real.
 
 ## Limitaciones pendientes
 

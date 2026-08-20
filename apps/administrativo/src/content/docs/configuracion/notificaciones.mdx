@@ -1,0 +1,74 @@
+---
+title: Administración de notificaciones
+description: Enviar mensajes, consultar historial y configurar categorías visibles en la aplicación.
+surface: admin
+documentType: screen
+module: notifications
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-20
+---
+
+Enviar mensajes, consultar historial y configurar categorías visibles en la aplicación.
+
+## Resultado esperado
+
+Al terminar este recorrido, podrás enviar mensajes, consultar historial y configurar categorías visibles en la aplicación.
+
+## Acceso requerido
+
+- notifications:send, notifications:broadcast o notifications:club
+- notifications:read_history para historial cuando aplique
+
+El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso ni reemplaza la autorización del backend.
+
+## Rutas incluidas
+
+| Ruta | Uso |
+|---|---|
+| `/dashboard/notifications` | Centro de notificaciones. |
+| `/dashboard/notifications/history` | Historial de operaciones. |
+
+## Antes de comenzar
+
+- Confirma la cuenta, el alcance territorial y el periodo que vas a operar.
+- Busca el registro antes de crearlo para evitar duplicados.
+- Si no ves una acción, no intentes saltar el control mediante una URL directa.
+
+## Tareas principales
+
+- Consultar estadísticas.
+- Redactar y segmentar un mensaje.
+- Enviar al club o alcance territorial autorizado.
+- Revisar historial.
+- Configurar categorías y preferencia móvil.
+
+## Flujo recomendado
+
+1. Abre **Configuración > Notificaciones**.
+2. Confirma el tipo de alcance que puedes utilizar.
+3. Redacta título, cuerpo y destino.
+4. Revisa destinatarios antes de enviar.
+5. Consulta **Historial** para verificar estado y alcance.
+
+## Cómo verificarlo
+
+El envío aparece en historial y los destinatarios pueden recibirlo según su categoría y alcance.
+
+## Errores frecuentes
+
+| Problema | Qué hacer |
+|---|---|
+| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
+| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
+| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
+| El registro está fuera de alcance | Revisa el filtro territorial y la cuenta activa. El panel limita los datos al alcance autorizado. |
+
+## Procesos relacionados
+
+- [Abrir la guía del proceso](/procesos/comunicacion-recursos/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-20 con las rutas, componentes, permisos de navegación y documentación canónica del módulo `notifications`.

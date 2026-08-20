@@ -1,0 +1,78 @@
+---
+title: Administración de usuarios
+description: Buscar, crear, importar y revisar perfiles, acceso, roles, MFA y sesiones.
+surface: admin
+documentType: screen
+module: users
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-20
+---
+
+Buscar, crear, importar y revisar perfiles, acceso, roles, MFA y sesiones.
+
+## Resultado esperado
+
+Al terminar este recorrido, podrás buscar, crear, importar y revisar perfiles, acceso, roles, MFA y sesiones.
+
+## Acceso requerido
+
+- users:read
+- permisos específicos para crear, actualizar acceso o gestionar roles
+
+El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso ni reemplaza la autorización del backend.
+
+## Rutas incluidas
+
+| Ruta | Uso |
+|---|---|
+| `/dashboard/users` | Listado de usuarios. |
+| `/dashboard/users/[userId]` | Detalle del registro seleccionado. |
+| `/dashboard/users/bulk-upload` | Pantalla operativa del módulo. |
+| `/dashboard/users/new` | Formulario para crear un registro. |
+
+## Antes de comenzar
+
+- Confirma la cuenta, el alcance territorial y el periodo que vas a operar.
+- Busca el registro antes de crearlo para evitar duplicados.
+- Si no ves una acción, no intentes saltar el control mediante una URL directa.
+
+## Tareas principales
+
+- Buscar y filtrar usuarios.
+- Crear una cuenta o importar una hoja.
+- Abrir perfil, enrollment, trayectoria y cargos.
+- Gestionar acceso a app/panel y revisión por excepción.
+- Consultar roles, MFA y sesiones según permiso.
+
+## Flujo recomendado
+
+1. Abre **Usuarios** y usa los filtros.
+2. Selecciona una persona o inicia alta/importación.
+3. En el detalle, revisa identidad y alcance antes de cambiar acceso.
+4. Realiza una sola acción y confirma los mensajes.
+5. Vuelve al resumen para verificar estado, roles y última actualización.
+
+## Cómo verificarlo
+
+La cuenta conserva su identidad y muestra correctamente acceso a app/panel, roles y contexto; una cuenta eliminada se etiqueta como tal.
+
+## Errores frecuentes
+
+| Problema | Qué hacer |
+|---|---|
+| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
+| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
+| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
+| El registro está fuera de alcance | Revisa el filtro territorial y la cuenta activa. El panel limita los datos al alcance autorizado. |
+
+## Procesos relacionados
+
+- [Abrir la guía del proceso](/procesos/alta-y-membresia/)
+- [Abrir la guía del proceso](/procesos/gestion-club-seccion/)
+- [Abrir la guía del proceso](/procesos/traslado-miembro/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-20 con las rutas, componentes, permisos de navegación y documentación canónica del módulo `users`.
