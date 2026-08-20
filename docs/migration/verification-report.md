@@ -1,6 +1,7 @@
 # Informe de verificación de la migración Astro
 
-**Fecha:** 2026-08-20  
+**Fecha:** 2026-08-20
+
 **Rama:** `codex/astro-documentation-portals`
 
 ## Resultado
