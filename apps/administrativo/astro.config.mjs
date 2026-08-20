@@ -3,7 +3,7 @@ import starlight from '@astrojs/starlight';
 
 export default defineConfig({
   output: 'static',
-  site: process.env.PRIVATE_ADMINISTRATIVO_URL ?? 'http://localhost:4322',
+  site: process.env.PUBLIC_ADMINISTRATIVO_URL ?? 'http://localhost:4322',
   integrations: [
     starlight({
       title: 'SACDIA — Manual administrativo',
