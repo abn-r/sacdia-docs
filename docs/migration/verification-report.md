@@ -18,7 +18,7 @@ Los tres comparten identidad visual, configuración tipada, schema editorial y n
 
 | Validación | Resultado |
 | --- | --- |
-| `pnpm test` | 11 archivos, 43 pruebas aprobadas |
+| `pnpm test` | 12 archivos, 46 pruebas aprobadas |
 | `pnpm check` | 3 portales, 0 errores, 0 warnings y 0 hints |
 | `git diff --check development...HEAD` | Sin errores de whitespace |
 | Schema de contenido | Las 102 entradas actuales del portal técnico sincronizan correctamente |
@@ -69,6 +69,34 @@ materiales** y **Registrar y supervisar finanzas**.
 Esta comprobación valida la presentación y navegación de muestras
 representativas; no sustituye una revisión editorial humana de cada uno de los
 96 archivos de guía.
+
+### Capturas reales en manuales prioritarios
+
+Se integraron seis capturas del runtime efectivo en las guías de Finanzas,
+Materiales y Membresía:
+
+- aplicación Flutter: resumen financiero, acceso rápido a Inventario/Pedidos y
+  solicitudes de miembros;
+- panel administrativo: Finanzas por club, solicitudes de materiales y
+  solicitudes de membresía.
+
+Las tres capturas móviles se obtuvieron con MobAI. Las tres administrativas se
+obtuvieron con Playwright y se recortaron al contenido funcional para excluir
+barra lateral, perfil y correo. La captura financiera utiliza exclusivamente
+datos QA cuya publicación privada fue autorizada: balance `$2,079`, ingresos
+`$100`, egresos `$300` y una transacción. Ninguna imagen incluye credenciales,
+tokens, datos médicos, correos personales ni adjuntos privados.
+
+El catálogo móvil de Materiales no se publicó porque el runtime QA mostraba las
+claves sin traducir `materials.catalog.*`. La guía usa en su lugar la vista real
+de acceso rápido a **Inventario** y **Pedidos**, y el defecto de localización
+quedó registrado para corrección en la aplicación.
+
+La prueba `manual-media.test.ts` valida la conexión de cada captura con su
+manual, su resolución dentro del portal correcto, la firma PNG y un tamaño
+mínimo. Playwright confirmó las seis imágenes a 1440 × 1000, los dos portales a
+390 × 844 sin overflow (`390/390`), pies de imagen visibles y consola sin
+errores.
 
 ## Cobertura de contenido
 

@@ -10,6 +10,8 @@ owners:
 lastReviewedAt: 2026-08-20
 ---
 
+import GuideScreenshot from '@sacdia/docs-ui/components/GuideScreenshot';
+
 Revisar solicitudes, aprobar pedidos, validar comprobantes, controlar inventario y registrar entrega.
 
 ## Resultado esperado
@@ -38,6 +40,17 @@ El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso n
 | `/dashboard/materials/receipts` | Comprobantes recibidos. |
 | `/dashboard/materials/receipts/[folio]` | Detalle del registro seleccionado. |
 | `/dashboard/materials/request/[folio]` | Detalle del registro seleccionado. |
+
+## Reconoce la pantalla
+
+<GuideScreenshot
+  src="/media/guides/materiales/solicitudes-materiales.png"
+  alt="Bandeja administrativa de Pedidos con buscador, filtro de estado y estado sin solicitudes pendientes"
+  caption="La bandeja inicia filtrada por estado. Busca por folio o director antes de cambiar el filtro."
+  kind="desktop"
+  width={1120}
+  height={406}
+/>
 
 ## Antes de comenzar
 

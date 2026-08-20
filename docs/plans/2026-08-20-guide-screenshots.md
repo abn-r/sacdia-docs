@@ -60,7 +60,7 @@ Expected: FAIL because the screenshots and MDX references do not exist.
 
 **Files:**
 - Create: `apps/operativo/public/media/guides/finanzas/resumen-financiero.png`
-- Create: `apps/operativo/public/media/guides/materiales/catalogo-materiales.png`
+- Create: `apps/operativo/public/media/guides/materiales/acceso-materiales.png`
 - Create: `apps/operativo/public/media/guides/membresia/miembros-del-club.png`
 
 **Step 1: Discover and start the mobile device**
@@ -76,6 +76,12 @@ credentials, personal email, health data or private attachments.
 **Step 3: Save full-quality screenshots**
 
 Use MobAI `save_screenshot` with the exact paths above.
+
+**Implementation variance:** the Materiales catalog exposed unresolved
+translation keys in the effective QA runtime. The published image therefore
+shows the real, safe entry points **Inventario** and **Pedidos** from Acceso
+rápido; the localization defect was recorded separately instead of documenting
+a broken screen as the expected experience.
 
 ### Task 4: Capture the three administrative views
 
