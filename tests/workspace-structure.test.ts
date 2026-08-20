@@ -45,6 +45,7 @@ describe('documentation workspace', () => {
     };
     const config = readFileSync('apps/administrativo/astro.config.mjs', 'utf8');
     const headers = readFileSync('apps/administrativo/public/_headers', 'utf8');
+    const robots = readFileSync('apps/administrativo/public/robots.txt', 'utf8');
 
     expect(manifest.name).toBe('@sacdia/docs-administrativo');
     expect(config).toContain("output: 'static'");
@@ -52,6 +53,7 @@ describe('documentation workspace', () => {
     expect(config).toContain("content: 'noindex,nofollow'");
     expect(config).toContain("directory: 'finanzas'");
     expect(headers).toContain('X-Robots-Tag: noindex, nofollow');
+    expect(robots).toContain('Disallow: /');
     expect(`${config}\n${headers}`).not.toMatch(/(password|secret|token)\s*[:=]\s*['"][^'"]+/i);
     expect(manifest.scripts.check).toContain('ASTRO_TELEMETRY_DISABLED=1');
   });
@@ -63,6 +65,7 @@ describe('documentation workspace', () => {
     };
     const config = readFileSync('apps/tecnico/astro.config.mjs', 'utf8');
     const headers = readFileSync('apps/tecnico/public/_headers', 'utf8');
+    const robots = readFileSync('apps/tecnico/public/robots.txt', 'utf8');
 
     expect(manifest.name).toBe('@sacdia/docs-tecnico');
     expect(config).toContain("output: 'static'");
@@ -83,6 +86,7 @@ describe('documentation workspace', () => {
       expect(config).toContain(`directory: '${directory}'`);
     }
     expect(headers).toContain('X-Robots-Tag: noindex, nofollow');
+    expect(robots).toContain('Disallow: /');
     expect(`${config}\n${headers}`).not.toMatch(/(password|secret|token)\s*[:=]\s*['"][^'"]+/i);
     expect(manifest.scripts.check).toContain('ASTRO_TELEMETRY_DISABLED=1');
   });
