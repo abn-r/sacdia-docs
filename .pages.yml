@@ -1,0 +1,227 @@
+media:
+  - name: operativo_media
+    label: Medios del manual operativo
+    input: apps/operativo/public/media
+    output: /media
+  - name: administrativo_media
+    label: Medios del manual administrativo
+    input: apps/administrativo/public/media
+    output: /media
+  - name: tecnico_media
+    label: Medios de la documentación técnica
+    input: apps/tecnico/public/media
+    output: /media
+
+content:
+  - name: manual_operativo
+    label: Manual operativo
+    type: collection
+    path: apps/operativo/src/content/docs
+    format: yaml-frontmatter
+    subfolders: true
+    filename: "{primary}.mdx"
+    exclude:
+      - "**/_generated-*"
+    view:
+      primary: title
+      fields: [status, module, lastReviewedAt]
+      tree: true
+    fields:
+      - name: title
+        label: Título
+        type: string
+        required: true
+      - name: description
+        label: Descripción
+        type: text
+        required: true
+      - name: surface
+        label: Superficie
+        type: select
+        required: true
+        options:
+          values: [app, cross-surface]
+      - name: documentType
+        label: Tipo de documento
+        type: select
+        required: true
+        options:
+          values: [screen, process, reference, concept]
+      - name: module
+        label: Módulo
+        type: string
+        required: true
+      - name: status
+        label: Estado
+        type: select
+        required: true
+        options:
+          values: [draft, published, deprecated]
+      - name: owners
+        label: Responsables
+        type: string
+        list: true
+        required: true
+      - name: lastReviewedAt
+        label: Última revisión
+        type: date
+        required: true
+      - name: generated
+        label: Generado automáticamente
+        type: boolean
+        readonly: true
+      - name: body
+        label: Contenido
+        type: rich-text
+        options:
+          format: markdown
+          media: operativo_media
+          path: .
+          rename: safe
+          switcher: true
+
+  - name: manual_administrativo
+    label: Manual administrativo
+    type: collection
+    path: apps/administrativo/src/content/docs
+    format: yaml-frontmatter
+    subfolders: true
+    filename: "{primary}.mdx"
+    exclude:
+      - "**/_generated-*"
+    view:
+      primary: title
+      fields: [status, module, lastReviewedAt]
+      tree: true
+    fields:
+      - name: title
+        label: Título
+        type: string
+        required: true
+      - name: description
+        label: Descripción
+        type: text
+        required: true
+      - name: surface
+        label: Superficie
+        type: select
+        required: true
+        options:
+          values: [admin, cross-surface]
+      - name: documentType
+        label: Tipo de documento
+        type: select
+        required: true
+        options:
+          values: [screen, process, reference, concept]
+      - name: module
+        label: Módulo
+        type: string
+        required: true
+      - name: status
+        label: Estado
+        type: select
+        required: true
+        options:
+          values: [draft, published, deprecated]
+      - name: owners
+        label: Responsables
+        type: string
+        list: true
+        required: true
+      - name: lastReviewedAt
+        label: Última revisión
+        type: date
+        required: true
+      - name: generated
+        label: Generado automáticamente
+        type: boolean
+        readonly: true
+      - name: body
+        label: Contenido
+        type: rich-text
+        options:
+          format: markdown
+          media: administrativo_media
+          path: .
+          rename: safe
+          switcher: true
+
+  - name: documentacion_tecnica
+    label: Documentación técnica
+    type: collection
+    path: apps/tecnico/src/content/docs
+    format: yaml-frontmatter
+    subfolders: true
+    filename: "{primary}.mdx"
+    exclude:
+      - "**/_generated-*"
+      - "api/endpoints.mdx"
+    view:
+      primary: title
+      fields: [status, module, lastReviewedAt]
+      tree: true
+    fields:
+      - name: title
+        label: Título
+        type: string
+        required: true
+      - name: description
+        label: Descripción
+        type: text
+        required: true
+      - name: surface
+        label: Superficie
+        type: select
+        required: true
+        options:
+          values: [technical]
+      - name: documentType
+        label: Tipo de documento
+        type: select
+        required: true
+        options:
+          values: [reference, concept]
+      - name: module
+        label: Módulo
+        type: string
+        required: true
+      - name: status
+        label: Estado
+        type: select
+        required: true
+        options:
+          values: [draft, published, deprecated]
+      - name: owners
+        label: Responsables
+        type: string
+        list: true
+        required: true
+      - name: lastReviewedAt
+        label: Última revisión
+        type: date
+        required: true
+      - name: generated
+        label: Generado automáticamente
+        type: boolean
+        readonly: true
+      - name: body
+        label: Contenido
+        type: rich-text
+        options:
+          format: markdown
+          media: tecnico_media
+          path: .
+          rename: safe
+          switcher: true
+
+settings:
+  content:
+    merge: true
+  commit:
+    identity: user
+    templates:
+      create: "docs: create {path}"
+      update: "docs: update {path}"
+      delete: "docs: remove {path}"
+      rename: "docs: move {oldPath} to {newPath}"
