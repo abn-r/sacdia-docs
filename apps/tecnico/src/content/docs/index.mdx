@@ -1,0 +1,33 @@
+---
+title: Documentación técnica de SACDIA
+description: Referencia privada para desarrollar, integrar y operar la plataforma.
+surface: technical
+documentType: concept
+module: home
+status: published
+owners:
+  - engineering
+lastReviewedAt: 2026-08-20
+template: splash
+sidebar:
+  hidden: true
+---
+
+import LandingHero from '@sacdia/docs-ui/components/LandingHero.astro';
+import TaskCard from '@sacdia/docs-ui/components/TaskCard.astro';
+
+<LandingHero
+  eyebrow="Equipo de desarrollo"
+  title="Entiende y evoluciona SACDIA"
+  summary="Contratos, decisiones y referencias técnicas verificadas para trabajar con seguridad."
+/>
+
+<div class="sacdia-task-grid">
+  <TaskCard href="/api/" title="Consultar la API" description="Revisa endpoints, contratos y errores." />
+  <TaskCard href="/arquitectura/" title="Entender la arquitectura" description="Conoce decisiones, límites y dependencias." />
+  <TaskCard href="/base-de-datos/" title="Explorar los datos" description="Consulta el schema y las reglas de persistencia." />
+</div>
+
+## Acceso restringido
+
+Este portal contiene información interna. Cloudflare Access debe limitarlo al equipo técnico autorizado.

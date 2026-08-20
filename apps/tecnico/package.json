@@ -1,0 +1,23 @@
+{
+  "name": "@sacdia/docs-tecnico",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev --port 4323",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "check": "ASTRO_TELEMETRY_DISABLED=1 astro check"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.41.7",
+    "@sacdia/docs-config": "workspace:*",
+    "@sacdia/docs-content": "workspace:*",
+    "@sacdia/docs-ui": "workspace:*",
+    "astro": "^7.2.4",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.3"
+  }
+}
