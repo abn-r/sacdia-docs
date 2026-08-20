@@ -10,6 +10,8 @@ owners:
 lastReviewedAt: 2026-08-20
 ---
 
+import GuideScreenshot from '@sacdia/docs-ui/components/GuideScreenshot';
+
 Gestionar camporees locales y de unión, agenda, eventos, jueces, pagos y clasificaciones.
 
 ## Resultado esperado
@@ -44,6 +46,17 @@ El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso n
 | `/dashboard/campamentos/union/[id]` | Detalle contextual del elemento seleccionado. |
 | `/dashboard/campamentos/union/[id]/events/[eventId]/edit` | Formulario para editar el registro seleccionado. |
 | `/dashboard/campamentos/union/[id]/events/new` | Formulario para crear un registro. |
+
+## Reconoce la biblioteca de plantillas
+
+<GuideScreenshot
+  src="/media/guides/camporees/administracion-camporees.png"
+  alt="Biblioteca administrativa de plantillas de eventos con buscador, filtros de alcance y estado vacío"
+  caption="Usa plantillas para reutilizar la estructura de los eventos. Filtra antes de crear una nueva para evitar duplicados."
+  kind="desktop"
+  width={1323}
+  height={458}
+/>
 
 ## Antes de comenzar
 

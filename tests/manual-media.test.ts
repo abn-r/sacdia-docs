@@ -38,6 +38,36 @@ const captures: ManualCapture[] = [
     manual: 'clubes/solicitudes.mdx',
     image: '/media/guides/membresia/solicitudes-membresia.png',
   },
+  {
+    portal: 'operativo',
+    manual: 'pantallas/ayuda-soporte.mdx',
+    image: '/media/guides/soporte/centro-ayuda.png',
+  },
+  {
+    portal: 'operativo',
+    manual: 'pantallas/recursos.mdx',
+    image: '/media/guides/recursos/biblioteca-recursos.png',
+  },
+  {
+    portal: 'operativo',
+    manual: 'pantallas/logros.mdx',
+    image: '/media/guides/logros/mis-logros.png',
+  },
+  {
+    portal: 'administrativo',
+    manual: 'clubes/campamentos.mdx',
+    image: '/media/guides/camporees/administracion-camporees.png',
+  },
+  {
+    portal: 'administrativo',
+    manual: 'materiales/recursos.mdx',
+    image: '/media/guides/recursos/gestion-recursos.png',
+  },
+  {
+    portal: 'administrativo',
+    manual: 'configuracion/logros.mdx',
+    image: '/media/guides/logros/configuracion-logros.png',
+  },
 ];
 
 describe('manual screenshots', () => {

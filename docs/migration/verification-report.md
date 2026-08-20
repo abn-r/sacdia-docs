@@ -72,15 +72,16 @@ representativas; no sustituye una revisión editorial humana de cada uno de los
 
 ### Capturas reales en manuales prioritarios
 
-Se integraron seis capturas del runtime efectivo en las guías de Finanzas,
-Materiales y Membresía:
+Se integraron doce capturas del runtime efectivo en guías prioritarias:
 
 - aplicación Flutter: resumen financiero, acceso rápido a Inventario/Pedidos y
-  solicitudes de miembros;
+  solicitudes de miembros; centro de Ayuda y soporte, biblioteca de Recursos y
+  catálogo personal de Logros;
 - panel administrativo: Finanzas por club, solicitudes de materiales y
-  solicitudes de membresía.
+  solicitudes de membresía; plantillas de eventos para camporees, filtros de
+  Recursos y configuración de Logros.
 
-Las tres capturas móviles se obtuvieron con MobAI. Las tres administrativas se
+Las seis capturas móviles se obtuvieron con MobAI. Las seis administrativas se
 obtuvieron con Playwright y se recortaron al contenido funcional para excluir
 barra lateral, perfil y correo. La captura financiera utiliza exclusivamente
 datos QA cuya publicación privada fue autorizada: balance `$2,079`, ingresos
@@ -92,11 +93,17 @@ claves sin traducir `materials.catalog.*`. La guía usa en su lugar la vista rea
 de acceso rápido a **Inventario** y **Pedidos**, y el defecto de localización
 quedó registrado para corrección en la aplicación.
 
+La lista móvil de Camporees tampoco se publicó: el runtime mostraba una
+organización y ubicación que no estaban autorizadas para este conjunto de
+medios. El bloque se completó con una captura segura de **Ayuda y soporte**; la
+guía administrativa de Camporees usa el estado vacío de la biblioteca de
+plantillas, sin información territorial.
+
 La prueba `manual-media.test.ts` valida la conexión de cada captura con su
 manual, su resolución dentro del portal correcto, la firma PNG y un tamaño
-mínimo. Playwright confirmó las seis imágenes a 1440 × 1000, los dos portales a
-390 × 844 sin overflow (`390/390`), pies de imagen visibles y consola sin
-errores.
+mínimo. Playwright confirmó ambos bloques de seis imágenes a 1440 × 1000, los
+dos portales a 390 × 844 sin overflow (`390/390`), pies de imagen visibles y
+consola sin errores.
 
 ## Cobertura de contenido
 
