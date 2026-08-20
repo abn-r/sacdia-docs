@@ -22,4 +22,19 @@ describe('documentation UI contract', () => {
 
     expect(styles).toContain('@media (prefers-reduced-motion: reduce)');
   });
+
+  it('renders guide screenshots with accessible captions and lazy loading', () => {
+    const screenshot = readFileSync(
+      'packages/ui/src/components/GuideScreenshot.astro',
+      'utf8',
+    );
+
+    expect(screenshot).toContain('alt: string');
+    expect(screenshot).toContain('caption: string');
+    expect(screenshot).toContain('<figure');
+    expect(screenshot).toContain('loading="lazy"');
+    expect(screenshot).toContain('decoding="async"');
+    expect(screenshot).toContain('aria-describedby={captionId}');
+    expect(screenshot).toContain('<figcaption id={captionId}>');
+  });
 });

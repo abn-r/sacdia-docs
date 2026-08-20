@@ -1,0 +1,33 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  caption: string;
+  kind?: 'mobile' | 'desktop';
+  width?: number;
+  height?: number;
+}
+
+const {
+  src,
+  alt,
+  caption,
+  kind = 'desktop',
+  width,
+  height,
+} = Astro.props;
+const captionId = `guide-screenshot-${crypto.randomUUID()}`;
+---
+
+<figure class:list={['sacdia-guide-screenshot', `sacdia-guide-screenshot--${kind}`]}>
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading="lazy"
+    decoding="async"
+    aria-describedby={captionId}
+  />
+  <figcaption id={captionId}>{caption}</figcaption>
+</figure>
