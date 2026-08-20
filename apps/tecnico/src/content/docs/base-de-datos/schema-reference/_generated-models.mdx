@@ -3,13 +3,14 @@ title: "Modelos — Referencia Generada"
 description: "Listado completo de modelos Prisma de SACDIA. Generado automaticamente desde sacdia-backend/prisma/schema.prisma."
 surface: technical
 documentType: reference
-module: base-de-datos
+module: database
 status: published
 owners:
   - "Auto-generated"
 lastReviewedAt: 2026-08-20
 generated: true
 ---
+
 {/*
   AUTO-GENERATED FILE — DO NOT EDIT MANUALLY.
   Source: sacdia-backend/prisma/schema.prisma
@@ -21,10 +22,10 @@ generated: true
 
 | Metrica | Valor |
 | --- | --- |
-| Total modelos | **152** |
-| Total enums | 23 |
-| Total campos | 2003 |
-| Generado | 2026-05-14 |
+| Total modelos | **227** |
+| Total enums | 61 |
+| Total campos | 3505 |
+| Generado | 2026-08-20 |
 | Fuente | `sacdia-backend/prisma/schema.prisma` |
 
 > Las paginas por dominio (`users-auth.mdx`, `clubs.mdx`, etc.) son prosa manual. Esta pagina es el listado plano y siempre fresco.
@@ -32,24 +33,24 @@ generated: true
 ## Indice por dominio
 
 
-- [users-auth](#users-auth) — 10 modelos
+- [users-auth](#users-auth) — 11 modelos
 - [rbac](#rbac) — 4 modelos
 - [clubs](#clubs) — 9 modelos
 - [organizacion](#organizacion) — 12 modelos
-- [classes](#classes) — 8 modelos
+- [classes](#classes) — 11 modelos
 - [honors](#honors) — 6 modelos
 - [activities](#activities) — 4 modelos
-- [camporees](#camporees) — 3 modelos
+- [camporees](#camporees) — 20 modelos
 - [folders-evidencias](#folders-evidencias) — 11 modelos
 - [investidura](#investidura) — 3 modelos
 - [health](#health) — 9 modelos
 - [finanzas](#finanzas) — 3 modelos
-- [inventario](#inventario) — 4 modelos
+- [inventario](#inventario) — 5 modelos
 - [resources](#resources) — 2 modelos
 - [notifications](#notifications) — 3 modelos
 - [audit](#audit) — 1 modelos
-- [i18n](#i18n) — 1 modelos
-- [otros](#otros) — 59 modelos
+- [i18n](#i18n) — 3 modelos
+- [otros](#otros) — 110 modelos
 
 ---
 
@@ -111,9 +112,24 @@ generated: true
 - `attending_members_camporees` → `camporee_members` (many)
 - `certification_module_progress` → `certification_module_progress` (many)
 - `certification_section_progress` → `certification_section_progress` (many)
+- `certification_section_progress_reviews` → `certification_section_progress` (many)
+- `certification_versions_published` → `certification_versions` (many)
+- `certification_evidences_uploaded` → `certification_evidences` (many)
+- `certification_review_events_performed` → `certification_review_events` (many)
+- `certification_closeout_uploaded` → `certification_closeout_evidences` (many)
+- `certification_closeout_reviewed` → `certification_closeout_evidences` (many)
 - `class_module_progress` → `class_module_progress` (many)
 - `class_section_progress` → `class_section_progress` (many)
+- `class_counselor_assignments` → `class_counselor_assignments` (many)
+- `class_counselor_assignments_assigned` → `class_counselor_assignments` (many)
+- `certificate_bulk_import_batches` → `certificate_bulk_import_batches` (many)
+- `certificate_bulk_import_files` → `certificate_bulk_import_files` (many)
+- `certificate_bulk_import_events` → `certificate_bulk_import_item_events` (many)
+- `certificate_bulk_import_reviews` → `certificate_bulk_import_items` (many)
 - `club_role_assignments` → `club_role_assignments` (many)
+- `director_succession_plans_as_successor` → `director_succession_plans` (many)
+- `director_succession_plans_as_scheduler` → `director_succession_plans` (many)
+- `authorization_context_versions` → `authorization_context_versions`
 - `emergency_contacts` → `emergency_contacts` (many)
 - `emergency_contact` → `emergency_contacts` (many)
 - `enrollments` → `enrollments` (many)
@@ -121,10 +137,12 @@ generated: true
 - `evidence_files_uploaded` → `evidence_files` (many)
 - `finances` → `finances` (many)
 - `finances_modified` → `finances` (many)
+- `finance_evidence_uploaded` → `finance_evidence_files` (many)
 - `assignments_folders` → `folder_assignments` (many)
 - `evidence_files_submitted` → `folders_section_records` (many)
 - `evidence_files_validated` → `folders_section_records` (many)
 - `investiture_validation_history` → `investiture_validation_history` (many)
+- `inventory_evidence_uploaded` → `inventory_evidence_files` (many)
 - `inventory_history_performed` → `inventory_history` (many)
 - `as_legal_representative` → `legal_representatives` (many)
 - `legal_representative` → `legal_representatives`
@@ -145,6 +163,8 @@ generated: true
 - `users_certifications` → `users_certifications` (many)
 - `users_diseases` → `users_diseases` (many)
 - `users_honors` → `users_honors` (many)
+- `users_master_honors` → `users_master_honors` (many)
+- `master_honor_evaluation_history` → `master_honor_evaluation_history` (many)
 - `users_medicines` → `users_medicines` (many)
 - `users_permissions` → `users_permissions` (many)
 - `users_pr` → `users_pr`
@@ -195,6 +215,54 @@ generated: true
 - `material_comprobantes_uploaded` → `MaterialComprobante` (many)
 - `material_comprobantes_validated` → `MaterialComprobante` (many)
 - `material_config_updated` → `MaterialConfig` (many)
+- `coordinator_assignments` → `coordinator_assignments` (many)
+- `coordinator_assignments_created` → `coordinator_assignments` (many)
+- `camporee_event_templates_created` → `camporee_event_templates` (many)
+- `camporee_event_templates_modified` → `camporee_event_templates` (many)
+- `camporee_event_template_rubrics_created` → `camporee_event_template_rubrics` (many)
+- `camporee_event_template_rubrics_modified` → `camporee_event_template_rubrics` (many)
+- `camporee_events_created` → `camporee_events` (many)
+- `camporee_events_modified` → `camporee_events` (many)
+- `camporee_events_led` → `camporee_events` (many)
+- `camporee_staff_profiles` → `camporee_staff_members` (many)
+- `camporee_staff_created` → `camporee_staff_members` (many)
+- `camporee_staff_modified` → `camporee_staff_members` (many)
+- `camporee_event_staff_assignments_created` → `camporee_event_staff_assignments` (many)
+- `camporee_event_staff_assignments_modified` → `camporee_event_staff_assignments` (many)
+- `camporee_judge_profiles` → `camporee_judges` (many)
+- `camporee_judges_created` → `camporee_judges` (many)
+- `camporee_judges_modified` → `camporee_judges` (many)
+- `camporee_event_rubrics_created` → `camporee_event_rubrics` (many)
+- `camporee_event_rubrics_modified` → `camporee_event_rubrics` (many)
+- `camporee_judge_assignments_created` → `camporee_event_judge_assignments` (many)
+- `camporee_judge_assignments_modified` → `camporee_event_judge_assignments` (many)
+- `camporee_score_submissions_submitted` → `camporee_event_score_submissions` (many)
+- `camporee_event_section_results_finalized` → `camporee_event_section_results` (many)
+- `local_camporees_timezone_verified` → `local_camporees` (many)
+- `union_camporees_timezone_verified` → `union_camporees` (many)
+- `institutional_reorganizations_approved` → `institutional_reorganizations` (many)
+- `institutional_name_versions_recorded` → `institutional_name_versions` (many)
+- `insurance_products_created` → `insurance_products` (many)
+- `insurance_products_modified` → `insurance_products` (many)
+- `insurance_cycle_configs_created` → `insurance_cycle_configs` (many)
+- `insurance_cycle_configs_modified` → `insurance_cycle_configs` (many)
+- `insurance_purchases_submitted` → `insurance_purchases` (many)
+- `insurance_purchases_reviewed` → `insurance_purchases` (many)
+- `insurance_purchases_created` → `insurance_purchases` (many)
+- `insurance_purchases_modified` → `insurance_purchases` (many)
+- `insurance_coverage_slots_created` → `insurance_coverage_slots` (many)
+- `insurance_coverage_slots_modified` → `insurance_coverage_slots` (many)
+- `insurance_slot_movements_performed` → `insurance_slot_movements` (many)
+- `insurance_assignments_assigned` → `insurance_assignments` (many)
+- `insurance_assignments_confirmed` → `insurance_assignments` (many)
+- `insurance_assignments_created` → `insurance_assignments` (many)
+- `insurance_assignments_modified` → `insurance_assignments` (many)
+- `insurance_assignment_subjects` → `insurance_assignments` (many)
+- `insurance_evidence_files_uploaded` → `insurance_evidence_files` (many)
+- `insurance_evidence_files_created` → `insurance_evidence_files` (many)
+- `insurance_evidence_files_modified` → `insurance_evidence_files` (many)
+- `camporee_external_participants_created` → `camporee_external_participants` (many)
+- `camporee_external_participants_modified` → `camporee_external_participants` (many)
 
 ### `users_allergies`
 
@@ -224,20 +292,36 @@ generated: true
 | `enrollment_id` | `Int` | PK |
 | `user_id` | `String` | — |
 | `certification_id` | `Int` | — |
+| `certification_version_id` | `Int` | — |
 | `enrollment_date` | `DateTime` | — |
+| `started_at` | `DateTime` | optional |
+| `submitted_at` | `DateTime` | optional |
+| `approved_at` | `DateTime` | optional |
+| `certified_at` | `DateTime` | optional |
+| `expires_at` | `DateTime` | optional |
 | `completion_status` | `Boolean` | — |
 | `completion_date` | `DateTime` | optional |
 | `certificate_url` | `String` | optional |
+| `lock_version` | `Int` | — |
 | `active` | `Boolean` | — |
 | `created_at` | `DateTime` | — |
 | `modified_at` | `DateTime` | — |
 
+**Enums**:
+- `status`: `certification_enrollment_status_enum`
+
 **Relaciones**:
 - `certifications` → `certifications`
+- `certification_versions` → `certification_versions`
 - `users` → `users`
+- `certification_section_progress` → `certification_section_progress` (many)
+- `certification_review_events` → `certification_review_events` (many)
+- `certification_closeout_evidences` → `certification_closeout_evidences` (many)
 
 **Bloque**:
 - `@@index([user_id, completion_status], map: "idx_users_certifications_completion")`
+- `@@index([status], map: "idx_users_certifications_status")`
+- `@@index([certification_version_id], map: "idx_users_certifications_version")`
 
 ### `users_diseases`
 
@@ -280,6 +364,7 @@ generated: true
 
 **Enums**:
 - `validation_status`: `honor_validation_status_enum`
+- `completion_mode`: `honor_completion_mode_enum`
 
 **Relaciones**:
 - `honors` → `honors`
@@ -287,11 +372,46 @@ generated: true
 - `validator` → `users`
 - `evidence_files` → `evidence_files` (many)
 - `user_honor_requirement_progress` → `user_honor_requirement_progress` (many)
+- `certification_component_responses` → `certification_component_responses` (many)
 
 **Bloque**:
 - `@@unique([user_id, honor_id])`
 - `@@index([user_id], map: "idx_users_honors_user_id")`
 - `@@index([validation_status], map: "idx_users_honors_validation_status")`
+- `@@index([honor_id, active], map: "idx_users_honors_honor_active")`
+
+### `users_master_honors`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `user_master_honor_id` | `Int` | PK |
+| `user_id` | `String` | — |
+| `master_honor_id` | `Int` | — |
+| `awarded_at` | `DateTime` | optional |
+| `revoked_at` | `DateTime` | optional |
+| `recovered_at` | `DateTime` | optional |
+| `evaluated_at` | `DateTime` | — |
+| `awarded_division_id` | `Int` | optional |
+| `evaluation_snapshot` | `Json` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `status`: `user_master_honor_status_enum`
+- `source`: `user_master_honor_source_enum`
+- `status_reason`: `user_master_honor_status_reason_enum`
+
+**Relaciones**:
+- `user` → `users`
+- `master_honor` → `master_honors`
+- `awarded_division` → `divisions`
+- `history` → `master_honor_evaluation_history` (many)
+
+**Bloque**:
+- `@@unique([user_id, master_honor_id])`
+- `@@index([user_id, status])`
+- `@@index([master_honor_id, status])`
 
 ### `users_medicines`
 
@@ -392,6 +512,9 @@ generated: true
 
 **Relaciones**:
 - `club_sections` → `club_sections`
+- `class_counselor_assignments` → `class_counselor_assignments` (many)
+- `outgoing_director_succession_plans` → `director_succession_plans` (many)
+- `activated_director_succession_plans` → `director_succession_plans` (many)
 - `ecclesiastical_year` → `ecclesiastical_years`
 - `roles` → `roles`
 - `users` → `users`
@@ -402,6 +525,7 @@ generated: true
 - `@@index([user_id], map: "idx_club_role_assignments_user")`
 - `@@index([ecclesiastical_year_id], map: "idx_club_role_assignments_year")`
 - `@@index([club_section_id], map: "idx_club_role_assignments_club_section_id")`
+- `@@index([ecclesiastical_year_id, active, status], map: "idx_club_role_assignments_year_active_status")`
 - `@@index([user_id, active, start_date(sort: Desc)], map: "idx_club_role_assignments_user_active_start")`
 
 ### `permissions`
@@ -462,6 +586,7 @@ generated: true
 - `users_roles` → `users_roles` (many)
 - `role_slot_limits` → `role_slot_limits`
 - `role_assignment_requests` → `role_assignment_requests` (many)
+- `certification_eligibility_rules` → `certification_eligibility_rules` (many)
 
 ## clubs
 
@@ -498,7 +623,7 @@ generated: true
 - `club_ideals` → `club_ideals`
 
 **Bloque**:
-- `@@unique([club_ideal_id, locale], map: "club_ideals_translations_unique_locale")`
+- `@@unique([club_ideal_id, locale], name: "club_ideals_translations_unique_locale", map: "club_ideals_translations_unique_locale")`
 - `@@index([locale], map: "club_ideals_translations_locale_idx")`
 - `@@index([club_ideal_id], map: "club_ideals_translations_club_ideal_id_idx")`
 
@@ -514,7 +639,6 @@ generated: true
 | `meeting_time` | `Json` | list |
 | `club_type_id` | `Int` | — |
 | `main_club_id` | `Int` | optional |
-| `name` | `String` | optional |
 | `phone` | `String` | optional |
 | `email` | `String` | optional |
 | `website` | `String` | optional |
@@ -530,7 +654,9 @@ generated: true
 - `activity_instances` → `activity_instances` (many)
 - `camporee_clubs` → `camporee_clubs` (many)
 - `club_inventory` → `club_inventory` (many)
+- `class_counselor_assignments` → `class_counselor_assignments` (many)
 - `club_role_assignments` → `club_role_assignments` (many)
+- `director_succession_plans` → `director_succession_plans` (many)
 - `club_types` → `club_types`
 - `clubs` → `clubs`
 - `finances` → `finances` (many)
@@ -546,9 +672,21 @@ generated: true
 - `enrollment_rankings` → `EnrollmentRanking` (many)
 - `section_rankings` → `SectionRanking` (many)
 - `material_orders` → `MaterialOrder` (many)
+- `coordinator_assignments` → `coordinator_assignments` (many)
+- `camporee_score_judge_assignments` → `camporee_event_judge_assignments` (many)
+- `camporee_score_submissions` → `camporee_event_score_submissions` (many)
+- `camporee_score_section_results` → `camporee_event_section_results` (many)
+- `camporee_schedule_block_assignments` → `camporee_event_schedule_block_assignments` (many)
+- `insurance_purchases` → `insurance_purchases` (many)
+- `insurance_coverage_slots_purchased` → `insurance_coverage_slots` (many)
+- `insurance_coverage_slots_current` → `insurance_coverage_slots` (many)
+- `insurance_slot_movements_from` → `insurance_slot_movements` (many)
+- `insurance_slot_movements_to` → `insurance_slot_movements` (many)
 
 **Bloque**:
 - `@@unique([main_club_id, club_type_id])`
+- `@@index([club_type_id, active], map: "idx_club_sections_club_type_active")`
+- `@@index([main_club_id, active], map: "idx_club_sections_club_active")`
 
 ### `club_types`
 
@@ -567,17 +705,22 @@ generated: true
 - `club_sections` → `club_sections` (many)
 - `finances` → `finances` (many)
 - `folders` → `folders` (many)
+- `honor_club_types` → `honor_club_types` (many)
 - `honors` → `honors` (many)
 - `units` → `units` (many)
 - `folder_templates` → `folder_templates` (many)
 - `resources` → `resources` (many)
 - `award_categories` → `award_categories` (many)
+- `annual_ranking_configs` → `annual_ranking_configs` (many)
 - `club_annual_rankings` → `club_annual_rankings` (many)
 - `achievements` → `achievements` (many)
 - `ranking_weight_configs` → `ranking_weight_configs`
 - `enrollment_ranking_weights` → `EnrollmentRankingWeight` (many)
 - `translations` → `club_types_translations` (many)
 - `material_products` → `MaterialProduct` (many)
+- `coordinator_assignments` → `coordinator_assignments` (many)
+- `insurance_cycle_configs` → `insurance_cycle_configs` (many)
+- `certification_eligibility_rules` → `certification_eligibility_rules` (many)
 
 ### `club_types_translations`
 
@@ -594,7 +737,7 @@ generated: true
 - `club_types` → `club_types`
 
 **Bloque**:
-- `@@unique([club_type_id, locale], map: "club_types_translations_unique_locale")`
+- `@@unique([club_type_id, locale], name: "club_types_translations_unique_locale", map: "club_types_translations_unique_locale")`
 - `@@index([locale], map: "club_types_translations_locale_idx")`
 - `@@index([club_type_id], map: "club_types_translations_club_type_id_idx")`
 
@@ -625,9 +768,18 @@ generated: true
 - `quarterly_reports` → `quarterly_reports` (many)
 - `annual_reports` → `annual_reports` (many)
 - `audit_logs` → `audit_logs` (many)
+- `club_institutional_history` → `club_institutional_history` (many)
+- `hierarchy_contexts` → `hierarchy_contexts` (many)
+- `institutional_name_versions` → `institutional_name_versions` (many)
+- `institutional_reorganization_participants` → `institutional_reorganization_participants` (many)
+- `insurance_purchases_owned` → `insurance_purchases` (many)
+- `insurance_coverage_slots_owned` → `insurance_coverage_slots` (many)
 
 **Bloque**:
 - `@@index([local_field_id], map: "idx_clubs_local_field_id")`
+- `@@index([church_id], map: "idx_clubs_church_id")`
+- `@@index([districlub_type_id, active], map: "idx_clubs_district_active")`
+- `@@index([active, name], map: "idx_clubs_active_name")`
 
 ### `ecclesiastical_years`
 
@@ -642,6 +794,12 @@ generated: true
 
 **Relaciones**:
 - `club_role_assignments` → `club_role_assignments` (many)
+- `director_succession_plans` → `director_succession_plans` (many)
+- `class_counselor_assignments` → `class_counselor_assignments` (many)
+- `classes_available_from` → `classes` (many)
+- `classes_available_until` → `classes` (many)
+- `class_sections_available_from` → `class_sections` (many)
+- `class_sections_available_until` → `class_sections` (many)
 - `enrollments_relation` → `enrollments` (many)
 - `folders` → `folders` (many)
 - `investiture_configs` → `investiture_config` (many)
@@ -650,11 +808,13 @@ generated: true
 - `club_enrollments` → `club_enrollments` (many)
 - `folder_templates` → `folder_templates` (many)
 - `club_annual_rankings` → `club_annual_rankings` (many)
+- `annual_ranking_configs` → `annual_ranking_configs` (many)
 - `user_achievements` → `user_achievements` (many)
 - `annual_reports` → `annual_reports` (many)
 - `enrollment_rankings` → `EnrollmentRanking` (many)
 - `section_rankings` → `SectionRanking` (many)
 - `enrollment_ranking_weights` → `EnrollmentRankingWeight` (many)
+- `insurance_cycle_configs` → `insurance_cycle_configs` (many)
 
 **Bloque**:
 - `@@index([start_date, end_date], map: "idx_ecclesiastical_years_date_range")`
@@ -703,6 +863,7 @@ generated: true
 - `club_types` → `club_types`
 - `users_units_secretary_idTousers` → `users`
 - `users_units_as_substitute_advisor` → `users`
+- `weekly_records` → `weekly_records` (many)
 
 **Bloque**:
 - `@@index([club_section_id], map: "idx_units_club_section_id")`
@@ -723,7 +884,16 @@ generated: true
 **Relaciones**:
 - `districts` → `districts`
 - `clubs` → `clubs` (many)
+- `church_district_history` → `church_district_history` (many)
+- `club_institutional_history` → `club_institutional_history` (many)
+- `hierarchy_contexts` → `hierarchy_contexts` (many)
+- `institutional_name_versions` → `institutional_name_versions` (many)
+- `institutional_reorganization_participants` → `institutional_reorganization_participants` (many)
 - `translations` → `churches_translations` (many)
+
+**Bloque**:
+- `@@index([districlub_type_id, active], map: "idx_churches_district_active")`
+- `@@index([districlub_type_id, name], map: "idx_churches_district_name")`
 
 ### `churches_translations`
 
@@ -740,7 +910,7 @@ generated: true
 - `churches` → `churches`
 
 **Bloque**:
-- `@@unique([church_id, locale])`
+- `@@unique([church_id, locale], name: "churches_translations_unique_locale", map: "churches_translations_unique_locale")`
 - `@@index([locale])`
 - `@@index([church_id])`
 
@@ -778,7 +948,7 @@ generated: true
 - `countries` → `countries`
 
 **Bloque**:
-- `@@unique([country_id, locale])`
+- `@@unique([country_id, locale], name: "countries_translations_unique_locale", map: "countries_translations_unique_locale")`
 - `@@index([locale])`
 - `@@index([country_id])`
 
@@ -797,7 +967,17 @@ generated: true
 - `churches` → `churches` (many)
 - `clubs` → `clubs` (many)
 - `local_fields` → `local_fields`
+- `district_local_field_history` → `district_local_field_history` (many)
+- `church_district_history` → `church_district_history` (many)
+- `club_institutional_history` → `club_institutional_history` (many)
+- `hierarchy_contexts` → `hierarchy_contexts` (many)
+- `institutional_name_versions` → `institutional_name_versions` (many)
+- `institutional_reorganization_participants` → `institutional_reorganization_participants` (many)
+- `coordination_zone_districts` → `coordination_zone_districts` (many)
 - `translations` → `districts_translations` (many)
+
+**Bloque**:
+- `@@index([local_field_id, active], map: "idx_districts_local_field_active")`
 
 ### `districts_translations`
 
@@ -814,7 +994,7 @@ generated: true
 - `districts` → `districts`
 
 **Bloque**:
-- `@@unique([districlub_type_id, locale])`
+- `@@unique([districlub_type_id, locale], name: "districts_translations_unique_locale", map: "districts_translations_unique_locale")`
 - `@@index([locale])`
 - `@@index([districlub_type_id])`
 
@@ -827,6 +1007,7 @@ generated: true
 | `abbreviation` | `String` | UNIQUE |
 | `active` | `Boolean` | — |
 | `union_id` | `Int` | — |
+| `timezone` | `String` | optional |
 | `created_at` | `DateTime` | optional |
 | `modified_at` | `DateTime` | optional |
 
@@ -834,14 +1015,37 @@ generated: true
 - `attending_clubs_camporees` → `camporee_clubs` (many)
 - `attending_members_camporees` → `camporee_members` (many)
 - `clubs` → `clubs` (many)
+- `class_sections_owned_by_local_field` → `class_sections` (many)
 - `districts` → `districts` (many)
 - `folder_templates` → `folder_templates` (many)
 - `investiture_configs` → `investiture_config` (many)
 - `local_camporees` → `local_camporees` (many)
+- `certificate_bulk_import_batches` → `certificate_bulk_import_batches` (many)
 - `unions` → `unions`
+- `local_field_union_history` → `local_field_union_history` (many)
+- `district_local_field_history` → `district_local_field_history` (many)
+- `club_institutional_history` → `club_institutional_history` (many)
+- `hierarchy_contexts` → `hierarchy_contexts` (many)
+- `institutional_name_versions` → `institutional_name_versions` (many)
+- `institutional_reorganization_participants` → `institutional_reorganization_participants` (many)
+- `annual_ranking_configs` → `annual_ranking_configs` (many)
 - `union_camporee_local_fields` → `union_camporee_local_fields` (many)
 - `users` → `users` (many)
+- `director_succession_plans` → `director_succession_plans` (many)
 - `translations` → `local_fields_translations` (many)
+- `material_products` → `MaterialProduct` (many)
+- `material_orders` → `MaterialOrder` (many)
+- `material_folio_counters` → `MaterialFolioCounter` (many)
+- `material_config` → `MaterialConfig`
+- `camporee_event_templates` → `camporee_event_templates` (many)
+- `camporee_venues` → `camporee_venues` (many)
+- `coordination_zones` → `coordination_zones` (many)
+- `coordinator_assignments` → `coordinator_assignments` (many)
+- `insurance_products` → `insurance_products` (many)
+- `insurance_cycle_configs` → `insurance_cycle_configs` (many)
+
+**Bloque**:
+- `@@index([union_id, active], map: "idx_local_fields_union_active")`
 
 ### `local_fields_translations`
 
@@ -858,7 +1062,7 @@ generated: true
 - `local_fields` → `local_fields`
 
 **Bloque**:
-- `@@unique([local_field_id, locale])`
+- `@@unique([local_field_id, locale], name: "local_fields_translations_unique_locale", map: "local_fields_translations_unique_locale")`
 - `@@index([locale])`
 - `@@index([local_field_id])`
 
@@ -897,7 +1101,7 @@ generated: true
 - `relationship_types` → `relationship_types`
 
 **Bloque**:
-- `@@unique([relationship_type_id, locale], map: "relationship_types_translations_unique_locale")`
+- `@@unique([relationship_type_id, locale], name: "relationship_types_translations_unique_locale", map: "relationship_types_translations_unique_locale")`
 - `@@index([locale], map: "relationship_types_translations_locale_idx")`
 - `@@index([relationship_type_id], map: "relationship_types_translations_relationship_type_id_idx")`
 
@@ -910,16 +1114,31 @@ generated: true
 | `abbreviation` | `String` | UNIQUE |
 | `active` | `Boolean` | — |
 | `country_id` | `Int` | — |
+| `division_id` | `Int` | — |
 | `created_at` | `DateTime` | optional |
 | `modified_at` | `DateTime` | optional |
 
 **Relaciones**:
 - `local_fields` → `local_fields` (many)
+- `class_sections_owned_by_union` → `class_sections` (many)
 - `union_camporees` → `union_camporees` (many)
 - `folder_templates` → `folder_templates` (many)
+- `camporee_event_templates` → `camporee_event_templates` (many)
+- `camporee_venues` → `camporee_venues` (many)
 - `countries` → `countries`
+- `divisions` → `divisions`
+- `union_division_history` → `union_division_history` (many)
+- `local_field_union_history` → `local_field_union_history` (many)
+- `club_institutional_history` → `club_institutional_history` (many)
+- `hierarchy_contexts` → `hierarchy_contexts` (many)
+- `institutional_name_versions` → `institutional_name_versions` (many)
+- `institutional_reorganization_participants` → `institutional_reorganization_participants` (many)
+- `annual_ranking_configs` → `annual_ranking_configs` (many)
 - `users` → `users` (many)
 - `translations` → `unions_translations` (many)
+
+**Bloque**:
+- `@@index([division_id], map: "idx_unions_division_id")`
 
 ### `unions_translations`
 
@@ -936,11 +1155,67 @@ generated: true
 - `unions` → `unions`
 
 **Bloque**:
-- `@@unique([union_id, locale])`
+- `@@unique([union_id, locale], name: "unions_translations_unique_locale", map: "unions_translations_unique_locale")`
 - `@@index([locale])`
 - `@@index([union_id])`
 
 ## classes
+
+### `class_counselor_assignments`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `assignment_id` | `String` | PK |
+| `user_id` | `String` | — |
+| `club_section_id` | `Int` | — |
+| `class_id` | `Int` | — |
+| `ecclesiastical_year_id` | `Int` | — |
+| `club_role_assignment_id` | `String` | optional |
+| `responsibility_type` | `String` | — |
+| `active` | `Boolean` | — |
+| `exceptional` | `Boolean` | — |
+| `exception_reason` | `String` | optional |
+| `assigned_by_id` | `String` | optional |
+| `start_date` | `DateTime` | — |
+| `end_date` | `DateTime` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `users` → `users`
+- `assigned_by` → `users`
+- `club_sections` → `club_sections`
+- `classes` → `classes`
+- `ecclesiastical_year` → `ecclesiastical_years`
+- `club_role_assignments` → `club_role_assignments`
+
+**Bloque**:
+- `@@index([user_id, active, ecclesiastical_year_id], map: "idx_class_counselor_user_active_year")`
+- `@@index([club_section_id, class_id, active, ecclesiastical_year_id], map: "idx_class_counselor_section_class_active_year")`
+- `@@index([club_role_assignment_id], map: "idx_class_counselor_role_assignment")`
+- `@@index([assigned_by_id], map: "idx_class_counselor_assigned_by")`
+
+### `class_honors`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `class_honor_id` | `Int` | PK |
+| `class_id` | `Int` | — |
+| `honor_id` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `relation_type`: `class_honor_relation_type_enum`
+
+**Relaciones**:
+- `class` → `classes`
+- `honor` → `honors`
+
+**Bloque**:
+- `@@unique([class_id, honor_id, relation_type])`
+- `@@index([honor_id])`
 
 ### `class_module_progress`
 
@@ -963,6 +1238,7 @@ generated: true
 
 **Bloque**:
 - `@@unique([user_id, class_id, module_id])`
+- `@@index([enrollment_id], map: "idx_class_module_progress_enrollment_id")`
 
 ### `class_modules`
 
@@ -1004,6 +1280,25 @@ generated: true
 - `@@index([locale])`
 - `@@index([module_id])`
 
+### `class_prerequisites`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `class_prerequisite_id` | `Int` | PK |
+| `class_id` | `Int` | — |
+| `prerequisite_class_id` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `class` → `classes`
+- `prerequisite` → `classes`
+
+**Bloque**:
+- `@@unique([class_id, prerequisite_class_id])`
+- `@@index([prerequisite_class_id])`
+
 ### `class_section_progress`
 
 | Campo | Tipo | Notas |
@@ -1039,6 +1334,7 @@ generated: true
 **Bloque**:
 - `@@unique([user_id, class_id, module_id, section_id])`
 - `@@index([enrollment_id], map: "idx_class_section_progress_enrollment_id")`
+- `@@index([user_id, created_at], map: "idx_class_section_progress_user_created")`
 
 ### `class_sections`
 
@@ -1048,16 +1344,38 @@ generated: true
 | `name` | `String` | — |
 | `description` | `String` | optional |
 | `module_id` | `Int` | — |
+| `required_for_investiture` | `Boolean` | — |
+| `display_order` | `Int` | — |
+| `owner_division_id` | `Int` | optional |
+| `owner_union_id` | `Int` | optional |
+| `owner_local_field_id` | `Int` | optional |
+| `available_from_year_id` | `Int` | optional |
+| `available_until_year_id` | `Int` | optional |
 | `active` | `Boolean` | — |
 | `created_at` | `DateTime` | — |
 | `modified_at` | `DateTime` | — |
 
+**Enums**:
+- `requirement_track`: `class_requirement_track_enum`
+
 **Relaciones**:
 - `class_modules` → `class_modules`
+- `owner_division` → `divisions`
+- `owner_union` → `unions`
+- `owner_local_field` → `local_fields`
+- `available_from_year` → `ecclesiastical_years`
+- `available_until_year` → `ecclesiastical_years`
 - `translations` → `class_sections_translations` (many)
 
 **Bloque**:
 - `@@unique([name, module_id])`
+- `@@index([requirement_track], map: "idx_class_sections_requirement_track")`
+- `@@index([module_id, requirement_track], map: "idx_class_sections_module_requirement_track")`
+- `@@index([owner_division_id], map: "idx_class_sections_owner_division_id")`
+- `@@index([owner_union_id], map: "idx_class_sections_owner_union_id")`
+- `@@index([owner_local_field_id], map: "idx_class_sections_owner_local_field_id")`
+- `@@index([available_from_year_id], map: "idx_class_sections_available_from_year_id")`
+- `@@index([available_until_year_id], map: "idx_class_sections_available_until_year_id")`
 
 ### `class_sections_translations`
 
@@ -1090,19 +1408,37 @@ generated: true
 | `club_type_id` | `Int` | — |
 | `minimum_age` | `Int` | — |
 | `requires_invested_gm` | `Boolean` | — |
+| `advanced_enabled` | `Boolean` | — |
 | `display_order` | `Int` | — |
-| `asset_code` | `String` | optional |
+| `asset_code` | `String` | UNIQUE, optional |
+| `available_from_year_id` | `Int` | optional |
+| `available_until_year_id` | `Int` | optional |
+| `min_duration_years` | `Int` | — |
+| `max_duration_years` | `Int` | — |
 | `created_at` | `DateTime` | — |
 | `modified_at` | `DateTime` | — |
 | `material_url` | `String` | optional |
 
 **Relaciones**:
 - `class_module_progress` → `class_module_progress` (many)
+- `class_counselor_assignments` → `class_counselor_assignments` (many)
 - `class_modules` → `class_modules` (many)
 - `class_section_progress` → `class_section_progress` (many)
+- `certificate_bulk_import_items` → `certificate_bulk_import_items` (many)
 - `club_types` → `club_types`
+- `available_from_year` → `ecclesiastical_years`
+- `available_until_year` → `ecclesiastical_years`
+- `class_honors` → `class_honors` (many)
+- `prerequisites` → `class_prerequisites` (many)
+- `prerequisite_of` → `class_prerequisites` (many)
 - `enrollments` → `enrollments` (many)
 - `translations` → `classes_translations` (many)
+- `certification_eligibility_rules` → `certification_eligibility_rules` (many)
+
+**Bloque**:
+- `@@index([available_from_year_id], map: "idx_classes_available_from_year")`
+- `@@index([available_until_year_id], map: "idx_classes_available_until_year")`
+- `@@index([club_type_id, active], map: "idx_classes_club_type_active")`
 
 ### `classes_translations`
 
@@ -1131,7 +1467,8 @@ generated: true
 | Campo | Tipo | Notas |
 | --- | --- | --- |
 | `honor_id` | `Int` | PK |
-| `name` | `String` | UNIQUE |
+| `name` | `String` | — |
+| `code` | `String` | UNIQUE, optional |
 | `description` | `String` | optional |
 | `honor_image` | `String` | — |
 | `honors_category_id` | `Int` | — |
@@ -1149,9 +1486,19 @@ generated: true
 - `club_types` → `club_types`
 - `honors_categories` → `honors_categories`
 - `master_honors` → `master_honors`
+- `certificate_bulk_import_items` → `certificate_bulk_import_items` (many)
 - `users_honors` → `users_honors` (many)
 - `honor_requirements` → `honor_requirements` (many)
+- `honor_club_types` → `honor_club_types` (many)
+- `class_honors` → `class_honors` (many)
+- `master_honor_requirement_option_honors` → `master_honor_requirement_option_honors` (many)
 - `translations` → `honors_translations` (many)
+- `certification_requirement_components` → `certification_requirement_components` (many)
+
+**Bloque**:
+- `@@index([active, honors_category_id, name], map: "idx_honors_active_category_name")`
+- `@@index([club_type_id, active], map: "idx_honors_club_type_active")`
+- `@@index([name], map: "idx_honors_name")`
 
 ### `honors_categories`
 
@@ -1167,6 +1514,7 @@ generated: true
 
 **Relaciones**:
 - `honors` → `honors` (many)
+- `master_honor_requirement_groups` → `master_honor_requirement_groups` (many)
 - `translations` → `honors_categories_translations` (many)
 
 ### `honors_categories_translations`
@@ -1217,11 +1565,20 @@ generated: true
 | `name` | `String` | UNIQUE |
 | `master_image` | `String` | optional |
 | `active` | `Boolean` | — |
+| `philosophy` | `String` | optional |
+| `notes` | `String` | optional |
 | `created_at` | `DateTime` | optional |
 | `modified_at` | `DateTime` | optional |
 
+**Enums**:
+- `applicability_scope`: `master_honor_applicability_scope_enum`
+
 **Relaciones**:
 - `honors` → `honors` (many)
+- `master_honor_divisions` → `master_honor_divisions` (many)
+- `requirement_groups` → `master_honor_requirement_groups` (many)
+- `users_master_honors` → `users_master_honors` (many)
+- `evaluation_history` → `master_honor_evaluation_history` (many)
 - `translations` → `master_honors_translations` (many)
 
 ### `master_honors_translations`
@@ -1280,11 +1637,15 @@ generated: true
 - `club_types` → `club_types`
 - `users` → `users`
 - `activity_instances` → `activity_instances` (many)
+- `certification_component_responses` → `certification_component_responses` (many)
 
 **Bloque**:
 - `@@index([activity_type_id], map: "idx_activities_activity_type_id")`
 - `@@index([club_section_id], map: "idx_activities_club_section_id")`
 - `@@index([active, activity_type_id], map: "idx_activities_active_type")`
+- `@@index([created_by], map: "idx_activities_created_by")`
+- `@@index([created_at(sort: Desc)], map: "idx_activities_created_at")`
+- `@@index([created_by, activity_date], map: "idx_activities_created_by_date")`
 
 ### `activity_instances`
 
@@ -1322,6 +1683,7 @@ generated: true
 **Relaciones**:
 - `activities` → `activities` (many)
 - `translations` → `activity_types_translations` (many)
+- `certification_requirement_components` → `certification_requirement_components` (many)
 
 ### `activity_types_translations`
 
@@ -1339,7 +1701,7 @@ generated: true
 - `activity_types` → `activity_types`
 
 **Bloque**:
-- `@@unique([activity_type_id, locale], map: "activity_types_translations_unique_locale")`
+- `@@unique([activity_type_id, locale], name: "activity_types_translations_unique_locale", map: "activity_types_translations_unique_locale")`
 - `@@index([locale], map: "activity_types_translations_locale_idx")`
 - `@@index([activity_type_id], map: "activity_types_translations_activity_type_id_idx")`
 
@@ -1371,16 +1733,492 @@ generated: true
 - `club_sections` → `club_sections`
 - `local_fields` → `local_fields`
 - `registrar` → `users`
+- `score_judge_assignments` → `camporee_event_judge_assignments` (many)
+- `score_submissions` → `camporee_event_score_submissions` (many)
+- `score_section_results` → `camporee_event_section_results` (many)
+- `schedule_block_assignments` → `camporee_event_schedule_block_assignments` (many)
+- `members` → `camporee_members` (many)
 
 **Bloque**:
 - `@@index([club_section_id], map: "idx_camporee_clubs_club_section_id")`
 - `@@index([union_camporee_id], map: "idx_camporee_clubs_union_camporee_id")`
+- `@@index([camporee_id], map: "idx_camporee_clubs_camporee_id")`
+- `@@index([club_id], map: "idx_camporee_clubs_club_id")`
+- `@@index([status, active], map: "idx_camporee_clubs_status_active")`
+
+### `camporee_event_judge_assignments`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_event_judge_assignment_id` | `String` | PK |
+| `camporee_event_id` | `Int` | — |
+| `camporee_judge_id` | `String` | — |
+| `camporee_club_id` | `Int` | optional |
+| `club_section_id` | `Int` | — |
+| `judge_role` | `String` | — |
+| `active` | `Boolean` | — |
+| `created_by` | `String` | optional |
+| `modified_by` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `camporee_event` → `camporee_events`
+- `camporee_judge` → `camporee_judges`
+- `camporee_club` → `camporee_clubs`
+- `club_section` → `club_sections`
+- `creator` → `users`
+- `modifier` → `users`
+- `score_submissions` → `camporee_event_score_submissions` (many)
+
+**Bloque**:
+- `@@index([camporee_judge_id, active], map: "idx_camporee_event_judge_assignments_judge")`
+- `@@index([camporee_event_id, club_section_id], map: "idx_camporee_event_judge_assignments_event_section")`
+
+### `camporee_event_rubrics`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_event_rubric_id` | `Int` | PK |
+| `camporee_event_id` | `Int` | — |
+| `title` | `String` | — |
+| `description` | `String` | optional |
+| `max_points` | `Decimal` | — |
+| `display_order` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_by` | `String` | optional |
+| `modified_by` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `camporee_event` → `camporee_events`
+- `creator` → `users`
+- `modifier` → `users`
+- `submission_items` → `camporee_event_score_submission_items` (many)
+
+**Bloque**:
+- `@@index([camporee_event_id, active, display_order], map: "idx_camporee_event_rubrics_event_active")`
+
+### `camporee_event_schedule_block_assignments`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_event_schedule_block_assignment_id` | `String` | PK |
+| `schedule_block_id` | `String` | — |
+| `camporee_club_id` | `Int` | optional |
+| `club_section_id` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_by` | `String` | optional |
+| `modified_by` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `schedule_block` → `camporee_event_schedule_blocks`
+- `camporee_club` → `camporee_clubs`
+- `club_section` → `club_sections`
+
+**Bloque**:
+- `@@index([schedule_block_id, active], map: "idx_camporee_schedule_block_assignments_block")`
+- `@@index([club_section_id, active], map: "idx_camporee_schedule_block_assignments_section")`
+- `@@index([camporee_club_id], map: "idx_camporee_schedule_block_assignments_camporee_club")`
+
+### `camporee_event_schedule_blocks`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_event_schedule_block_id` | `String` | PK |
+| `camporee_event_id` | `Int` | — |
+| `title` | `String` | optional |
+| `description` | `String` | optional |
+| `day_number` | `Int` | — |
+| `starts_at` | `String` | optional |
+| `ends_at` | `String` | optional |
+| `venue_id` | `Int` | optional |
+| `display_order` | `Int` | — |
+| `capacity` | `Int` | optional |
+| `notes` | `String` | optional |
+| `active` | `Boolean` | — |
+| `created_by` | `String` | optional |
+| `modified_by` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `camporee_event` → `camporee_events`
+- `venue` → `camporee_venues`
+- `assignments` → `camporee_event_schedule_block_assignments` (many)
+
+**Bloque**:
+- `@@index([camporee_event_id, active, display_order], map: "idx_camporee_event_schedule_blocks_event")`
+- `@@index([day_number, starts_at], map: "idx_camporee_event_schedule_blocks_day_time")`
+- `@@index([venue_id], map: "idx_camporee_event_schedule_blocks_venue")`
+
+### `camporee_event_score_submission_items`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_event_score_submission_item_id` | `String` | PK |
+| `camporee_event_score_submission_id` | `String` | — |
+| `camporee_event_rubric_id` | `Int` | — |
+| `awarded_points` | `Decimal` | — |
+| `notes` | `String` | optional |
+| `created_at` | `DateTime` | — |
+
+**Relaciones**:
+- `submission` → `camporee_event_score_submissions`
+- `rubric` → `camporee_event_rubrics`
+
+**Bloque**:
+- `@@unique([camporee_event_score_submission_id, camporee_event_rubric_id], map: "uq_camporee_score_submission_item_rubric")`
+
+### `camporee_event_score_submissions`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_event_score_submission_id` | `String` | PK |
+| `camporee_event_id` | `Int` | — |
+| `camporee_club_id` | `Int` | optional |
+| `club_section_id` | `Int` | — |
+| `judge_assignment_id` | `String` | optional |
+| `submitted_by` | `String` | — |
+| `source` | `String` | — |
+| `status` | `String` | — |
+| `score_status` | `String` | — |
+| `is_no_show` | `Boolean` | — |
+| `override_of_submission_id` | `String` | optional |
+| `idempotency_key` | `String` | optional |
+| `request_hash` | `String` | optional |
+| `total_awarded_points` | `Decimal` | — |
+| `raw_awarded_points` | `Decimal` | — |
+| `minimum_adjustment_points` | `Decimal` | — |
+| `total_max_points` | `Decimal` | — |
+| `notes` | `String` | optional |
+| `voided_reason` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `camporee_event` → `camporee_events`
+- `camporee_club` → `camporee_clubs`
+- `club_section` → `club_sections`
+- `judge_assignment` → `camporee_event_judge_assignments`
+- `submitter` → `users`
+- `overridden_submission` → `camporee_event_score_submissions`
+- `override_submissions` → `camporee_event_score_submissions` (many)
+- `items` → `camporee_event_score_submission_items` (many)
+- `section_results` → `camporee_event_section_results` (many)
+
+**Bloque**:
+- `@@index([camporee_event_id, club_section_id, created_at], map: "idx_camporee_event_score_submissions_event_section")`
+- `@@index([score_status], map: "idx_camporee_event_score_submissions_score_status")`
+- `@@index([override_of_submission_id], map: "idx_camporee_event_score_submissions_override_of")`
+
+### `camporee_event_section_results`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_event_section_result_id` | `String` | PK |
+| `camporee_event_id` | `Int` | — |
+| `camporee_club_id` | `Int` | optional |
+| `club_section_id` | `Int` | — |
+| `source_submission_id` | `String` | — |
+| `score_status` | `String` | — |
+| `is_no_show` | `Boolean` | — |
+| `total_awarded_points` | `Decimal` | — |
+| `total_max_points` | `Decimal` | — |
+| `percentage` | `Decimal` | — |
+| `finalized_by` | `String` | — |
+| `finalized_at` | `DateTime` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `camporee_event` → `camporee_events`
+- `camporee_club` → `camporee_clubs`
+- `club_section` → `club_sections`
+- `source_submission` → `camporee_event_score_submissions`
+- `finalizer` → `users`
+
+**Bloque**:
+- `@@index([camporee_event_id, club_section_id], map: "idx_camporee_event_section_results_event_section")`
+- `@@index([camporee_event_id, club_section_id, active, score_status], map: "idx_camporee_event_section_results_active_status")`
+
+### `camporee_event_staff_assignments`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_event_staff_assignment_id` | `String` | PK |
+| `camporee_event_id` | `Int` | — |
+| `camporee_staff_member_id` | `String` | — |
+| `assignment_role` | `String` | — |
+| `title_override` | `String` | optional |
+| `notes` | `String` | optional |
+| `display_order` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_by` | `String` | optional |
+| `modified_by` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `camporee_event` → `camporee_events`
+- `camporee_staff_member` → `camporee_staff_members`
+- `creator` → `users`
+- `modifier` → `users`
+
+**Bloque**:
+- `@@index([camporee_event_id, active, display_order], map: "idx_camporee_event_staff_event")`
+- `@@index([camporee_staff_member_id, active], map: "idx_camporee_event_staff_member")`
+
+### `camporee_event_template_rubrics`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_event_template_rubric_id` | `Int` | PK |
+| `event_template_id` | `Int` | — |
+| `title` | `String` | — |
+| `description` | `String` | optional |
+| `max_points` | `Decimal` | — |
+| `display_order` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_by` | `String` | optional |
+| `modified_by` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `event_template` → `camporee_event_templates`
+- `creator` → `users`
+- `modifier` → `users`
+
+**Bloque**:
+- `@@index([event_template_id, active, display_order], map: "idx_camporee_event_template_rubrics_template_active")`
+
+### `camporee_event_templates`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `event_template_id` | `Int` | PK |
+| `scope` | `String` | — |
+| `union_id` | `Int` | optional |
+| `local_field_id` | `Int` | optional |
+| `event_type_id` | `Int` | — |
+| `title` | `String` | — |
+| `description` | `String` | optional |
+| `requirements` | `String` | optional |
+| `development` | `String` | optional |
+| `prerequisites` | `String` | optional |
+| `materials` | `String` | optional |
+| `auxiliaries` | `String` | optional |
+| `max_points` | `Int` | — |
+| `scoring_enabled` | `Boolean` | — |
+| `min_points` | `Int` | — |
+| `penalties` | `Json` | — |
+| `participants_mode` | `String` | — |
+| `participants_count` | `Int` | optional |
+| `participants_by_class` | `Json` | optional |
+| `duration_seconds` | `Int` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+| `created_by` | `String` | optional |
+| `modified_by` | `String` | optional |
+
+**Relaciones**:
+- `event_type` → `camporee_event_types`
+- `union` → `unions`
+- `local_field` → `local_fields`
+- `creator` → `users`
+- `modifier` → `users`
+- `rubrics` → `camporee_event_template_rubrics` (many)
+- `events` → `camporee_events` (many)
+
+**Bloque**:
+- `@@index([scope, union_id], map: "idx_camporee_event_templates_scope_union")`
+- `@@index([scope, local_field_id], map: "idx_camporee_event_templates_scope_lf")`
+- `@@index([event_type_id], map: "idx_camporee_event_templates_event_type")`
+- `@@index([active], map: "idx_camporee_event_templates_active")`
+
+### `camporee_event_types`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `event_type_id` | `Int` | PK |
+| `code` | `String` | UNIQUE |
+| `name` | `String` | — |
+| `description` | `String` | optional |
+| `display_order` | `Int` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `translations` → `camporee_event_types_translations` (many)
+- `templates` → `camporee_event_templates` (many)
+- `events` → `camporee_events` (many)
+
+**Bloque**:
+- `@@index([active], map: "idx_camporee_event_types_active")`
+
+### `camporee_event_types_translations`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `id` | `BigInt` | PK |
+| `event_type_id` | `Int` | — |
+| `locale` | `String` | — |
+| `name` | `String` | optional |
+| `description` | `String` | optional |
+| `created_at` | `DateTime` | optional |
+| `updated_at` | `DateTime` | optional |
+
+**Relaciones**:
+- `event_type` → `camporee_event_types`
+
+**Bloque**:
+- `@@unique([event_type_id, locale], name: "camporee_event_types_translations_unique_locale", map: "camporee_event_types_translations_unique_locale")`
+- `@@index([locale], map: "camporee_event_types_translations_locale_idx")`
+- `@@index([event_type_id], map: "camporee_event_types_translations_event_type_id_idx")`
+
+### `camporee_events`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_event_id` | `Int` | PK |
+| `local_camporee_id` | `Int` | optional |
+| `union_camporee_id` | `Int` | optional |
+| `event_template_id` | `Int` | optional |
+| `event_type_id` | `Int` | — |
+| `title` | `String` | — |
+| `description` | `String` | optional |
+| `requirements` | `String` | optional |
+| `development` | `String` | optional |
+| `prerequisites` | `String` | optional |
+| `materials` | `String` | optional |
+| `auxiliaries` | `String` | optional |
+| `max_points` | `Int` | — |
+| `scoring_enabled` | `Boolean` | — |
+| `min_points` | `Int` | — |
+| `penalties` | `Json` | — |
+| `participants_mode` | `String` | — |
+| `participants_count` | `Int` | optional |
+| `participants_by_class` | `Json` | optional |
+| `duration_seconds` | `Int` | optional |
+| `display_order` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+| `created_by` | `String` | optional |
+| `modified_by` | `String` | optional |
+| `day_number` | `Int` | — |
+| `starts_at` | `String` | optional |
+| `ends_at` | `String` | optional |
+| `venue_id` | `Int` | optional |
+| `leader_user_id` | `String` | optional |
+| `leader_name_override` | `String` | optional |
+| `leader_role` | `String` | optional |
+| `sections` | `String` | list |
+| `display_category` | `String` | — |
+| `capacity` | `Int` | optional |
+| `registered_count` | `Int` | — |
+
+**Enums**:
+- `status`: `CamporeeEventStatus`
+
+**Relaciones**:
+- `event_type` → `camporee_event_types`
+- `event_template` → `camporee_event_templates`
+- `local_camporee` → `local_camporees`
+- `union_camporee` → `union_camporees`
+- `creator` → `users`
+- `modifier` → `users`
+- `venue` → `camporee_venues`
+- `leader` → `users`
+- `rubrics` → `camporee_event_rubrics` (many)
+- `judge_assignments` → `camporee_event_judge_assignments` (many)
+- `score_submissions` → `camporee_event_score_submissions` (many)
+- `score_section_results` → `camporee_event_section_results` (many)
+- `schedule_blocks` → `camporee_event_schedule_blocks` (many)
+- `staff_assignments` → `camporee_event_staff_assignments` (many)
+
+**Bloque**:
+- `@@index([local_camporee_id], map: "idx_camporee_events_local_camporee")`
+- `@@index([union_camporee_id], map: "idx_camporee_events_union_camporee")`
+- `@@index([event_template_id], map: "idx_camporee_events_template")`
+- `@@index([active], map: "idx_camporee_events_active")`
+- `@@index([local_camporee_id, display_order], map: "idx_camporee_events_display_order")`
+- `@@index([day_number, active], map: "camporee_events_day_idx")`
+- `@@index([status, active], map: "camporee_events_status_idx")`
+- `@@index([display_category, active], map: "camporee_events_category_idx")`
+- `@@index([venue_id], map: "camporee_events_venue_idx")`
+- `@@index([leader_user_id], map: "camporee_events_leader_idx")`
+- `@@index([local_camporee_id, day_number, starts_at, display_order], map: "idx_camporee_events_local_day_start")`
+- `@@index([union_camporee_id, day_number, starts_at, display_order], map: "idx_camporee_events_union_day_start")`
+
+### `camporee_external_participants`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_external_participant_id` | `Int` | PK |
+| `local_camporee_id` | `Int` | optional |
+| `union_camporee_id` | `Int` | optional |
+| `full_name` | `String` | — |
+| `role_type` | `String` | — |
+| `role_description` | `String` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+| `created_by_id` | `String` | optional |
+| `modified_by_id` | `String` | optional |
+
+**Relaciones**:
+- `local_camporee` → `local_camporees`
+- `union_camporee` → `union_camporees`
+- `creator` → `users`
+- `modifier` → `users`
+- `assignments` → `insurance_assignments` (many)
+
+**Bloque**:
+- `@@index([local_camporee_id, active], map: "idx_camporee_external_participants_local_active")`
+- `@@index([union_camporee_id, active], map: "idx_camporee_external_participants_union_active")`
+
+### `camporee_judges`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_judge_id` | `String` | PK |
+| `local_camporee_id` | `Int` | optional |
+| `union_camporee_id` | `Int` | optional |
+| `user_id` | `String` | — |
+| `status` | `String` | — |
+| `notes` | `String` | optional |
+| `active` | `Boolean` | — |
+| `created_by` | `String` | optional |
+| `modified_by` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `local_camporee` → `local_camporees`
+- `union_camporee` → `union_camporees`
+- `user` → `users`
+- `creator` → `users`
+- `modifier` → `users`
+- `assignments` → `camporee_event_judge_assignments` (many)
+
+**Bloque**:
+- `@@index([local_camporee_id, user_id], map: "idx_camporee_judges_local_user")`
+- `@@index([union_camporee_id, user_id], map: "idx_camporee_judges_union_user")`
 
 ### `camporee_members`
 
 | Campo | Tipo | Notas |
 | --- | --- | --- |
 | `camporee_member_id` | `Int` | PK |
+| `camporee_club_id` | `Int` | optional |
 | `camporee_id` | `Int` | optional |
 | `union_camporee_id` | `Int` | optional |
 | `camporee_type` | `String` | — |
@@ -1398,6 +2236,7 @@ generated: true
 | `rejected_by` | `String` | optional |
 
 **Relaciones**:
+- `camporee_club` → `camporee_clubs`
 - `local_camporees` → `local_camporees`
 - `union_camporees` → `union_camporees`
 - `insurance` → `member_insurances`
@@ -1406,6 +2245,7 @@ generated: true
 - `camporee_payments` → `camporee_payments` (many)
 
 **Bloque**:
+- `@@index([camporee_club_id], map: "idx_camporee_members_camporee_club_id")`
 - `@@index([union_camporee_id], map: "idx_camporee_members_union_camporee_id")`
 - `@@index([camporee_id], map: "idx_camporee_members_camporee_id")`
 - `@@index([user_id], map: "idx_camporee_members_user_id")`
@@ -1422,6 +2262,8 @@ generated: true
 | `payment_type` | `String` | — |
 | `reference` | `String` | optional |
 | `notes` | `String` | optional |
+| `voucher_url` | `String` | optional |
+| `voucher_uploaded_at` | `DateTime` | optional |
 | `registered_by` | `String` | — |
 | `paid_at` | `DateTime` | — |
 | `created_at` | `DateTime` | — |
@@ -1440,6 +2282,66 @@ generated: true
 - `@@index([registered_by], map: "idx_camporee_payments_registered_by")`
 - `@@index([approved_by], map: "idx_camporee_payments_approved_by")`
 - `@@index([rejected_by], map: "idx_camporee_payments_rejected_by")`
+- `@@index([status, paid_at], map: "idx_camporee_payments_status_paid_at")`
+
+### `camporee_staff_members`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_staff_member_id` | `String` | PK |
+| `local_camporee_id` | `Int` | optional |
+| `union_camporee_id` | `Int` | optional |
+| `user_id` | `String` | — |
+| `category` | `String` | — |
+| `role_label` | `String` | optional |
+| `notes` | `String` | optional |
+| `status` | `String` | — |
+| `active` | `Boolean` | — |
+| `created_by` | `String` | optional |
+| `modified_by` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `local_camporee` → `local_camporees`
+- `union_camporee` → `union_camporees`
+- `user` → `users`
+- `creator` → `users`
+- `modifier` → `users`
+- `event_assignments` → `camporee_event_staff_assignments` (many)
+
+**Bloque**:
+- `@@index([local_camporee_id, active], map: "idx_camporee_staff_local_active")`
+- `@@index([union_camporee_id, active], map: "idx_camporee_staff_union_active")`
+- `@@index([user_id], map: "idx_camporee_staff_user")`
+
+### `camporee_venues`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_venue_id` | `Int` | PK |
+| `scope` | `String` | — |
+| `union_id` | `Int` | optional |
+| `local_field_id` | `Int` | optional |
+| `name` | `String` | — |
+| `description` | `String` | optional |
+| `capacity` | `Int` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+| `created_by` | `String` | optional |
+| `modified_by` | `String` | optional |
+
+**Relaciones**:
+- `union` → `unions`
+- `local_field` → `local_fields`
+- `events` → `camporee_events` (many)
+- `schedule_blocks` → `camporee_event_schedule_blocks` (many)
+
+**Bloque**:
+- `@@index([union_id, active], map: "camporee_venues_union_idx")`
+- `@@index([local_field_id, active], map: "camporee_venues_local_field_idx")`
+- `@@index([scope, active], map: "camporee_venues_scope_idx")`
 
 ## folders-evidencias
 
@@ -1467,6 +2369,8 @@ generated: true
 
 **Bloque**:
 - `@@index([club_section_id], map: "idx_folder_assignments_club_section_id")`
+- `@@index([user_id], map: "idx_folder_assignments_user_id")`
+- `@@index([folder_id], map: "idx_folder_assignments_folder_id")`
 
 ### `folder_template_sections`
 
@@ -1508,6 +2412,9 @@ generated: true
 | `created_at` | `DateTime` | — |
 | `modified_at` | `DateTime` | — |
 
+**Enums**:
+- `status`: `folder_template_status_enum`
+
 **Relaciones**:
 - `club_type` → `club_types`
 - `ecclesiastical_year` → `ecclesiastical_years`
@@ -1521,6 +2428,7 @@ generated: true
 - `@@index([ecclesiastical_year_id], map: "idx_folder_templates_year")`
 - `@@index([owner_union_id], map: "idx_folder_templates_owner_union")`
 - `@@index([owner_local_field_id], map: "idx_folder_templates_owner_local_field")`
+- `@@index([status], map: "idx_folder_templates_status")`
 
 ### `folders`
 
@@ -1547,6 +2455,9 @@ generated: true
 - `folders_modules_records` → `folders_modules_records` (many)
 - `folders_section_records` → `folders_section_records` (many)
 - `translations` → `folders_translations` (many)
+
+**Bloque**:
+- `@@index([ecclesiastical_year_id], map: "idx_folders_ecclesiastical_year")`
 
 ### `folders_modules`
 
@@ -1727,6 +2638,7 @@ generated: true
 | `duration_hours` | `Int` | optional |
 
 **Relaciones**:
+- `certification_versions` → `certification_versions` (many)
 - `certification_module_progress` → `certification_module_progress` (many)
 - `certification_modules` → `certification_modules` (many)
 - `certification_section_progress` → `certification_section_progress` (many)
@@ -1771,6 +2683,8 @@ generated: true
 
 **Bloque**:
 - `@@index([enrollment_id], map: "idx_investiture_history_enrollment")`
+- `@@index([enrollment_id, created_at], map: "idx_investiture_history_enrollment_created")`
+- `@@index([action, created_at], map: "idx_investiture_history_action_created")`
 
 ## health
 
@@ -1805,7 +2719,7 @@ generated: true
 - `allergies` → `allergies`
 
 **Bloque**:
-- `@@unique([allergy_id, locale], map: "allergies_translations_unique_locale")`
+- `@@unique([allergy_id, locale], name: "allergies_translations_unique_locale", map: "allergies_translations_unique_locale")`
 - `@@index([locale], map: "allergies_translations_locale_idx")`
 - `@@index([allergy_id], map: "allergies_translations_allergy_id_idx")`
 
@@ -1840,7 +2754,7 @@ generated: true
 - `diseases` → `diseases`
 
 **Bloque**:
-- `@@unique([disease_id, locale], map: "diseases_translations_unique_locale")`
+- `@@unique([disease_id, locale], name: "diseases_translations_unique_locale", map: "diseases_translations_unique_locale")`
 - `@@index([locale], map: "diseases_translations_locale_idx")`
 - `@@index([disease_id], map: "diseases_translations_disease_id_idx")`
 
@@ -1866,6 +2780,7 @@ generated: true
 
 **Bloque**:
 - `@@index([relationship_type_id], map: "idx_emergency_contacts_relationship_type_id")`
+- `@@index([owner_id, active], map: "idx_emergency_contacts_owner_active")`
 
 ### `legal_representatives`
 
@@ -1922,7 +2837,7 @@ generated: true
 - `medicines` → `medicines`
 
 **Bloque**:
-- `@@unique([medicine_id, locale], map: "medicines_translations_unique_locale")`
+- `@@unique([medicine_id, locale], name: "medicines_translations_unique_locale", map: "medicines_translations_unique_locale")`
 - `@@index([locale], map: "medicines_translations_locale_idx")`
 - `@@index([medicine_id], map: "medicines_translations_medicine_id_idx")`
 
@@ -1987,6 +2902,7 @@ generated: true
 - `users` → `users`
 - `modified_by` → `users`
 - `finances_categories` → `finances_categories`
+- `evidence_files` → `finance_evidence_files` (many)
 
 **Bloque**:
 - `@@index([club_section_id], map: "idx_finances_club_section_id")`
@@ -1994,6 +2910,7 @@ generated: true
 - `@@index([created_by], map: "idx_finances_created_by")`
 - `@@index([finance_category_id], map: "idx_finances_finance_category_id")`
 - `@@index([modified_by_id], map: "idx_finances_modified_by_id")`
+- `@@index([finance_date], map: "idx_finances_finance_date")`
 
 ### `finances_categories`
 
@@ -2054,6 +2971,7 @@ generated: true
 **Relaciones**:
 - `club_sections` → `club_sections`
 - `inventory_categories` → `inventory_categories`
+- `inventory_evidence_files` → `inventory_evidence_files` (many)
 - `inventory_history` → `inventory_history` (many)
 
 **Bloque**:
@@ -2093,6 +3011,28 @@ generated: true
 - `@@unique([inventory_category_id, locale])`
 - `@@index([locale])`
 - `@@index([inventory_category_id])`
+
+### `inventory_evidence_files`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `inventory_evidence_file_id` | `Int` | PK |
+| `inventory_id` | `Int` | — |
+| `file_url` | `String` | — |
+| `file_name` | `String` | — |
+| `file_type` | `String` | — |
+| `file_size` | `Int` | optional |
+| `uploaded_by_id` | `String` | — |
+| `uploaded_at` | `DateTime` | — |
+| `active` | `Boolean` | — |
+
+**Relaciones**:
+- `club_inventory` → `club_inventory`
+- `uploaded_by` → `users`
+
+**Bloque**:
+- `@@index([inventory_id], map: "idx_inventory_evidence_files_inventory")`
+- `@@index([uploaded_by_id], map: "idx_inventory_evidence_files_uploaded_by")`
 
 ### `inventory_history`
 
@@ -2168,6 +3108,7 @@ generated: true
 - `@@index([club_type_id], map: "idx_resources_club_type")`
 - `@@index([resource_category_id], map: "idx_resources_category")`
 - `@@index([resource_type], map: "idx_resources_type")`
+- `@@index([created_at(sort: Desc)], map: "idx_resources_created_at")`
 
 ## notifications
 
@@ -2251,6 +3192,18 @@ generated: true
 | `summary` | `String` | optional |
 | `changes` | `Json` | optional |
 | `created_at` | `DateTime` | — |
+| `event_key` | `String` | UNIQUE, optional |
+| `actor_kind` | `String` | — |
+| `actor_role_name` | `String` | optional |
+| `actor_scope` | `Json` | optional |
+| `target_user_id` | `String` | optional |
+| `target_scope` | `Json` | optional |
+| `effective_at` | `DateTime` | optional |
+| `correlation_id` | `String` | optional |
+| `idempotency_key` | `String` | optional |
+| `result` | `String` | — |
+| `source` | `String` | — |
+| `request_context` | `Json` | optional |
 
 **Relaciones**:
 - `clubs` → `clubs`
@@ -2258,8 +3211,52 @@ generated: true
 **Bloque**:
 - `@@index([club_id, created_at(sort: Desc)], map: "idx_audit_logs_club_created")`
 - `@@index([entity_type, entity_id], map: "idx_audit_logs_entity")`
+- `@@index([actor_user_id, created_at(sort: Desc)], map: "idx_audit_logs_actor_created")`
+- `@@index([target_user_id, created_at(sort: Desc)], map: "idx_audit_logs_target_created")`
+- `@@index([action, created_at(sort: Desc)], map: "idx_audit_logs_action_created")`
+- `@@index([correlation_id], map: "idx_audit_logs_correlation_id")`
+- `@@index([created_at], map: "idx_audit_logs_created")`
 
 ## i18n
+
+### `divisions_translations`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `id` | `Int` | PK |
+| `division_id` | `Int` | — |
+| `locale` | `String` | — |
+| `name` | `String` | optional |
+| `created_at` | `DateTime` | optional |
+| `updated_at` | `DateTime` | optional |
+
+**Relaciones**:
+- `divisions` → `divisions`
+
+**Bloque**:
+- `@@unique([division_id, locale], name: "divisions_translations_unique_locale", map: "divisions_translations_unique_locale")`
+- `@@index([locale], map: "divisions_translations_locale_idx")`
+- `@@index([division_id], map: "divisions_translations_division_id_idx")`
+- `@@map("divisions_translations")`
+
+### `institutional_name_version_translations`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `id` | `BigInt` | PK |
+| `name_version_id` | `String` | — |
+| `locale` | `String` | — |
+| `name` | `String` | optional |
+| `abbreviation` | `String` | optional |
+| `created_at` | `DateTime` | — |
+
+**Relaciones**:
+- `institutional_name_versions` → `institutional_name_versions`
+
+**Bloque**:
+- `@@unique([name_version_id, locale], map: "institutional_name_version_translations_unique_locale")`
+- `@@index([locale], map: "idx_institutional_name_version_translations_locale")`
+- `@@map("institutional_name_version_translations")`
 
 ### `scoring_categories_translations`
 
@@ -2306,6 +3303,7 @@ generated: true
 
 **Bloque**:
 - `@@unique([providerId, accountId])`
+- `@@index([userId], map: "idx_accounts_user_id")`
 - `@@map("accounts")`
 
 ### `account_deletion_log`
@@ -2493,6 +3491,7 @@ generated: true
 | `annual_folder_id` | `String` | PK |
 | `club_enrollment_id` | `String` | — |
 | `folder_template_id` | `String` | — |
+| `hierarchy_context_id` | `String` | optional |
 | `local_camporee_id` | `Int` | optional |
 | `union_camporee_id` | `Int` | optional |
 | `requires_union_confirmation` | `Boolean` | — |
@@ -2509,6 +3508,7 @@ generated: true
 **Relaciones**:
 - `club_enrollment` → `club_enrollments`
 - `folder_template` → `folder_templates`
+- `hierarchy_context` → `hierarchy_contexts`
 - `local_camporee` → `local_camporees`
 - `union_camporee` → `union_camporees`
 - `evidences` → `annual_folder_evidences` (many)
@@ -2518,8 +3518,91 @@ generated: true
 **Bloque**:
 - `@@unique([club_enrollment_id])`
 - `@@index([folder_template_id], map: "idx_annual_folders_template")`
+- `@@index([hierarchy_context_id], map: "idx_annual_folders_hierarchy_context")`
 - `@@index([local_camporee_id], map: "idx_annual_folders_local_camporee")`
 - `@@index([union_camporee_id], map: "idx_annual_folders_union_camporee")`
+- `@@index([status], map: "idx_annual_folders_status")`
+- `@@index([status, modified_at(sort: Desc)], map: "idx_annual_folders_status_modified")`
+
+### `annual_ranking_axis_configs`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `annual_ranking_axis_config_id` | `String` | PK |
+| `annual_ranking_config_id` | `String` | — |
+| `axis_key` | `String` | — |
+| `label` | `String` | — |
+| `max_points` | `Int` | — |
+| `sort_order` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `updated_at` | `DateTime` | — |
+
+**Relaciones**:
+- `annual_ranking_config` → `annual_ranking_configs`
+- `components` → `annual_ranking_component_configs` (many)
+
+**Bloque**:
+- `@@unique([annual_ranking_config_id, axis_key], map: "annual_ranking_axis_configs_unique_axis")`
+- `@@index([active, sort_order], map: "idx_annual_ranking_axis_configs_active_order")`
+- `@@index([annual_ranking_config_id, active, sort_order], map: "idx_annual_ranking_axis_configs_config_active_order")`
+- `@@map("annual_ranking_axis_configs")`
+
+### `annual_ranking_component_configs`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `annual_ranking_component_config_id` | `String` | PK |
+| `annual_ranking_config_id` | `String` | — |
+| `annual_ranking_axis_config_id` | `String` | optional |
+| `component_key` | `String` | — |
+| `label` | `String` | — |
+| `max_points` | `Int` | — |
+| `sort_order` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `updated_at` | `DateTime` | — |
+
+**Relaciones**:
+- `annual_ranking_config` → `annual_ranking_configs`
+- `annual_ranking_axis_config` → `annual_ranking_axis_configs`
+
+**Bloque**:
+- `@@unique([annual_ranking_config_id, component_key], map: "annual_ranking_component_configs_unique_component")`
+- `@@index([active, sort_order], map: "idx_annual_ranking_component_configs_active_order")`
+- `@@index([annual_ranking_axis_config_id], map: "idx_annual_ranking_component_configs_axis_id")`
+- `@@map("annual_ranking_component_configs")`
+
+### `annual_ranking_configs`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `annual_ranking_config_id` | `String` | PK |
+| `union_id` | `Int` | optional |
+| `local_field_id` | `Int` | optional |
+| `ecclesiastical_year_id` | `Int` | — |
+| `club_type_id` | `Int` | — |
+| `max_points` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_by` | `String` | optional |
+| `updated_by` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `updated_at` | `DateTime` | — |
+
+**Relaciones**:
+- `union` → `unions`
+- `local_field` → `local_fields`
+- `ecclesiastical_year` → `ecclesiastical_years`
+- `club_type` → `club_types`
+- `axes` → `annual_ranking_axis_configs` (many)
+- `components` → `annual_ranking_component_configs` (many)
+
+**Bloque**:
+- `@@index([union_id], map: "idx_annual_ranking_configs_union_id")`
+- `@@index([local_field_id], map: "idx_annual_ranking_configs_local_field_id")`
+- `@@index([ecclesiastical_year_id, club_type_id], map: "idx_annual_ranking_configs_year_type")`
+- `@@index([active], map: "idx_annual_ranking_configs_active")`
+- `@@map("annual_ranking_configs")`
 
 ### `annual_reports`
 
@@ -2546,6 +3629,20 @@ generated: true
 **Bloque**:
 - `@@unique([club_id, ecclesiastical_year_id])`
 - `@@index([status], map: "idx_annual_reports_status")`
+
+### `authorization_context_versions`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `user_id` | `String` | PK |
+| `version` | `BigInt` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `users` → `users`
+
+**Bloque**:
+- `@@map("authorization_context_versions")`
 
 ### `award_categories`
 
@@ -2581,6 +3678,235 @@ generated: true
 - `@@index([scope, is_legacy], map: "idx_award_categories_scope")`
 - `@@map("award_categories")`
 
+### `certificate_bulk_import_batches`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `batch_id` | `String` | PK |
+| `user_id` | `String` | — |
+| `local_field_id` | `Int` | optional |
+| `raw_ocr_payload` | `Json` | optional |
+| `submitted_at` | `DateTime` | optional |
+| `reviewed_at` | `DateTime` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `status`: `certificate_bulk_import_batch_status_enum`
+
+**Relaciones**:
+- `user` → `users`
+- `local_field` → `local_fields`
+- `items` → `certificate_bulk_import_items` (many)
+- `files` → `certificate_bulk_import_files` (many)
+- `events` → `certificate_bulk_import_item_events` (many)
+
+**Bloque**:
+- `@@index([user_id, status], map: "idx_certificate_bulk_batches_user_status")`
+- `@@index([local_field_id, status], map: "idx_certificate_bulk_batches_lf_status")`
+- `@@index([status, submitted_at], map: "idx_certificate_bulk_batches_status_submitted")`
+
+### `certificate_bulk_import_files`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `file_id` | `String` | PK |
+| `batch_id` | `String` | — |
+| `file_url` | `String` | — |
+| `file_name` | `String` | — |
+| `file_type` | `String` | — |
+| `uploaded_by_id` | `String` | — |
+| `ocr_raw_text` | `String` | optional |
+| `active` | `Boolean` | — |
+| `uploaded_at` | `DateTime` | — |
+
+**Relaciones**:
+- `batch` → `certificate_bulk_import_batches`
+- `uploaded_by` → `users`
+
+**Bloque**:
+- `@@index([batch_id], map: "idx_certificate_bulk_files_batch")`
+- `@@index([uploaded_by_id], map: "idx_certificate_bulk_files_uploaded_by")`
+
+### `certificate_bulk_import_item_events`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `event_id` | `String` | PK |
+| `batch_id` | `String` | — |
+| `item_id` | `String` | optional |
+| `action` | `String` | — |
+| `performed_by_id` | `String` | optional |
+| `comment` | `String` | optional |
+| `payload` | `Json` | optional |
+| `created_at` | `DateTime` | — |
+
+**Relaciones**:
+- `batch` → `certificate_bulk_import_batches`
+- `item` → `certificate_bulk_import_items`
+- `performed_by` → `users`
+
+**Bloque**:
+- `@@index([batch_id, created_at], map: "idx_certificate_bulk_events_batch_created")`
+- `@@index([item_id, created_at], map: "idx_certificate_bulk_events_item_created")`
+- `@@index([performed_by_id], map: "idx_certificate_bulk_events_performed_by")`
+
+### `certificate_bulk_import_items`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `item_id` | `String` | PK |
+| `batch_id` | `String` | — |
+| `honor_id` | `Int` | optional |
+| `class_id` | `Int` | optional |
+| `detected_name` | `String` | optional |
+| `detected_date` | `DateTime` | optional |
+| `completed_at` | `DateTime` | optional |
+| `ocr_confidence` | `Float` | optional |
+| `field_confidence` | `Json` | optional |
+| `rejection_reason` | `String` | optional |
+| `reviewed_by_id` | `String` | optional |
+| `reviewed_at` | `DateTime` | optional |
+| `applied_entity_id` | `Int` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `item_type`: `certificate_bulk_import_item_type_enum`
+- `status`: `certificate_bulk_import_item_status_enum`
+- `applied_entity_type`: `certificate_bulk_import_applied_entity_type_enum`
+
+**Relaciones**:
+- `batch` → `certificate_bulk_import_batches`
+- `honor` → `honors`
+- `class` → `classes`
+- `reviewed_by` → `users`
+- `events` → `certificate_bulk_import_item_events` (many)
+
+**Bloque**:
+- `@@index([batch_id], map: "idx_certificate_bulk_items_batch")`
+- `@@index([status], map: "idx_certificate_bulk_items_status")`
+- `@@index([honor_id], map: "idx_certificate_bulk_items_honor")`
+- `@@index([class_id], map: "idx_certificate_bulk_items_class")`
+- `@@index([applied_entity_type, applied_entity_id], map: "idx_certificate_bulk_items_applied_entity")`
+
+### `certification_closeout_evidences`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `closeout_evidence_id` | `Int` | PK |
+| `enrollment_id` | `Int` | — |
+| `object_key` | `String` | — |
+| `original_filename` | `String` | — |
+| `mime_type` | `String` | — |
+| `size_bytes` | `BigInt` | — |
+| `checksum_sha256` | `String` | optional |
+| `uploaded_by_id` | `String` | — |
+| `reviewed_by_id` | `String` | optional |
+| `confirmed_at` | `DateTime` | optional |
+| `reviewed_at` | `DateTime` | optional |
+| `review_comment` | `String` | optional |
+| `deleted_at` | `DateTime` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `upload_status`: `certification_evidence_upload_status_enum`
+- `review_status`: `certification_closeout_review_status_enum`
+
+**Relaciones**:
+- `users_certifications` → `users_certifications`
+- `uploaded_by` → `users`
+- `reviewed_by` → `users`
+
+**Bloque**:
+- `@@index([enrollment_id], map: "idx_cert_closeout_evidences_enrollment")`
+- `@@index([review_status], map: "idx_cert_closeout_evidences_review_status")`
+
+### `certification_component_responses`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `response_id` | `Int` | PK |
+| `progress_id` | `Int` | — |
+| `component_id` | `Int` | — |
+| `text_value` | `String` | optional |
+| `attestation_confirmed` | `Boolean` | optional |
+| `linked_user_honor_id` | `Int` | optional |
+| `linked_activity_id` | `Int` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `certification_section_progress` → `certification_section_progress`
+- `certification_requirement_components` → `certification_requirement_components`
+- `users_honors` → `users_honors`
+- `activities` → `activities`
+- `certification_evidences` → `certification_evidences` (many)
+
+**Bloque**:
+- `@@unique([progress_id, component_id])`
+
+### `certification_eligibility_rules`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `eligibility_rule_id` | `Int` | PK |
+| `certification_version_id` | `Int` | — |
+| `configuration` | `Json` | — |
+| `class_id` | `Int` | optional |
+| `club_type_id` | `Int` | optional |
+| `role_id` | `String` | optional |
+| `sort_order` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `rule_type`: `certification_eligibility_rule_type_enum`
+
+**Relaciones**:
+- `certification_versions` → `certification_versions`
+- `classes` → `classes`
+- `club_types` → `club_types`
+- `roles` → `roles`
+
+**Bloque**:
+- `@@index([certification_version_id], map: "idx_cert_eligibility_rules_version")`
+
+### `certification_evidences`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `evidence_id` | `Int` | PK |
+| `response_id` | `Int` | — |
+| `object_key` | `String` | — |
+| `original_filename` | `String` | — |
+| `mime_type` | `String` | — |
+| `size_bytes` | `BigInt` | — |
+| `checksum_sha256` | `String` | optional |
+| `uploaded_by_id` | `String` | — |
+| `confirmed_at` | `DateTime` | optional |
+| `deleted_at` | `DateTime` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `upload_status`: `certification_evidence_upload_status_enum`
+
+**Relaciones**:
+- `certification_component_responses` → `certification_component_responses`
+- `uploaded_by` → `users`
+
+**Bloque**:
+- `@@index([response_id], map: "idx_cert_evidences_response")`
+- `@@index([upload_status], map: "idx_cert_evidences_upload_status")`
+
 ### `certification_module_progress`
 
 | Campo | Tipo | Notas |
@@ -2611,16 +3937,74 @@ generated: true
 | `name` | `String` | — |
 | `description` | `String` | optional |
 | `certification_id` | `Int` | — |
+| `certification_version_id` | `Int` | — |
+| `sort_order` | `Int` | — |
 | `active` | `Boolean` | — |
 | `created_at` | `DateTime` | — |
 | `modified_at` | `DateTime` | — |
 
 **Relaciones**:
 - `certifications` → `certifications`
+- `certification_versions` → `certification_versions`
 - `certification_sections` → `certification_sections` (many)
 
 **Bloque**:
-- `@@unique([name, certification_id])`
+- `@@unique([name, certification_version_id])`
+- `@@index([certification_version_id, sort_order], map: "idx_cert_modules_version_sort")`
+
+### `certification_requirement_components`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `component_id` | `Int` | PK |
+| `section_id` | `Int` | — |
+| `label` | `String` | — |
+| `instructions` | `String` | optional |
+| `configuration` | `Json` | — |
+| `sort_order` | `Int` | — |
+| `required` | `Boolean` | — |
+| `honor_id` | `Int` | optional |
+| `activity_type_id` | `Int` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `component_type`: `certification_component_type_enum`
+
+**Relaciones**:
+- `certification_sections` → `certification_sections`
+- `honors` → `honors`
+- `activity_types` → `activity_types`
+- `certification_component_responses` → `certification_component_responses` (many)
+
+**Bloque**:
+- `@@index([section_id, sort_order], map: "idx_cert_requirement_components_section_sort")`
+
+### `certification_review_events`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `review_event_id` | `Int` | PK |
+| `enrollment_id` | `Int` | — |
+| `progress_id` | `Int` | optional |
+| `comment` | `String` | optional |
+| `performed_by_id` | `String` | — |
+| `from_status` | `String` | optional |
+| `to_status` | `String` | optional |
+| `created_at` | `DateTime` | — |
+
+**Enums**:
+- `event_type`: `certification_review_event_type_enum`
+
+**Relaciones**:
+- `users_certifications` → `users_certifications`
+- `certification_section_progress` → `certification_section_progress`
+- `performed_by` → `users`
+
+**Bloque**:
+- `@@index([enrollment_id, created_at], map: "idx_cert_review_events_enrollment")`
+- `@@index([progress_id, created_at], map: "idx_cert_review_events_progress")`
 
 ### `certification_section_progress`
 
@@ -2631,20 +4015,36 @@ generated: true
 | `certification_id` | `Int` | — |
 | `module_id` | `Int` | — |
 | `section_id` | `Int` | — |
+| `enrollment_id` | `Int` | optional |
 | `score` | `Float` | — |
 | `evidences` | `Json` | optional |
+| `submitted_at` | `DateTime` | optional |
+| `reviewed_at` | `DateTime` | optional |
+| `last_review_comment` | `String` | optional |
+| `reviewed_by_id` | `String` | optional |
 | `active` | `Boolean` | — |
 | `created_at` | `DateTime` | — |
 | `modified_at` | `DateTime` | — |
 | `completed` | `Boolean` | — |
 | `completion_date` | `DateTime` | optional |
 
+**Enums**:
+- `status`: `certification_requirement_status_enum`
+
 **Relaciones**:
 - `certifications` → `certifications`
 - `users` → `users`
+- `users_certifications` → `users_certifications`
+- `certification_sections` → `certification_sections`
+- `reviewed_by` → `users`
+- `certification_component_responses` → `certification_component_responses` (many)
+- `certification_review_events` → `certification_review_events` (many)
 
 **Bloque**:
 - `@@unique([user_id, certification_id, module_id, section_id])`
+- `@@index([enrollment_id, section_id], map: "idx_cert_section_progress_enrollment_section")`
+- `@@index([status], map: "idx_cert_section_progress_status")`
+- `@@index([enrollment_id], map: "idx_cert_section_progress_enrollment")`
 
 ### `certification_sections`
 
@@ -2653,16 +4053,83 @@ generated: true
 | `section_id` | `Int` | PK |
 | `name` | `String` | — |
 | `description` | `String` | optional |
+| `instructions` | `String` | optional |
 | `module_id` | `Int` | — |
+| `sort_order` | `Int` | — |
+| `required` | `Boolean` | — |
 | `active` | `Boolean` | — |
 | `created_at` | `DateTime` | — |
 | `modified_at` | `DateTime` | — |
 
 **Relaciones**:
 - `certification_modules` → `certification_modules`
+- `certification_requirement_components` → `certification_requirement_components` (many)
+- `certification_section_progress` → `certification_section_progress` (many)
 
 **Bloque**:
 - `@@unique([name, module_id])`
+- `@@index([module_id, sort_order], map: "idx_cert_sections_module_sort")`
+
+### `certification_versions`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `certification_version_id` | `Int` | PK |
+| `certification_id` | `Int` | — |
+| `version_number` | `Int` | — |
+| `title` | `String` | optional |
+| `description` | `String` | optional |
+| `min_duration_months` | `Int` | optional |
+| `max_duration_months` | `Int` | optional |
+| `published_at` | `DateTime` | optional |
+| `retired_at` | `DateTime` | optional |
+| `published_by_id` | `String` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `status`: `certification_version_status_enum`
+
+**Relaciones**:
+- `certifications` → `certifications`
+- `published_by` → `users`
+- `certification_eligibility_rules` → `certification_eligibility_rules` (many)
+- `certification_modules` → `certification_modules` (many)
+- `users_certifications` → `users_certifications` (many)
+
+**Bloque**:
+- `@@unique([certification_id, version_number])`
+- `@@index([status], map: "idx_certification_versions_status")`
+
+### `church_district_history`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `church_district_history_id` | `BigInt` | PK |
+| `church_id` | `Int` | — |
+| `districlub_type_id` | `Int` | — |
+| `valid_from` | `DateTime` | — |
+| `valid_to` | `DateTime` | optional |
+| `precision` | `String` | — |
+| `created_at` | `DateTime` | — |
+| `created_by` | `String` | optional |
+| `recorded_from` | `DateTime` | — |
+| `recorded_to` | `DateTime` | optional |
+| `supersedes_history_id` | `BigInt` | optional |
+| `reorganization_id` | `String` | optional |
+
+**Relaciones**:
+- `churches` → `churches`
+- `districts` → `districts`
+- `supersedes` → `church_district_history`
+- `superseded_by` → `church_district_history` (many)
+- `institutional_reorganizations` → `institutional_reorganizations`
+
+**Bloque**:
+- `@@index([districlub_type_id], map: "idx_church_district_history_district_id")`
+- `@@index([church_id, valid_from, valid_to], map: "idx_church_district_history_church_period")`
+- `@@map("church_district_history")`
 
 ### `club_annual_rankings`
 
@@ -2686,12 +4153,14 @@ generated: true
 | `evidence_score_pct` | `Decimal` | — |
 | `composite_score_pct` | `Decimal` | — |
 | `composite_calculated_at` | `DateTime` | optional |
+| `hierarchy_context_id` | `String` | optional |
 
 **Relaciones**:
 - `club_enrollment` → `club_enrollments`
 - `club_type` → `club_types`
 - `ecclesiastical_year` → `ecclesiastical_years`
 - `award_category` → `award_categories`
+- `hierarchy_context` → `hierarchy_contexts`
 
 **Bloque**:
 - `@@unique([club_enrollment_id, ecclesiastical_year_id, award_category_id])`
@@ -2699,6 +4168,7 @@ generated: true
 - `@@index([ecclesiastical_year_id], map: "idx_club_annual_rankings_year")`
 - `@@index([award_category_id], map: "idx_club_annual_rankings_category")`
 - `@@index([rank_position], map: "idx_club_annual_rankings_rank")`
+- `@@index([hierarchy_context_id], map: "idx_club_annual_rankings_hierarchy_context")`
 - `@@index([ecclesiastical_year_id, composite_score_pct(sort: Desc)], map: "idx_rankings_composite")`
 - `@@map("club_annual_rankings")`
 
@@ -2744,6 +4214,48 @@ generated: true
 - `@@unique([club_section_id, ecclesiastical_year_id])`
 - `@@index([club_section_id], map: "idx_club_enrollments_club_section")`
 - `@@index([ecclesiastical_year_id], map: "idx_club_enrollments_year")`
+- `@@index([ecclesiastical_year_id, status], map: "idx_club_enrollments_year_status")`
+
+### `club_institutional_history`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `club_institutional_history_id` | `BigInt` | PK |
+| `club_id` | `Int` | — |
+| `division_id` | `Int` | — |
+| `union_id` | `Int` | — |
+| `local_field_id` | `Int` | — |
+| `districlub_type_id` | `Int` | — |
+| `church_id` | `Int` | — |
+| `valid_from` | `DateTime` | — |
+| `valid_to` | `DateTime` | optional |
+| `precision` | `String` | — |
+| `created_at` | `DateTime` | — |
+| `created_by` | `String` | optional |
+| `recorded_from` | `DateTime` | — |
+| `recorded_to` | `DateTime` | optional |
+| `supersedes_history_id` | `BigInt` | optional |
+| `reorganization_id` | `String` | optional |
+
+**Relaciones**:
+- `clubs` → `clubs`
+- `divisions` → `divisions`
+- `unions` → `unions`
+- `local_fields` → `local_fields`
+- `districts` → `districts`
+- `churches` → `churches`
+- `supersedes` → `club_institutional_history`
+- `superseded_by` → `club_institutional_history` (many)
+- `institutional_reorganizations` → `institutional_reorganizations`
+
+**Bloque**:
+- `@@index([division_id], map: "idx_club_institutional_history_division_id")`
+- `@@index([union_id], map: "idx_club_institutional_history_union_id")`
+- `@@index([local_field_id], map: "idx_club_institutional_history_local_field_id")`
+- `@@index([districlub_type_id], map: "idx_club_institutional_history_district_id")`
+- `@@index([church_id], map: "idx_club_institutional_history_church_id")`
+- `@@index([club_id, valid_from, valid_to], map: "idx_club_institutional_history_club_period")`
+- `@@map("club_institutional_history")`
 
 ### `club_transfer_requests`
 
@@ -2772,6 +4284,85 @@ generated: true
 - `@@index([from_section_id], map: "idx_transfer_requests_from_section")`
 - `@@index([to_section_id], map: "idx_transfer_requests_to_section")`
 - `@@index([status], map: "idx_transfer_requests_status")`
+
+### `coordination_zone_districts`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `zone_district_id` | `Int` | PK |
+| `zone_id` | `Int` | — |
+| `districlub_type_id` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `zone` → `coordination_zones`
+- `districts` → `districts`
+
+**Bloque**:
+- `@@unique([zone_id, districlub_type_id], map: "uq_coordination_zone_district_pair")`
+- `@@index([districlub_type_id, active], map: "idx_coordination_zone_district_active")`
+- `@@index([zone_id, active], map: "idx_coordination_zone_district_zone_active")`
+- `@@map("coordination_zone_districts")`
+
+### `coordination_zones`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `zone_id` | `Int` | PK |
+| `local_field_id` | `Int` | — |
+| `name` | `String` | — |
+| `description` | `String` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `local_fields` → `local_fields`
+- `districts` → `coordination_zone_districts` (many)
+- `coordinator_assignments` → `coordinator_assignments` (many)
+
+**Bloque**:
+- `@@unique([local_field_id, name], map: "uq_coordination_zones_lf_name")`
+- `@@index([local_field_id, active], map: "idx_coordination_zones_lf_active")`
+- `@@map("coordination_zones")`
+
+### `coordinator_assignments`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `assignment_id` | `String` | PK |
+| `user_id` | `String` | — |
+| `local_field_id` | `Int` | — |
+| `zone_id` | `Int` | optional |
+| `club_type_id` | `Int` | optional |
+| `club_section_id` | `Int` | optional |
+| `active` | `Boolean` | — |
+| `start_date` | `DateTime` | — |
+| `end_date` | `DateTime` | optional |
+| `created_by` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `assignment_type`: `coordinator_assignment_type`
+
+**Relaciones**:
+- `users` → `users`
+- `creator` → `users`
+- `local_fields` → `local_fields`
+- `coordination_zones` → `coordination_zones`
+- `club_types` → `club_types`
+- `club_sections` → `club_sections`
+
+**Bloque**:
+- `@@index([user_id, active], map: "idx_coordinator_assignments_user_active")`
+- `@@index([local_field_id, active], map: "idx_coordinator_assignments_lf_active")`
+- `@@index([assignment_type, active], map: "idx_coordinator_assignments_type_active")`
+- `@@index([zone_id, club_type_id, active], map: "idx_coordinator_assignments_zone_type_active")`
+- `@@index([club_section_id, active], map: "idx_coordinator_assignments_section_active")`
+- `@@map("coordinator_assignments")`
 
 ### `cron_alerts_log`
 
@@ -2834,6 +4425,111 @@ generated: true
 - `@@index([user_id, created_at(sort: Desc)], map: "idx_data_export_requests_user_created")`
 - `@@map("data_export_requests")`
 
+### `director_succession_plans`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `succession_id` | `String` | PK |
+| `club_section_id` | `Int` | — |
+| `outgoing_assignment_id` | `String` | — |
+| `successor_user_id` | `String` | — |
+| `target_ecclesiastical_year_id` | `Int` | — |
+| `effective_date` | `DateTime` | — |
+| `scheduled_by_id` | `String` | — |
+| `scheduled_by_role` | `String` | — |
+| `scheduled_local_field_id` | `Int` | — |
+| `scheduled_at` | `DateTime` | — |
+| `idempotency_key` | `String` | — |
+| `request_hash` | `String` | — |
+| `activated_assignment_id` | `String` | UNIQUE, optional |
+| `activated_at` | `DateTime` | optional |
+| `blocked_at` | `DateTime` | optional |
+| `block_code` | `String` | optional |
+| `processing_token` | `String` | optional |
+| `processing_expires_at` | `DateTime` | optional |
+| `attempt_count` | `Int` | — |
+| `last_attempt_at` | `DateTime` | optional |
+| `version` | `Int` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `status`: `director_succession_status_enum`
+
+**Relaciones**:
+- `club_section` → `club_sections`
+- `outgoing_assignment` → `club_role_assignments`
+- `activated_assignment` → `club_role_assignments`
+- `successor` → `users`
+- `target_ecclesiastical_year` → `ecclesiastical_years`
+- `scheduled_by` → `users`
+- `scheduled_local_field` → `local_fields`
+
+**Bloque**:
+- `@@unique([club_section_id, target_ecclesiastical_year_id])`
+- `@@unique([scheduled_by_id, idempotency_key])`
+- `@@index([status, effective_date, processing_expires_at])`
+- `@@index([successor_user_id])`
+- `@@index([outgoing_assignment_id])`
+- `@@index([scheduled_local_field_id])`
+
+### `district_local_field_history`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `district_local_field_history_id` | `BigInt` | PK |
+| `districlub_type_id` | `Int` | — |
+| `local_field_id` | `Int` | — |
+| `valid_from` | `DateTime` | — |
+| `valid_to` | `DateTime` | optional |
+| `precision` | `String` | — |
+| `created_at` | `DateTime` | — |
+| `created_by` | `String` | optional |
+| `recorded_from` | `DateTime` | — |
+| `recorded_to` | `DateTime` | optional |
+| `supersedes_history_id` | `BigInt` | optional |
+| `reorganization_id` | `String` | optional |
+
+**Relaciones**:
+- `districts` → `districts`
+- `local_fields` → `local_fields`
+- `supersedes` → `district_local_field_history`
+- `superseded_by` → `district_local_field_history` (many)
+- `institutional_reorganizations` → `institutional_reorganizations`
+
+**Bloque**:
+- `@@index([local_field_id], map: "idx_district_local_field_history_field_id")`
+- `@@index([districlub_type_id, valid_from, valid_to], map: "idx_district_local_field_history_district_period")`
+- `@@map("district_local_field_history")`
+
+### `divisions`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `division_id` | `Int` | PK |
+| `code` | `String` | UNIQUE |
+| `name` | `String` | UNIQUE |
+| `abbreviation` | `String` | UNIQUE |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | optional |
+| `modified_at` | `DateTime` | optional |
+
+**Relaciones**:
+- `unions` → `unions` (many)
+- `class_sections_owned_by_division` → `class_sections` (many)
+- `master_honor_divisions` → `master_honor_divisions` (many)
+- `awarded_users_master_honors` → `users_master_honors` (many)
+- `translations` → `divisions_translations` (many)
+- `union_division_history` → `union_division_history` (many)
+- `club_institutional_history` → `club_institutional_history` (many)
+- `hierarchy_contexts` → `hierarchy_contexts` (many)
+- `institutional_name_versions` → `institutional_name_versions` (many)
+- `institutional_reorganization_participants` → `institutional_reorganization_participants` (many)
+
+**Bloque**:
+- `@@index([active], map: "idx_divisions_active")`
+- `@@map("divisions")`
+
 ### `EnrollmentRanking`
 
 | Campo | Tipo | Notas |
@@ -2850,6 +4546,7 @@ generated: true
 | `composite_score_pct` | `Decimal` | optional |
 | `rank_position` | `Int` | optional |
 | `awarded_category_id` | `String` | optional |
+| `hierarchy_context_id` | `String` | optional |
 | `composite_calculated_at` | `DateTime` | optional |
 | `created_at` | `DateTime` | — |
 | `modified_at` | `DateTime` | — |
@@ -2861,6 +4558,7 @@ generated: true
 - `club_section` → `club_sections`
 - `ecclesiastical_year` → `ecclesiastical_years`
 - `awarded_category` → `award_categories`
+- `hierarchy_context` → `hierarchy_contexts`
 
 **Bloque**:
 - `@@unique([enrollment_id, ecclesiastical_year_id], map: "uq_enrollment_rankings_enrollment_year")`
@@ -2869,6 +4567,7 @@ generated: true
 - `@@index([club_id, ecclesiastical_year_id, composite_score_pct(sort: Desc)], map: "idx_enrollment_rankings_composite")`
 - `@@index([user_id], map: "idx_enrollment_rankings_user")`
 - `@@index([awarded_category_id], map: "idx_enrollment_rankings_award_category")`
+- `@@index([hierarchy_context_id], map: "idx_enrollment_rankings_hierarchy_context")`
 - `@@map("enrollment_rankings")`
 
 ### `EnrollmentRankingWeight`
@@ -2939,6 +4638,7 @@ generated: true
 - `@@index([user_id, investiture_status, active], map: "idx_enrollments_user_investiture_active")`
 - `@@index([user_id, ecclesiastical_year_id, active], map: "idx_enrollments_user_year_active")`
 - `@@index([last_progress_change], map: "idx_enrollments_last_progress")`
+- `@@index([ecclesiastical_year_id, investiture_status, active], map: "idx_enrollments_year_status_active")`
 
 ### `error_logs`
 
@@ -2977,6 +4677,151 @@ generated: true
 - `@@index([uploaded_by_id], map: "idx_evidence_files_uploaded_by")`
 - `@@index([user_honor_id], map: "idx_evidence_files_user_honor_id")`
 
+### `field_payment_folio_counters`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `local_field_id` | `Int` | — |
+| `year` | `Int` | — |
+| `last_folio` | `Int` | — |
+| `updated_at` | `DateTime` | — |
+
+**Bloque**:
+- `@@id([local_field_id, year])`
+
+### `field_payment_order_configs`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `field_payment_order_config_id` | `Int` | PK |
+| `local_field_id` | `Int` | UNIQUE |
+| `bank_name` | `String` | optional |
+| `bank_account` | `String` | optional |
+| `bank_clabe` | `String` | optional |
+| `bank_holder` | `String` | optional |
+| `cash_instructions` | `String` | optional |
+| `extra_notes` | `String` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+| `created_by_id` | `String` | optional |
+| `modified_by_id` | `String` | optional |
+
+### `field_payment_order_lines`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `field_payment_order_line_id` | `String` | PK |
+| `field_payment_order_id` | `String` | — |
+| `sequence` | `Int` | — |
+| `beneficiary_user_id` | `String` | — |
+| `unit_cost_centavos` | `Int` | — |
+| `purpose_ref_id` | `Int` | — |
+| `active_guard` | `Boolean` | — |
+| `purpose_payload` | `Json` | optional |
+| `insurance_assignment_id` | `Int` | optional |
+| `camporee_member_id` | `Int` | optional |
+| `created_at` | `DateTime` | — |
+
+**Enums**:
+- `purpose`: `field_payment_order_purpose_enum`
+
+**Relaciones**:
+- `order` → `field_payment_orders`
+
+**Bloque**:
+- `@@unique([field_payment_order_id, sequence], map: "uq_field_payment_order_lines_sequence")`
+- `@@index([beneficiary_user_id], map: "idx_field_payment_order_lines_beneficiary")`
+
+### `field_payment_order_proofs`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `field_payment_order_proof_id` | `String` | PK |
+| `field_payment_order_id` | `String` | — |
+| `r2_key` | `String` | — |
+| `file_name` | `String` | — |
+| `mime_type` | `String` | — |
+| `size_bytes` | `Int` | — |
+| `reject_reason` | `String` | optional |
+| `uploaded_by_id` | `String` | — |
+| `reviewed_by_id` | `String` | optional |
+| `reviewed_at` | `DateTime` | optional |
+| `created_at` | `DateTime` | — |
+
+**Enums**:
+- `status`: `field_payment_order_proof_status_enum`
+
+**Relaciones**:
+- `order` → `field_payment_orders`
+
+**Bloque**:
+- `@@index([field_payment_order_id, status], map: "idx_field_payment_order_proofs_order_status")`
+
+### `field_payment_orders`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `field_payment_order_id` | `String` | PK |
+| `local_field_id` | `Int` | — |
+| `club_id` | `Int` | — |
+| `club_section_id` | `Int` | — |
+| `folio` | `Int` | — |
+| `folio_reference` | `String` | — |
+| `insurance_cycle_config_id` | `Int` | optional |
+| `local_camporee_id` | `Int` | optional |
+| `union_camporee_id` | `Int` | optional |
+| `currency` | `String` | — |
+| `unit_cost_centavos` | `Int` | — |
+| `total_centavos` | `Int` | — |
+| `expires_at` | `DateTime` | — |
+| `issued_by_id` | `String` | — |
+| `approved_by_id` | `String` | optional |
+| `approved_at` | `DateTime` | optional |
+| `cancelled_by_id` | `String` | optional |
+| `cancelled_at` | `DateTime` | optional |
+| `expired_at` | `DateTime` | optional |
+| `idempotency_key` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `purpose`: `field_payment_order_purpose_enum`
+- `status`: `field_payment_order_status_enum`
+
+**Relaciones**:
+- `lines` → `field_payment_order_lines` (many)
+- `proofs` → `field_payment_order_proofs` (many)
+
+**Bloque**:
+- `@@unique([local_field_id, folio_reference], map: "uq_field_payment_orders_lf_folio")`
+- `@@unique([issued_by_id, idempotency_key], map: "uq_field_payment_orders_idempotency")`
+- `@@index([local_field_id, status], map: "idx_field_payment_orders_lf_status")`
+- `@@index([club_section_id, status], map: "idx_field_payment_orders_section_status")`
+- `@@index([union_camporee_id], map: "idx_field_payment_orders_union_camporee")`
+
+### `finance_evidence_files`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `finance_evidence_file_id` | `Int` | PK |
+| `finance_id` | `Int` | — |
+| `file_url` | `String` | — |
+| `file_name` | `String` | — |
+| `file_type` | `String` | — |
+| `file_size` | `Int` | optional |
+| `uploaded_by_id` | `String` | — |
+| `uploaded_at` | `DateTime` | — |
+| `active` | `Boolean` | — |
+
+**Relaciones**:
+- `finance` → `finances`
+- `uploaded_by` → `users`
+
+**Bloque**:
+- `@@index([finance_id], map: "idx_finance_evidence_files_finance")`
+- `@@index([uploaded_by_id], map: "idx_finance_evidence_files_uploaded_by")`
+
 ### `FinancePeriodClosing`
 
 | Campo | Tipo | Notas |
@@ -3000,6 +4845,64 @@ generated: true
 **Bloque**:
 - `@@unique([club_id, year, month])`
 - `@@map("finance_period_closings")`
+
+### `hierarchy_contexts`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `hierarchy_context_id` | `String` | PK |
+| `division_id` | `Int` | — |
+| `union_id` | `Int` | optional |
+| `local_field_id` | `Int` | optional |
+| `districlub_type_id` | `Int` | optional |
+| `church_id` | `Int` | optional |
+| `club_id` | `Int` | optional |
+| `as_of` | `DateTime` | — |
+| `source` | `String` | — |
+| `precision` | `String` | — |
+| `context` | `Json` | optional |
+| `created_at` | `DateTime` | — |
+| `created_by` | `String` | optional |
+
+**Relaciones**:
+- `divisions` → `divisions`
+- `unions` → `unions`
+- `local_fields` → `local_fields`
+- `districts` → `districts`
+- `churches` → `churches`
+- `clubs` → `clubs`
+- `annual_folders` → `annual_folders` (many)
+- `club_annual_rankings` → `club_annual_rankings` (many)
+- `enrollment_rankings` → `EnrollmentRanking` (many)
+- `section_rankings` → `SectionRanking` (many)
+
+**Bloque**:
+- `@@index([division_id, as_of], map: "idx_hierarchy_contexts_division_as_of")`
+- `@@index([union_id, as_of], map: "idx_hierarchy_contexts_union_as_of")`
+- `@@index([local_field_id, as_of], map: "idx_hierarchy_contexts_local_field_as_of")`
+- `@@index([districlub_type_id, as_of], map: "idx_hierarchy_contexts_district_as_of")`
+- `@@index([church_id, as_of], map: "idx_hierarchy_contexts_church_as_of")`
+- `@@index([club_id, as_of], map: "idx_hierarchy_contexts_club_as_of")`
+- `@@map("hierarchy_contexts")`
+
+### `honor_club_types`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `honor_club_type_id` | `Int` | PK |
+| `honor_id` | `Int` | — |
+| `club_type_id` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `honor` → `honors`
+- `club_type` → `club_types`
+
+**Bloque**:
+- `@@unique([honor_id, club_type_id])`
+- `@@index([club_type_id])`
 
 ### `honor_requirements`
 
@@ -3033,6 +4936,377 @@ generated: true
 - `@@index([parent_id])`
 - `@@map("honor_requirements")`
 
+### `institutional_lineage_edges`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `lineage_edge_id` | `String` | PK |
+| `reorganization_id` | `String` | — |
+| `from_participant_id` | `String` | — |
+| `to_participant_id` | `String` | — |
+| `relation_type` | `String` | — |
+
+**Relaciones**:
+- `institutional_reorganizations` → `institutional_reorganizations`
+- `from_participant` → `institutional_reorganization_participants`
+- `to_participant` → `institutional_reorganization_participants`
+
+**Bloque**:
+- `@@index([reorganization_id], map: "idx_institutional_lineage_edges_reorganization")`
+- `@@index([from_participant_id], map: "idx_institutional_lineage_edges_from")`
+- `@@index([to_participant_id], map: "idx_institutional_lineage_edges_to")`
+- `@@map("institutional_lineage_edges")`
+
+### `institutional_name_versions`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `name_version_id` | `String` | PK |
+| `division_id` | `Int` | optional |
+| `union_id` | `Int` | optional |
+| `local_field_id` | `Int` | optional |
+| `districlub_type_id` | `Int` | optional |
+| `church_id` | `Int` | optional |
+| `club_id` | `Int` | optional |
+| `name` | `String` | — |
+| `abbreviation` | `String` | optional |
+| `valid_from` | `DateTime` | — |
+| `valid_to` | `DateTime` | optional |
+| `precision` | `String` | — |
+| `recorded_from` | `DateTime` | — |
+| `recorded_to` | `DateTime` | optional |
+| `supersedes_name_version_id` | `String` | optional |
+| `reorganization_id` | `String` | optional |
+| `recorded_by` | `String` | optional |
+
+**Relaciones**:
+- `divisions` → `divisions`
+- `unions` → `unions`
+- `local_fields` → `local_fields`
+- `districts` → `districts`
+- `churches` → `churches`
+- `clubs` → `clubs`
+- `supersedes` → `institutional_name_versions`
+- `superseded_by` → `institutional_name_versions` (many)
+- `institutional_reorganizations` → `institutional_reorganizations`
+- `recorded_by_user` → `users`
+- `translations` → `institutional_name_version_translations` (many)
+
+**Bloque**:
+- `@@map("institutional_name_versions")`
+
+### `institutional_reorganization_participants`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `participant_id` | `String` | PK |
+| `reorganization_id` | `String` | — |
+| `division_id` | `Int` | optional |
+| `union_id` | `Int` | optional |
+| `local_field_id` | `Int` | optional |
+| `districlub_type_id` | `Int` | optional |
+| `church_id` | `Int` | optional |
+| `club_id` | `Int` | optional |
+
+**Relaciones**:
+- `institutional_reorganizations` → `institutional_reorganizations`
+- `divisions` → `divisions`
+- `unions` → `unions`
+- `local_fields` → `local_fields`
+- `districts` → `districts`
+- `churches` → `churches`
+- `clubs` → `clubs`
+- `lineage_from` → `institutional_lineage_edges` (many)
+- `lineage_to` → `institutional_lineage_edges` (many)
+
+**Bloque**:
+- `@@unique([reorganization_id, participant_id], map: "uq_institutional_reorg_participants_reorg_participant")`
+- `@@index([reorganization_id], map: "idx_institutional_reorg_participants_reorganization")`
+- `@@map("institutional_reorganization_participants")`
+
+### `institutional_reorganizations`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `reorganization_id` | `String` | PK |
+| `type` | `String` | — |
+| `effective_on` | `DateTime` | — |
+| `description` | `String` | — |
+| `authority_source` | `String` | — |
+| `idempotency_key` | `String` | UNIQUE |
+| `approved_by` | `String` | — |
+| `recorded_at` | `DateTime` | — |
+| `corrects_reorganization_id` | `String` | optional |
+
+**Relaciones**:
+- `approved_by_user` → `users`
+- `corrects` → `institutional_reorganizations`
+- `corrected_by` → `institutional_reorganizations` (many)
+- `participants` → `institutional_reorganization_participants` (many)
+- `lineage_edges` → `institutional_lineage_edges` (many)
+- `name_versions` → `institutional_name_versions` (many)
+- `union_division_history` → `union_division_history` (many)
+- `local_field_union_history` → `local_field_union_history` (many)
+- `district_local_field_history` → `district_local_field_history` (many)
+- `church_district_history` → `church_district_history` (many)
+- `club_institutional_history` → `club_institutional_history` (many)
+
+**Bloque**:
+- `@@index([effective_on], map: "idx_institutional_reorganizations_effective_on")`
+- `@@index([corrects_reorganization_id], map: "idx_institutional_reorganizations_corrects")`
+- `@@map("institutional_reorganizations")`
+
+### `insurance_assignments`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `insurance_assignment_id` | `Int` | PK |
+| `insurance_coverage_slot_id` | `Int` | — |
+| `user_id` | `String` | optional |
+| `event_external_participant_id` | `Int` | optional |
+| `valid_from` | `DateTime` | — |
+| `valid_until` | `DateTime` | — |
+| `release_reason` | `String` | optional |
+| `assigned_by_id` | `String` | — |
+| `confirmed_by_id` | `String` | optional |
+| `confirmed_at` | `DateTime` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+| `created_by_id` | `String` | optional |
+| `modified_by_id` | `String` | optional |
+
+**Enums**:
+- `subject_type`: `insurance_assignment_subject_enum`
+- `status`: `insurance_assignment_status_enum`
+
+**Relaciones**:
+- `coverage_slot` → `insurance_coverage_slots`
+- `user_subject` → `users`
+- `event_external_participant` → `camporee_external_participants`
+- `assigner` → `users`
+- `confirmer` → `users`
+- `creator` → `users`
+- `modifier` → `users`
+- `movements` → `insurance_slot_movements` (many)
+- `evidence_files` → `insurance_evidence_files` (many)
+
+**Bloque**:
+- `@@index([user_id, status, valid_until], map: "idx_insurance_assignments_user_status_until")`
+
+### `insurance_coverage_slots`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `insurance_coverage_slot_id` | `Int` | PK |
+| `insurance_purchase_id` | `Int` | — |
+| `sequence_number` | `Int` | — |
+| `owner_club_id` | `Int` | — |
+| `purchasing_section_id` | `Int` | — |
+| `current_section_id` | `Int` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+| `created_by_id` | `String` | optional |
+| `modified_by_id` | `String` | optional |
+
+**Enums**:
+- `status`: `insurance_slot_status_enum`
+
+**Relaciones**:
+- `purchase` → `insurance_purchases`
+- `owner_club` → `clubs`
+- `purchasing_section` → `club_sections`
+- `current_section` → `club_sections`
+- `creator` → `users`
+- `modifier` → `users`
+- `movements` → `insurance_slot_movements` (many)
+- `assignments` → `insurance_assignments` (many)
+
+**Bloque**:
+- `@@unique([insurance_purchase_id, sequence_number], map: "uq_insurance_slot_purchase_sequence")`
+- `@@index([current_section_id, status], map: "idx_insurance_slots_current_section_status")`
+
+### `insurance_cycle_configs`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `insurance_cycle_config_id` | `Int` | PK |
+| `insurance_product_id` | `Int` | — |
+| `local_field_id` | `Int` | — |
+| `ecclesiastical_year_id` | `Int` | — |
+| `club_type_id` | `Int` | — |
+| `unit_cost` | `Decimal` | — |
+| `purchase_deadline` | `DateTime` | — |
+| `timezone` | `String` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+| `created_by_id` | `String` | optional |
+| `modified_by_id` | `String` | optional |
+
+**Relaciones**:
+- `product` → `insurance_products`
+- `local_field` → `local_fields`
+- `ecclesiastical_year` → `ecclesiastical_years`
+- `club_type` → `club_types`
+- `creator` → `users`
+- `modifier` → `users`
+- `purchases` → `insurance_purchases` (many)
+
+**Bloque**:
+- `@@unique([insurance_product_id, local_field_id, ecclesiastical_year_id, club_type_id], map: "uq_insurance_cycle_config_effective_scope")`
+
+### `insurance_evidence_files`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `insurance_evidence_file_id` | `Int` | PK |
+| `insurance_purchase_id` | `Int` | optional |
+| `insurance_assignment_id` | `Int` | optional |
+| `file_key` | `String` | — |
+| `file_name` | `String` | — |
+| `mime_type` | `String` | — |
+| `file_size` | `Int` | — |
+| `external_reference` | `String` | optional |
+| `receipt_date` | `DateTime` | optional |
+| `uploaded_by_id` | `String` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+| `created_by_id` | `String` | optional |
+| `modified_by_id` | `String` | optional |
+
+**Enums**:
+- `evidence_type`: `insurance_evidence_type_enum`
+
+**Relaciones**:
+- `purchase` → `insurance_purchases`
+- `assignment` → `insurance_assignments`
+- `uploader` → `users`
+- `creator` → `users`
+- `modifier` → `users`
+
+**Bloque**:
+- `@@index([insurance_purchase_id], map: "idx_insurance_evidence_files_purchase")`
+- `@@index([insurance_assignment_id], map: "idx_insurance_evidence_files_assignment")`
+- `@@index([uploaded_by_id], map: "idx_insurance_evidence_files_uploaded_by")`
+
+### `insurance_products`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `insurance_product_id` | `Int` | PK |
+| `local_field_id` | `Int` | — |
+| `name` | `String` | — |
+| `default_duration_months` | `Int` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+| `created_by_id` | `String` | optional |
+| `modified_by_id` | `String` | optional |
+
+**Enums**:
+- `coverage_scope`: `insurance_coverage_scope_enum`
+- `validity_mode`: `insurance_validity_mode_enum`
+
+**Relaciones**:
+- `local_field` → `local_fields`
+- `creator` → `users`
+- `modifier` → `users`
+- `cycle_configs` → `insurance_cycle_configs` (many)
+
+**Bloque**:
+- `@@index([local_field_id, active], map: "idx_insurance_products_local_field_active")`
+
+### `insurance_purchases`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `insurance_purchase_id` | `Int` | PK |
+| `insurance_cycle_config_id` | `Int` | — |
+| `owner_club_id` | `Int` | — |
+| `purchasing_section_id` | `Int` | — |
+| `quantity` | `Int` | — |
+| `unit_cost_snapshot` | `Decimal` | optional |
+| `total_amount` | `Decimal` | optional |
+| `external_reference` | `String` | optional |
+| `receipt_date` | `DateTime` | optional |
+| `applied_deadline` | `DateTime` | optional |
+| `submitted_by_id` | `String` | — |
+| `reviewed_by_id` | `String` | optional |
+| `reviewed_at` | `DateTime` | optional |
+| `rejection_reason` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+| `created_by_id` | `String` | optional |
+| `modified_by_id` | `String` | optional |
+
+**Enums**:
+- `classification`: `insurance_purchase_classification_enum`
+- `status`: `insurance_purchase_status_enum`
+
+**Relaciones**:
+- `cycle_config` → `insurance_cycle_configs`
+- `owner_club` → `clubs`
+- `purchasing_section` → `club_sections`
+- `submitter` → `users`
+- `reviewer` → `users`
+- `creator` → `users`
+- `modifier` → `users`
+- `coverage_slots` → `insurance_coverage_slots` (many)
+- `evidence_files` → `insurance_evidence_files` (many)
+
+**Bloque**:
+- `@@index([purchasing_section_id, receipt_date, status], map: "idx_insurance_purchases_section_receipt_status")`
+
+### `insurance_reassignment_requests`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `insurance_reassignment_request_id` | `Int` | PK |
+| `insurance_assignment_id` | `Int` | — |
+| `from_user_id` | `String` | — |
+| `to_user_id` | `String` | — |
+| `reason` | `String` | optional |
+| `requested_by_id` | `String` | — |
+| `reviewed_by_id` | `String` | optional |
+| `reviewed_at` | `DateTime` | optional |
+| `review_comment` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `status`: `insurance_reassignment_request_status_enum`
+
+**Bloque**:
+- `@@index([status, created_at], map: "idx_insurance_reassignment_requests_status")`
+- `@@index([insurance_assignment_id], map: "idx_insurance_reassignment_requests_assignment")`
+
+### `insurance_slot_movements`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `insurance_slot_movement_id` | `Int` | PK |
+| `insurance_coverage_slot_id` | `Int` | — |
+| `from_section_id` | `Int` | optional |
+| `to_section_id` | `Int` | optional |
+| `insurance_assignment_id` | `Int` | optional |
+| `reason` | `String` | optional |
+| `performed_by_id` | `String` | — |
+| `correlation_id` | `String` | optional |
+| `created_at` | `DateTime` | — |
+
+**Enums**:
+- `movement_type`: `insurance_slot_movement_type_enum`
+
+**Relaciones**:
+- `coverage_slot` → `insurance_coverage_slots`
+- `from_section` → `club_sections`
+- `to_section` → `club_sections`
+- `assignment` → `insurance_assignments`
+- `performer` → `users`
+
+**Bloque**:
+- `@@index([insurance_coverage_slot_id, created_at], map: "idx_insurance_slot_movements_slot_created")`
+
 ### `local_camporees`
 
 | Campo | Tipo | Notas |
@@ -3047,10 +5321,19 @@ generated: true
 | `includes_pathfinders` | `Boolean` | optional |
 | `includes_master_guides` | `Boolean` | optional |
 | `local_camporee_place` | `String` | — |
+| `lat` | `Float` | optional |
+| `long` | `Float` | optional |
 | `registration_cost` | `Decimal` | optional |
+| `timezone` | `String` | — |
+| `timezone_verified_at` | `DateTime` | optional |
+| `timezone_verified_by` | `String` | optional |
+| `club_registration_opens_at` | `DateTime` | optional |
 | `club_registration_deadline` | `DateTime` | optional |
+| `club_registration_closed_at` | `DateTime` | optional |
+| `club_registration_closed_by` | `String` | optional |
 | `member_registration_deadline` | `DateTime` | optional |
 | `payment_deadline` | `DateTime` | optional |
+| `agenda_visible_from` | `DateTime` | optional |
 | `ecclesiastical_year` | `Int` | — |
 | `active` | `Boolean` | — |
 | `created_at` | `DateTime` | — |
@@ -3060,8 +5343,156 @@ generated: true
 - `attending_clubs_camporees` → `camporee_clubs` (many)
 - `attending_members_camporees` → `camporee_members` (many)
 - `annual_folders` → `annual_folders` (many)
+- `camporee_events` → `camporee_events` (many)
+- `camporee_staff_members` → `camporee_staff_members` (many)
 - `ecclesiastical_year_relation` → `ecclesiastical_years`
 - `local_fields` → `local_fields`
+- `timezone_verifier` → `users`
+- `camporee_judges` → `camporee_judges` (many)
+- `insurance_external_participants` → `camporee_external_participants` (many)
+
+**Bloque**:
+- `@@index([timezone_verified_by], map: "idx_local_camporees_timezone_verified_by")`
+- `@@index([local_field_id, active], map: "idx_local_camporees_local_field_active")`
+
+### `local_field_union_history`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `local_field_union_history_id` | `BigInt` | PK |
+| `local_field_id` | `Int` | — |
+| `union_id` | `Int` | — |
+| `valid_from` | `DateTime` | — |
+| `valid_to` | `DateTime` | optional |
+| `precision` | `String` | — |
+| `created_at` | `DateTime` | — |
+| `created_by` | `String` | optional |
+| `recorded_from` | `DateTime` | — |
+| `recorded_to` | `DateTime` | optional |
+| `supersedes_history_id` | `BigInt` | optional |
+| `reorganization_id` | `String` | optional |
+
+**Relaciones**:
+- `local_fields` → `local_fields`
+- `unions` → `unions`
+- `supersedes` → `local_field_union_history`
+- `superseded_by` → `local_field_union_history` (many)
+- `institutional_reorganizations` → `institutional_reorganizations`
+
+**Bloque**:
+- `@@index([union_id], map: "idx_local_field_union_history_union_id")`
+- `@@index([local_field_id, valid_from, valid_to], map: "idx_local_field_union_history_field_period")`
+- `@@map("local_field_union_history")`
+
+### `master_honor_divisions`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `master_honor_division_id` | `Int` | PK |
+| `master_honor_id` | `Int` | — |
+| `division_id` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `master_honor` → `master_honors`
+- `division` → `divisions`
+
+**Bloque**:
+- `@@unique([master_honor_id, division_id])`
+- `@@index([division_id])`
+
+### `master_honor_evaluation_history`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `history_id` | `Int` | PK |
+| `user_master_honor_id` | `Int` | — |
+| `user_id` | `String` | — |
+| `master_honor_id` | `Int` | — |
+| `evaluation_snapshot` | `Json` | — |
+| `created_at` | `DateTime` | — |
+| `created_by_job_id` | `String` | optional |
+
+**Enums**:
+- `from_status`: `user_master_honor_status_enum`
+- `to_status`: `user_master_honor_status_enum`
+- `reason`: `user_master_honor_status_reason_enum`
+
+**Relaciones**:
+- `user_master_honor` → `users_master_honors`
+- `user` → `users`
+- `master_honor` → `master_honors`
+
+**Bloque**:
+- `@@index([user_id, created_at])`
+- `@@index([master_honor_id, created_at])`
+
+### `master_honor_requirement_groups`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `group_id` | `Int` | PK |
+| `master_honor_id` | `Int` | — |
+| `title` | `String` | optional |
+| `description` | `String` | optional |
+| `minimum_required` | `Int` | — |
+| `honors_category_id` | `Int` | optional |
+| `display_order` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `group_type`: `master_honor_requirement_group_type_enum`
+
+**Relaciones**:
+- `master_honor` → `master_honors`
+- `honor_category` → `honors_categories`
+- `options` → `master_honor_requirement_options` (many)
+
+**Bloque**:
+- `@@index([master_honor_id])`
+- `@@index([honors_category_id])`
+
+### `master_honor_requirement_option_honors`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `option_honor_id` | `Int` | PK |
+| `option_id` | `Int` | — |
+| `honor_id` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `option` → `master_honor_requirement_options`
+- `honor` → `honors`
+
+**Bloque**:
+- `@@unique([option_id, honor_id])`
+- `@@index([honor_id])`
+
+### `master_honor_requirement_options`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `option_id` | `Int` | PK |
+| `group_id` | `Int` | — |
+| `label` | `String` | — |
+| `display_order` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `group` → `master_honor_requirement_groups`
+- `honors` → `master_honor_requirement_option_honors` (many)
+
+**Bloque**:
+- `@@index([group_id])`
 
 ### `MaterialCategory`
 
@@ -3117,7 +5548,7 @@ generated: true
 
 | Campo | Tipo | Notas |
 | --- | --- | --- |
-| `id` | `Int` | PK |
+| `local_field_id` | `Int` | PK |
 | `bank_name` | `String` | optional |
 | `bank_account_clabe` | `String` | optional |
 | `account_holder` | `String` | optional |
@@ -3128,6 +5559,7 @@ generated: true
 | `updated_at` | `DateTime` | — |
 
 **Relaciones**:
+- `local_field` → `local_fields`
 - `updater` → `users`
 
 **Bloque**:
@@ -3137,11 +5569,16 @@ generated: true
 
 | Campo | Tipo | Notas |
 | --- | --- | --- |
-| `year` | `Int` | PK |
+| `local_field_id` | `Int` | — |
+| `year` | `Int` | — |
 | `last_folio` | `Int` | — |
 | `updated_at` | `DateTime` | — |
 
+**Relaciones**:
+- `local_field` → `local_fields`
+
 **Bloque**:
+- `@@id([local_field_id, year])`
 - `@@map("material_folio_counters")`
 
 ### `MaterialOrder`
@@ -3149,7 +5586,8 @@ generated: true
 | Campo | Tipo | Notas |
 | --- | --- | --- |
 | `id` | `String` | PK |
-| `folio_referencia` | `String` | UNIQUE, optional |
+| `local_field_id` | `Int` | — |
+| `folio_referencia` | `String` | optional |
 | `club_section_id` | `Int` | — |
 | `created_by` | `String` | — |
 | `approved_by` | `String` | optional |
@@ -3178,6 +5616,7 @@ generated: true
 - `entrega`: `MaterialEntrega`
 
 **Relaciones**:
+- `local_field` → `local_fields`
 - `club_section` → `club_sections`
 - `creator` → `users`
 - `approver` → `users`
@@ -3188,6 +5627,8 @@ generated: true
 - `comprobantes` → `MaterialComprobante` (many)
 
 **Bloque**:
+- `@@unique([local_field_id, folio_referencia], map: "uq_material_orders_lf_folio_ref")`
+- `@@index([local_field_id], map: "idx_material_orders_local_field_id")`
 - `@@index([estado, created_at(sort: Desc)], map: "idx_material_orders_estado_created")`
 - `@@index([club_section_id, estado], map: "idx_material_orders_section_estado")`
 - `@@index([created_by, created_at(sort: Desc)], map: "idx_material_orders_created_by")`
@@ -3224,7 +5665,8 @@ generated: true
 | Campo | Tipo | Notas |
 | --- | --- | --- |
 | `id` | `String` | PK |
-| `sku` | `String` | UNIQUE |
+| `local_field_id` | `Int` | — |
+| `sku` | `String` | — |
 | `title` | `String` | — |
 | `description` | `String` | optional |
 | `material_category_id` | `String` | — |
@@ -3236,13 +5678,16 @@ generated: true
 | `updated_at` | `DateTime` | — |
 
 **Relaciones**:
+- `local_field` → `local_fields`
 - `category` → `MaterialCategory`
 - `club_type` → `club_types`
 - `variants` → `MaterialVariant` (many)
 - `order_lines` → `MaterialOrderLine` (many)
 
 **Bloque**:
-- `@@index([active, club_type_id, material_category_id], map: "idx_material_products_active_type_cat")`
+- `@@unique([local_field_id, sku], map: "uq_material_products_local_field_sku")`
+- `@@index([local_field_id, active, club_type_id, material_category_id], map: "idx_material_products_lf_active_type_cat")`
+- `@@index([local_field_id], map: "idx_material_products_local_field_id")`
 - `@@index([title], map: "idx_material_products_title")`
 - `@@map("material_products")`
 
@@ -3348,6 +5793,11 @@ generated: true
 | `submitted_at` | `DateTime` | optional |
 | `submitted_by` | `String` | optional |
 | `snapshot_data` | `Json` | optional |
+| `pdf_r2_key` | `String` | optional |
+| `pdf_size_bytes` | `BigInt` | optional |
+| `pdf_sha256` | `String` | optional |
+| `pdf_generated_at` | `DateTime` | optional |
+| `pdf_template_version` | `String` | optional |
 | `created_at` | `DateTime` | — |
 | `modified_at` | `DateTime` | — |
 
@@ -3360,6 +5810,8 @@ generated: true
 - `@@unique([club_enrollment_id, month, year])`
 - `@@index([club_enrollment_id], map: "idx_monthly_reports_enrollment")`
 - `@@index([status], map: "idx_monthly_reports_status")`
+- `@@index([pdf_template_version], map: "idx_monthly_reports_pdf_template_version")`
+- `@@index([submitted_by, submitted_at], map: "idx_monthly_reports_submitter_submitted")`
 
 ### `quarterly_reports`
 
@@ -3387,6 +5839,25 @@ generated: true
 - `@@unique([club_id, year, quarter])`
 - `@@index([year, quarter], map: "idx_quarterly_reports_year_quarter")`
 - `@@index([status], map: "idx_quarterly_reports_status")`
+
+### `ranking_tiers`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `ranking_tier_id` | `String` | PK |
+| `name` | `String` | — |
+| `slug` | `String` | UNIQUE |
+| `band_percentage` | `Decimal` | — |
+| `color` | `String` | optional |
+| `icon` | `String` | optional |
+| `sort_order` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `updated_at` | `DateTime` | — |
+
+**Bloque**:
+- `@@index([active, sort_order], map: "idx_ranking_tiers_active_order")`
+- `@@map("ranking_tiers")`
 
 ### `ranking_weight_configs`
 
@@ -3487,6 +5958,7 @@ generated: true
 | `modified_at` | `DateTime` | — |
 
 **Enums**:
+- `scoring_mode`: `scoring_mode_enum`
 - `origin_level`: `origin_level_enum`
 
 **Relaciones**:
@@ -3509,6 +5981,7 @@ generated: true
 | `active_enrollment_count` | `Int` | — |
 | `rank_position` | `Int` | optional |
 | `awarded_category_id` | `String` | optional |
+| `hierarchy_context_id` | `String` | optional |
 | `composite_calculated_at` | `DateTime` | optional |
 | `created_at` | `DateTime` | — |
 | `modified_at` | `DateTime` | — |
@@ -3518,12 +5991,14 @@ generated: true
 - `club` → `clubs`
 - `ecclesiastical_year` → `ecclesiastical_years`
 - `awarded_category` → `award_categories`
+- `hierarchy_context` → `hierarchy_contexts`
 
 **Bloque**:
 - `@@unique([club_section_id, ecclesiastical_year_id], map: "uq_section_rankings_section_year")`
 - `@@index([club_id, ecclesiastical_year_id], map: "idx_section_rankings_club_year")`
 - `@@index([club_id, ecclesiastical_year_id, composite_score_pct(sort: Desc)], map: "idx_section_rankings_composite")`
 - `@@index([awarded_category_id], map: "idx_section_rankings_award_category")`
+- `@@index([hierarchy_context_id], map: "idx_section_rankings_hierarchy_context")`
 - `@@map("section_rankings")`
 
 ### `session`
@@ -3595,6 +6070,7 @@ generated: true
 
 **Bloque**:
 - `@@id([union_camporee_lf_id, local_field_id])`
+- `@@index([local_field_id, active], map: "idx_union_camporee_lfs_field_active")`
 
 ### `union_camporees`
 
@@ -3610,10 +6086,19 @@ generated: true
 | `includes_pathfinders` | `Boolean` | optional |
 | `includes_master_guides` | `Boolean` | optional |
 | `union_camporee_place` | `String` | — |
+| `lat` | `Float` | optional |
+| `long` | `Float` | optional |
 | `registration_cost` | `Decimal` | optional |
+| `timezone` | `String` | — |
+| `timezone_verified_at` | `DateTime` | optional |
+| `timezone_verified_by` | `String` | optional |
+| `club_registration_opens_at` | `DateTime` | optional |
 | `club_registration_deadline` | `DateTime` | optional |
+| `club_registration_closed_at` | `DateTime` | optional |
+| `club_registration_closed_by` | `String` | optional |
 | `member_registration_deadline` | `DateTime` | optional |
 | `payment_deadline` | `DateTime` | optional |
+| `agenda_visible_from` | `DateTime` | optional |
 | `ecclesiastical_year` | `Int` | — |
 | `active` | `Boolean` | — |
 | `created_at` | `DateTime` | — |
@@ -3624,8 +6109,46 @@ generated: true
 - `attending_clubs_camporees` → `camporee_clubs` (many)
 - `attending_members_camporees` → `camporee_members` (many)
 - `annual_folders` → `annual_folders` (many)
+- `camporee_events` → `camporee_events` (many)
+- `camporee_staff_members` → `camporee_staff_members` (many)
 - `ecclesiastical_year_relation` → `ecclesiastical_years`
 - `unions` → `unions`
+- `timezone_verifier` → `users`
+- `camporee_judges` → `camporee_judges` (many)
+- `insurance_external_participants` → `camporee_external_participants` (many)
+
+**Bloque**:
+- `@@index([timezone_verified_by], map: "idx_union_camporees_timezone_verified_by")`
+- `@@index([union_id, active], map: "idx_union_camporees_union_active")`
+
+### `union_division_history`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `union_division_history_id` | `BigInt` | PK |
+| `union_id` | `Int` | — |
+| `division_id` | `Int` | — |
+| `valid_from` | `DateTime` | — |
+| `valid_to` | `DateTime` | optional |
+| `precision` | `String` | — |
+| `created_at` | `DateTime` | — |
+| `created_by` | `String` | optional |
+| `recorded_from` | `DateTime` | — |
+| `recorded_to` | `DateTime` | optional |
+| `supersedes_history_id` | `BigInt` | optional |
+| `reorganization_id` | `String` | optional |
+
+**Relaciones**:
+- `unions` → `unions`
+- `divisions` → `divisions`
+- `supersedes` → `union_division_history`
+- `superseded_by` → `union_division_history` (many)
+- `institutional_reorganizations` → `institutional_reorganizations`
+
+**Bloque**:
+- `@@index([division_id], map: "idx_union_division_history_division_id")`
+- `@@index([union_id, valid_from, valid_to], map: "idx_union_division_history_union_period")`
+- `@@map("union_division_history")`
 
 ### `user_achievements`
 
@@ -3740,6 +6263,7 @@ generated: true
 | Campo | Tipo | Notas |
 | --- | --- | --- |
 | `record_id` | `Int` | PK |
+| `unit_id` | `Int` | optional |
 | `user_id` | `String` | — |
 | `week` | `Int` | — |
 | `year` | `Int` | — |
@@ -3752,12 +6276,15 @@ generated: true
 | `created_by` | `String` | — |
 
 **Relaciones**:
+- `units` → `units`
 - `users` → `users`
 - `creator` → `users`
 - `weekly_record_scores` → `weekly_record_scores` (many)
 
 **Bloque**:
-- `@@unique([user_id, week, year], map: "weekly_records_user_id_week_year_key")`
+- `@@unique([unit_id, user_id, week, year], map: "weekly_records_unit_id_user_id_week_year_key")`
+- `@@index([unit_id], map: "idx_weekly_records_unit_id")`
+- `@@index([user_id, year, week], map: "idx_weekly_records_user_year_week")`
 
 
 ---
@@ -3812,6 +6339,135 @@ generated: true
 - `O_POSITIVE  @map("O+")`
 - `O_NEGATIVE  @map("O-")`
 
+### `CamporeeEventStatus`
+
+- `programado`
+- `publicado`
+- `en_curso`
+- `realizado`
+- `cancelado`
+- `@@map("camporee_event_status")`
+
+### `certificate_bulk_import_applied_entity_type_enum`
+
+- `USER_HONOR`
+- `ENROLLMENT`
+
+### `certificate_bulk_import_batch_status_enum`
+
+- `DRAFT`
+- `READY_TO_SUBMIT`
+- `SUBMITTED`
+- `PARTIALLY_APPROVED`
+- `APPROVED`
+- `REJECTED`
+- `NEEDS_CORRECTION`
+
+### `certificate_bulk_import_item_status_enum`
+
+- `NEEDS_REVIEW`
+- `READY`
+- `SUBMITTED`
+- `APPROVED`
+- `REJECTED`
+- `RESUBMITTED`
+
+### `certificate_bulk_import_item_type_enum`
+
+- `HONOR`
+- `CLASS`
+
+### `certification_closeout_review_status_enum`
+
+- `PENDING`
+- `SUBMITTED`
+- `CHANGES_REQUESTED`
+- `APPROVED`
+
+### `certification_component_type_enum`
+
+- `TEXT_RESPONSE`
+- `FILE_EVIDENCE`
+- `LINKED_HONOR`
+- `LINKED_ACTIVITY`
+- `ATTESTATION`
+- `AUTO_VALIDATION`
+
+### `certification_eligibility_rule_type_enum`
+
+- `MIN_AGE`
+- `BAPTIZED`
+- `INVESTED_CLASS`
+- `ACTIVE_CLUB_TYPE`
+- `ACTIVE_ROLE`
+
+### `certification_enrollment_status_enum`
+
+- `ENROLLED`
+- `IN_PROGRESS`
+- `READY_FOR_CLOSEOUT`
+- `SUBMITTED_FOR_FINAL_REVIEW`
+- `APPROVED`
+- `CERTIFIED`
+- `WITHDRAWN`
+- `EXPIRED`
+- `CHANGES_REQUESTED`
+
+### `certification_evidence_upload_status_enum`
+
+- `PENDING_UPLOAD`
+- `CONFIRMED`
+
+### `certification_requirement_status_enum`
+
+- `DRAFT`
+- `SUBMITTED`
+- `CHANGES_REQUESTED`
+- `APPROVED`
+
+### `certification_review_event_type_enum`
+
+- `REQUIREMENT_SUBMITTED`
+- `REQUIREMENT_CHANGES_REQUESTED`
+- `REQUIREMENT_APPROVED`
+- `REQUIREMENT_RESUBMITTED`
+- `CLOSEOUT_SUBMITTED`
+- `CLOSEOUT_CHANGES_REQUESTED`
+- `CLOSEOUT_APPROVED`
+- `CERTIFIED`
+- `WITHDRAWN`
+
+### `certification_version_status_enum`
+
+- `DRAFT`
+- `PUBLISHED`
+- `RETIRED`
+
+### `class_honor_relation_type_enum`
+
+- `REQUIRED`
+- `RECOMMENDED`
+- `ELECTIVE`
+
+### `class_requirement_track_enum`
+
+- `BASIC`
+- `ADVANCED`
+- `EXTRA`
+
+### `coordinator_assignment_type`
+
+- `GENERAL`
+- `ZONE`
+- `SECTION`
+
+### `director_succession_status_enum`
+
+- `scheduled`
+- `activated`
+- `blocked`
+- `cancelled`
+
 ### `evidence_type_enum`
 
 - `IMAGE`
@@ -3825,10 +6481,42 @@ generated: true
 - `VALIDATED`
 - `REJECTED`
 
+### `field_payment_order_proof_status_enum`
+
+- `SUBMITTED`
+- `APPROVED`
+- `REJECTED`
+
+### `field_payment_order_purpose_enum`
+
+- `INSURANCE`
+- `CAMPOREE`
+
+### `field_payment_order_status_enum`
+
+- `ISSUED`
+- `PROOF_SUBMITTED`
+- `APPROVED`
+- `PROOF_REJECTED`
+- `CANCELLED`
+- `EXPIRED`
+
+### `folder_template_status_enum`
+
+- `DRAFT`
+- `PUBLISHED`
+- `ARCHIVED`
+
 ### `gender`
 
 - `Masculino`
 - `Femenino`
+
+### `honor_completion_mode_enum`
+
+- `UNDECIDED`
+- `IN_APP`
+- `EXTERNAL`
 
 ### `honor_validation_status_enum`
 
@@ -3837,11 +6525,74 @@ generated: true
 - `APPROVED`
 - `REJECTED`
 
+### `insurance_assignment_status_enum`
+
+- `PENDING_CONFIRMATION`
+- `ACTIVE`
+- `REJECTED`
+- `RELEASED`
+- `EXPIRED`
+
+### `insurance_assignment_subject_enum`
+
+- `MEMBER`
+- `EVENT_EXTERNAL`
+
+### `insurance_coverage_scope_enum`
+
+- `GENERAL`
+- `EVENT`
+
+### `insurance_evidence_type_enum`
+
+- `PURCHASE_PROOF`
+- `INDIVIDUAL_RECEIPT`
+
+### `insurance_purchase_classification_enum`
+
+- `ORDINARY`
+- `EXTRAORDINARY`
+- `LEGACY_UNCLASSIFIED`
+
+### `insurance_purchase_status_enum`
+
+- `PENDING_CONFIRMATION`
+- `CONFIRMED`
+- `REJECTED`
+- `REVERSED`
+
+### `insurance_reassignment_request_status_enum`
+
+- `PENDING`
+- `APPROVED`
+- `REJECTED`
+
+### `insurance_slot_movement_type_enum`
+
+- `PURCHASE_CONFIRMED`
+- `TRANSFERRED`
+- `ASSIGNED`
+- `RELEASED`
+- `REASSIGNED`
+- `VOIDED`
+- `CORRECTED`
+
+### `insurance_slot_status_enum`
+
+- `AVAILABLE`
+- `ASSIGNED`
+- `VOID`
+
 ### `insurance_type_enum`
 
 - `GENERAL_ACTIVITIES`
 - `CAMPOREE`
 - `HIGH_RISK`
+
+### `insurance_validity_mode_enum`
+
+- `FIXED_MONTHS`
+- `EVENT_DATES`
 
 ### `investiture_action_enum`
 
@@ -3853,6 +6604,7 @@ generated: true
 - `REJECTED`
 - `REINVESTITURE_REQUESTED`
 - `INVESTIDO`
+- `EXPIRED`
 
 ### `investiture_status_enum`
 
@@ -3864,6 +6616,17 @@ generated: true
 - `APPROVED`
 - `REJECTED`
 - `INVESTIDO`
+- `EXPIRED`
+
+### `master_honor_applicability_scope_enum`
+
+- `ALL`
+- `SELECTED_DIVISIONS`
+
+### `master_honor_requirement_group_type_enum`
+
+- `EXPLICIT_OPTIONS`
+- `CATEGORY_COUNT`
 
 ### `MaterialComprobanteStatus`
 
@@ -3907,6 +6670,11 @@ generated: true
 - `GLOBAL`
 - `CLUB`
 
+### `scoring_mode_enum`
+
+- `numeric`
+- `boolean_full`
+
 ### `severity_level`
 
 - `leve`
@@ -3923,3 +6691,20 @@ generated: true
 - `pending`
 - `approved`
 - `rejected`
+
+### `user_master_honor_source_enum`
+
+- `AUTO`
+
+### `user_master_honor_status_enum`
+
+- `AWARDED`
+- `REVOKED`
+- `RETIRED`
+
+### `user_master_honor_status_reason_enum`
+
+- `CRITERIA_CHANGED`
+- `USER_NO_LONGER_QUALIFIES`
+- `MASTER_HONOR_INACTIVE`
+- `RECOVERED`

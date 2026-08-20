@@ -1,5 +1,5 @@
 /**
- * Generador de docs/dev/base-de-datos/schema-reference/_generated-models.mdx
+ * Generador de apps/tecnico/src/content/docs/base-de-datos/schema-reference/_generated-models.mdx
  *
  * Lee sacdia-backend/prisma/schema.prisma y produce un MDX con todos los modelos,
  * sus campos, indices y relaciones (resumen).
@@ -11,6 +11,8 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { atomicWriteFile } from './lib/atomic-write';
+import { createSyncPaths } from './lib/sync-paths';
 
 interface Field {
   name: string;
@@ -188,7 +190,14 @@ function renderMdx(models: Model[], enums: Enum[]) {
   lines.push(`---
 title: "Modelos — Referencia Generada"
 description: "Listado completo de modelos Prisma de SACDIA. Generado automaticamente desde sacdia-backend/prisma/schema.prisma."
-author: "Auto-generated"
+surface: technical
+documentType: reference
+module: database
+status: published
+owners:
+  - "Auto-generated"
+lastReviewedAt: ${today}
+generated: true
 ---
 
 {/*
@@ -291,12 +300,12 @@ author: "Auto-generated"
   return lines.join('\n');
 }
 
-function main() {
+async function main() {
   const flags = parseArgs();
   const root = path.resolve(__dirname, '..');
   const defaultSchema = path.resolve(root, '..', 'sacdia-backend', 'prisma', 'schema.prisma');
   const schemaPath = flags.schema ? path.resolve(process.cwd(), flags.schema) : defaultSchema;
-  const outPath = path.resolve(root, 'content', 'dev', 'base-de-datos', 'schema-reference', '_generated-models.mdx');
+  const outPath = createSyncPaths(root).schema;
 
   console.log(`📖 Reading Prisma schema from: ${schemaPath}`);
   if (!fs.existsSync(schemaPath)) {
@@ -307,9 +316,8 @@ function main() {
   const { models, enums } = parseSchema(src);
   console.log(`📊 Parsed ${models.length} models, ${enums.length} enums`);
 
-  const mdx = renderMdx(models, enums);
-  fs.writeFileSync(outPath, mdx, 'utf8');
+  await atomicWriteFile(outPath, () => renderMdx(models, enums));
   console.log(`✅ Wrote ${outPath}`);
 }
 
-main();
+void main();

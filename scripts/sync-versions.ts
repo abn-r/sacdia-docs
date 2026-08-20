@@ -1,5 +1,5 @@
 /**
- * Generador de docs/dev/estandares/stack-tecnologico/_generated-versions.mdx
+ * Generador de apps/tecnico/src/content/docs/estandares/stack-tecnologico/_generated-versions.mdx
  *
  * Lee package.json (backend + admin) y pubspec.yaml (app) y produce
  * un MDX con tablas de versiones reales de todas las dependencias clave.
@@ -10,6 +10,8 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { atomicWriteFile } from './lib/atomic-write';
+import { createSyncPaths } from './lib/sync-paths';
 
 interface PkgJson {
   name?: string;
@@ -70,7 +72,7 @@ function table(rows: Array<[string, string]>) {
   ].join('\n');
 }
 
-function main() {
+async function main() {
   const root = path.resolve(__dirname, '..');
   const repoRoot = path.resolve(root, '..');
 
@@ -143,7 +145,14 @@ function main() {
   const mdx = `---
 title: "Versiones — Stack actualizado"
 description: "Tabla generada automaticamente con las versiones reales de las dependencias clave de backend, admin y app."
-author: "Auto-generated"
+surface: technical
+documentType: reference
+module: standards
+status: published
+owners:
+  - "Auto-generated"
+lastReviewedAt: ${today}
+generated: true
 ---
 
 {/*
@@ -173,16 +182,9 @@ ${table(pickDeps(admin, adminKeys))}
 ${table(appKeys.filter((k) => pubspecDeps[k]).map((k) => [k, pubspecDeps[k]]))}
 `;
 
-  const outPath = path.resolve(
-    root,
-    'content',
-    'dev',
-    'estandares',
-    'stack-tecnologico',
-    '_generated-versions.mdx',
-  );
-  fs.writeFileSync(outPath, mdx, 'utf8');
+  const outPath = createSyncPaths(root).versions;
+  await atomicWriteFile(outPath, () => mdx);
   console.log(`✅ Wrote ${outPath}`);
 }
 
-main();
+void main();

@@ -1,5 +1,5 @@
 /**
- * Generador de docs/dev/api/endpoints.mdx
+ * Generador de apps/tecnico/src/content/docs/api/endpoints.mdx
  *
  * Lee el OpenAPI spec generado por sacdia-backend (`pnpm openapi:generate` → sacdia-api-spec.json)
  * y produce un MDX con todos los endpoints agrupados por tag.
@@ -11,6 +11,8 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { atomicWriteFile } from './lib/atomic-write';
+import { createSyncPaths } from './lib/sync-paths';
 
 type Method = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
 
@@ -177,8 +179,14 @@ function renderMdx(spec: OpenApiSpec, endpoints: Endpoint[]) {
   const header = `---
 title: "Endpoints — Live Reference"
 description: "Referencia completa de endpoints REST de SACDIA API. Generado automaticamente desde el OpenAPI spec del backend."
-author: "Auto-generated"
-version: "${spec.info.version}"
+surface: technical
+documentType: reference
+module: api
+status: published
+owners:
+  - "Auto-generated"
+lastReviewedAt: ${today}
+generated: true
 ---
 
 {/*
@@ -234,12 +242,12 @@ function slug(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 }
 
-function main() {
+async function main() {
   const flags = parseArgs();
   const root = path.resolve(__dirname, '..');
   const defaultSpec = path.resolve(root, '..', 'sacdia-backend', 'sacdia-api-spec.json');
   const specPath = flags.spec ? path.resolve(process.cwd(), flags.spec) : defaultSpec;
-  const outPath = path.resolve(root, 'content', 'dev', 'api', 'endpoints.mdx');
+  const outPath = createSyncPaths(root).endpoints;
 
   console.log(`📖 Reading OpenAPI spec from: ${specPath}`);
   const spec = ensureSpec(specPath);
@@ -247,10 +255,8 @@ function main() {
   const endpoints = extractEndpoints(spec);
   console.log(`📊 Extracted ${endpoints.length} endpoints across ${new Set(endpoints.map((e) => e.tag)).size} tags`);
 
-  const mdx = renderMdx(spec, endpoints);
-
-  fs.writeFileSync(outPath, mdx, 'utf8');
+  await atomicWriteFile(outPath, () => renderMdx(spec, endpoints));
   console.log(`✅ Wrote ${outPath}`);
 }
 
-main();
+void main();
