@@ -19,24 +19,8 @@
     "sync:versions": "tsx scripts/sync-versions.ts",
     "sync:all": "pnpm sync:endpoints && pnpm sync:schema && pnpm sync:versions"
   },
-  "dependencies": {
-    "fumadocs-core": "latest",
-    "fumadocs-mdx": "latest",
-    "fumadocs-ui": "latest",
-    "next": "^16.2.1",
-    "react": "^19",
-    "react-dom": "^19",
-    "vite": "^8.0.3",
-    "zod": "^4.3.6"
-  },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/mdx": "^2",
     "@types/node": "^22",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "postcss": "^8",
-    "tailwindcss": "^4",
     "tsx": "^4.22.0",
     "typescript": "^5",
     "vitest": "^4.1.11"

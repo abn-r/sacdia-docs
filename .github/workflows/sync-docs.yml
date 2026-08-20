@@ -81,9 +81,10 @@ jobs:
         id: drift
         working-directory: sacdia-docs
         run: |
-          if [[ -n "$(git status --porcelain content/)" ]]; then
+          generated_root="apps/tecnico/src/content/docs"
+          if [[ -n "$(git status --porcelain "$generated_root")" ]]; then
             echo "drift=true" >> "$GITHUB_OUTPUT"
-            git status --short content/
+            git status --short "$generated_root"
           else
             echo "drift=false" >> "$GITHUB_OUTPUT"
           fi
@@ -99,9 +100,9 @@ jobs:
             Auto-generated PR from `sync-docs.yml`.
 
             Updated files:
-            - `content/dev/api/endpoints.mdx` (from OpenAPI spec)
-            - `content/dev/base-de-datos/schema-reference/_generated-models.mdx` (from Prisma schema)
-            - `content/dev/estandares/stack-tecnologico/_generated-versions.mdx` (from package.json + pubspec.yaml)
+            - `apps/tecnico/src/content/docs/api/endpoints.mdx` (from OpenAPI spec)
+            - `apps/tecnico/src/content/docs/base-de-datos/schema-reference/_generated-models.mdx` (from Prisma schema)
+            - `apps/tecnico/src/content/docs/estandares/stack-tecnologico/_generated-versions.mdx` (from package.json + pubspec.yaml)
 
             Source repos:
             - `abn-r/sacdia-backend`

@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 describe('documentation workspace', () => {
@@ -85,5 +85,30 @@ describe('documentation workspace', () => {
     expect(headers).toContain('X-Robots-Tag: noindex, nofollow');
     expect(`${config}\n${headers}`).not.toMatch(/(password|secret|token)\s*[:=]\s*['"][^'"]+/i);
     expect(manifest.scripts.check).toContain('ASTRO_TELEMETRY_DISABLED=1');
+  });
+
+  it('contains no Fumadocs or Next.js runtime', () => {
+    const manifest = JSON.parse(readFileSync('package.json', 'utf8')) as {
+      dependencies?: Record<string, string>;
+    };
+    const legacyDependencies = Object.keys(manifest.dependencies ?? {})
+      .filter((dependency) => dependency === 'next' || dependency.startsWith('fumadocs-'));
+
+    expect(legacyDependencies).toEqual([]);
+    for (const legacyPath of ['src', 'next.config.mjs', 'source.config.ts', 'postcss.config.mjs', 'content']) {
+      expect(existsSync(legacyPath), `${legacyPath} todavía existe`).toBe(false);
+    }
+  });
+
+  it('validates Astro portals without building and uses no legacy sync paths', () => {
+    const validation = readFileSync('.github/workflows/validate-docs.yml', 'utf8');
+    const drift = readFileSync('.github/workflows/drift-check.yml', 'utf8');
+    const sync = readFileSync('.github/workflows/sync-docs.yml', 'utf8');
+
+    expect(validation).toContain('pnpm test');
+    expect(validation).toContain('pnpm check');
+    expect(validation).not.toMatch(/pnpm (?:run )?build|astro build/);
+    expect(`${drift}\n${sync}`).not.toContain('content/dev');
+    expect(`${drift}\n${sync}`).toContain('apps/tecnico/src/content/docs');
   });
 });

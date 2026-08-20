@@ -7,9 +7,11 @@ on:
   pull_request:
     paths:
       - 'scripts/sync-*.ts'
-      - 'content/dev/api/endpoints.mdx'
-      - 'content/dev/base-de-datos/schema-reference/_generated-models.mdx'
-      - 'content/dev/estandares/stack-tecnologico/_generated-versions.mdx'
+      - 'scripts/lib/atomic-write.ts'
+      - 'scripts/lib/sync-paths.ts'
+      - 'apps/tecnico/src/content/docs/api/endpoints.mdx'
+      - 'apps/tecnico/src/content/docs/base-de-datos/schema-reference/_generated-models.mdx'
+      - 'apps/tecnico/src/content/docs/estandares/stack-tecnologico/_generated-versions.mdx'
 
 permissions:
   contents: read
@@ -24,9 +26,9 @@ jobs:
       - name: Check for manual edits in auto-generated files
         run: |
           gen_files=(
-            "content/dev/api/endpoints.mdx"
-            "content/dev/base-de-datos/schema-reference/_generated-models.mdx"
-            "content/dev/estandares/stack-tecnologico/_generated-versions.mdx"
+            "apps/tecnico/src/content/docs/api/endpoints.mdx"
+            "apps/tecnico/src/content/docs/base-de-datos/schema-reference/_generated-models.mdx"
+            "apps/tecnico/src/content/docs/estandares/stack-tecnologico/_generated-versions.mdx"
           )
           for f in "${gen_files[@]}"; do
             if [[ -f "$f" ]]; then
