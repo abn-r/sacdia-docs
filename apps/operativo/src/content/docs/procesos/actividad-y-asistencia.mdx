@@ -1,43 +1,76 @@
 ---
 title: Planear una actividad y registrar asistencia
-description: La actividad queda publicada y la asistencia se registra sin duplicados.
+description: Recorrido entre aplicación y panel para publicar una actividad y registrar asistencia sin duplicados.
 surface: cross-surface
 documentType: process
 module: actividad-y-asistencia
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-21
 ---
 
-La actividad queda publicada y la asistencia se registra sin duplicados.
+Este proceso comienza con la planificación, continúa con la publicación para los miembros y termina con el registro y la revisión de asistencia.
 
 ## Resultado esperado
 
-La actividad queda publicada y la asistencia se registra sin duplicados.
+Existe una sola actividad para el evento planeado, los integrantes consultan datos correctos y la asistencia queda registrada una vez por persona y sección.
 
 ## Participantes
 
-- Dirección o responsable de actividades
-- Miembros participantes
-- Personal administrativo de consulta
+- Dirección o responsable con `activities:create`.
+- Responsable de asistencia con `attendance:manage` o cargo operativo habilitado.
+- Miembros que presentan **Mostrar mi QR**.
+- Personal administrativo con `activities:read` para revisión.
 
 ## Antes de comenzar
 
-- Contexto de sección correcto.
-- Permiso para crear actividad o registrar asistencia.
+- Confirma club, sección, periodo y modalidad.
+- Define quién creará la actividad y quién controlará la asistencia.
+- Para una actividad conjunta, acuerda las secciones participantes y el responsable de cada una.
+- Evita publicar hasta confirmar fecha, hora, lugar y enlace.
+
+## No confundas mostrar y escanear
+
+- **Mostrar mi QR** identifica al miembro y sirve para presentar su código.
+- **Escanear QR** pertenece al responsable y registra asistencia cuando se abre desde una actividad.
+
+El miembro no confirma su propia asistencia por mostrar el código. La persona responsable debe leer el resultado antes de pasar al siguiente integrante.
+
+## Matriz de responsabilidades
+
+| Etapa | Responsable | Superficie | Evidencia de cierre |
+|---|---|---|---|
+| Planificar | Dirección o responsable | Fuera del sistema | Fecha, modalidad, lugar y secciones acordados. |
+| Crear | Cuenta con `activities:create` | Aplicación o panel | Detalle visible con datos correctos. |
+| Informar | Dirección | Aplicación | Miembros pueden consultar la actividad. |
+| Presentar código | Cada miembro | Aplicación | **Mostrar mi QR** abierto en su dispositivo. |
+| Registrar | Responsable de asistencia | Aplicación | Resultado nuevo o ya registrado por persona. |
+| Revisar | Dirección o administración | Aplicación/panel | Lista coincide con actividad y sección. |
 
 ## Flujo completo
 
-1. El responsable crea la actividad y, si aplica, selecciona varias secciones.
-2. Los miembros consultan fecha, modalidad y ubicación.
-3. Durante la actividad se registra asistencia manual o por QR.
-4. El panel consulta el detalle y la lista de asistencia.
-5. Se corrigen datos antes de cerrar el seguimiento.
+1. Busca la fecha y el nombre para confirmar que la actividad no existe.
+2. Crea la actividad en la aplicación o panel según tu responsabilidad.
+3. Si es conjunta, usa la aplicación de dirección, activa la opción y selecciona al menos dos secciones.
+4. Abre el detalle guardado y verifica la información antes de comunicarla.
+5. Los miembros consultan la actividad y, al llegar, abren **Mostrar mi QR**.
+6. El responsable abre **Escanear QR** desde el detalle de esa actividad.
+7. Registra una persona a la vez y espera el resultado.
+8. En actividades conjuntas, repite el control una vez por sección dentro de su contexto.
+9. Revisa la lista en la aplicación y, si corresponde, en el panel administrativo.
 
-## Cómo utilizar esta guía
+## Recuperar un error
 
-Comienza en la aplicación y utiliza el panel cuando el proceso cambie de responsable.
+- **Datos equivocados:** edita la actividad existente y vuelve a revisar el detalle.
+- **Lista sin actualizar:** refresca una vez antes de repetir un escaneo.
+- **Asistencia ya registrada:** no reenvíes; continúa con la siguiente persona.
+- **Actividad o sección incorrecta:** detén el escaneo y reporta el registro; no intentes compensarlo duplicando datos.
+- **Acción rechazada:** confirma permiso y contexto. No crees otra actividad ni uses otra cuenta.
+
+## Regla contra duplicados
+
+No crees otra actividad para corregir nombre, lugar, modalidad o fecha. Edita el registro existente. Tampoco vuelvas a escanear una persona después de recibir confirmación.
 
 ## Manuales relacionados en este portal
 
@@ -46,15 +79,11 @@ Comienza en la aplicación y utiliza el panel cuando el proceso cambie de respon
 
 ## Cómo verificarlo
 
-La actividad y asistencia coinciden entre detalle móvil y panel.
-
-## Errores frecuentes
-
-- **La siguiente etapa no aparece:** actualiza el estado antes de repetir y confirma que la etapa anterior terminó.
-- **La persona revisora no encuentra el registro:** verifica territorio, periodo, club y sección.
-- **Se rechazó la operación:** corrige sobre el mismo registro; no crees otro salvo que el sistema indique que el anterior quedó cancelado.
-- **El estado difiere entre superficies:** conserva folio o identificador visible y repórtalo sin reenviar la acción.
+- Solo existe una actividad para el evento.
+- La información consultada por los miembros coincide con la planificación.
+- Cada integrante aparece una sola vez en su sección.
+- La revisión administrativa corresponde al mismo identificador de actividad.
 
 ## Fuente de verificación
 
-Proceso contrastado el 2026-08-20 con los módulos involucrados y la documentación canónica de SACDIA.
+Proceso contrastado el 2026-08-21 con los flujos efectivos de actividades y QR de la aplicación, las rutas administrativas de actividades y las reglas canónicas de actividades conjuntas.

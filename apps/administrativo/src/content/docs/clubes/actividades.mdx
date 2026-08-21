@@ -1,0 +1,117 @@
+---
+title: Actividades y asistencia de clubes
+description: Filtrar la agenda administrativa, abrir una actividad y consultar su asistencia.
+surface: admin
+documentType: screen
+module: activities
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-21
+---
+
+Usa esta sección para revisar la agenda de los clubes dentro de tu alcance, crear o editar actividades autorizadas y consultar la asistencia registrada.
+
+## Resultado esperado
+
+El panel muestra las actividades del campo, club, sección y periodo seleccionados. El detalle conserva la información de la actividad y una lista de asistencia coherente con el registro móvil.
+
+## Acceso requerido
+
+- `activities:read` para abrir la agenda.
+- `activities:create` para mostrar **Nueva actividad**.
+- `activities:update` para acciones de edición desde la agenda.
+- `activities:delete` para retirar una actividad.
+
+El listado condiciona las acciones principales por permiso. En el detalle actual pueden aparecer **Editar** y **Eliminar** sin el mismo filtro visual; eso no concede acceso: la autorización final la aplica el backend. Si tu cargo no corresponde, no intentes completar la acción.
+
+## Rutas incluidas
+
+| Ruta | Uso |
+|---|---|
+| `/dashboard/clubs/activities` | Agenda, filtros, creación y navegación por periodo. |
+| `/dashboard/clubs/activities/[id]` | Detalle, datos de modalidad y consulta de asistencia. |
+
+## Antes de comenzar
+
+- Confirma tu alcance territorial.
+- Define el campo local, club y sección que deseas revisar.
+- Si crearás una actividad, prepara tipo, lugar, coordenadas, modalidad e imagen.
+- Busca primero la fecha y el nombre para evitar duplicados.
+
+## Filtrar la agenda
+
+1. Abre **Clubes → Actividades**.
+2. Selecciona **Campo local** si tu alcance incluye más de uno.
+3. Elige un club; después podrás limitar a una sección.
+4. Pulsa actualizar si cambió información en la aplicación.
+5. Comprueba el contador de actividades antes de concluir que el periodo está vacío.
+
+Cambiar el campo limpia club y sección. Cambiar el club limpia la sección; vuelve a seleccionarla si necesitas ese nivel de detalle.
+
+## Elegir calendario o lista
+
+El control de periodo ofrece tres escalas:
+
+- **Mes**: panorama completo y selección de una fecha.
+- **Semana**: actividades comprendidas en la semana de referencia.
+- **Día**: concentración en una fecha específica.
+
+Usa las flechas para avanzar o retroceder, **Hoy** para regresar a la fecha actual y la lista inferior para abrir el detalle en orden cronológico. La fecha y el filtro forman parte de la URL, por lo que conviene revisar ambos antes de compartirla.
+
+## Crear una actividad
+
+1. Selecciona un club. **Nueva actividad** solo aparece con `activities:create` y un club definido.
+2. Elige tipo de club y sección.
+3. Captura nombre, descripción, lugar, hora, latitud y longitud.
+4. Selecciona **Presencial**, **Virtual** o **Híbrido**.
+5. Para Virtual o Híbrido, agrega el enlace de reunión cuando corresponda.
+6. Captura una URL de imagen válida; el formulario la exige.
+7. Guarda y abre el registro desde la agenda.
+
+El formulario administrativo crea una actividad para una sección. La selección múltiple de actividad conjunta se realiza actualmente desde la aplicación móvil de dirección.
+
+## Editar o retirar
+
+- Abre el detalle y verifica primero que corresponde al club y sección correctos.
+- Corrige sobre el mismo registro; no crees otro para reemplazarlo.
+- Si retiras una actividad, confirma el diálogo una sola vez.
+- La eliminación es lógica y conserva el historial relacionado.
+
+Si el panel muestra una acción pero el backend responde sin autorización, detente y solicita revisión de permisos. No cambies parámetros de la URL ni utilices otra cuenta para evitar el control.
+
+## Consultar la asistencia
+
+1. Abre el detalle de la actividad.
+2. Selecciona la pestaña o bloque de **Asistencia**.
+3. Revisa nombre, correo disponible y fecha/hora de registro.
+4. Si la lista está vacía, actualiza y confirma que la app registró asistencia para esa misma actividad.
+5. En una actividad conjunta, revisa cada sección por separado; no asumas una lista consolidada.
+
+El panel consulta la asistencia; el registro con QR ocurre en la aplicación móvil desde el detalle de la actividad.
+
+## Cómo verificarlo
+
+- Los filtros muestran el club y sección previstos.
+- La fecha de la agenda coincide con el detalle.
+- La modalidad y el enlace corresponden a la actividad.
+- La lista de asistencia no duplica integrantes y coincide con el contexto móvil.
+
+## Errores frecuentes
+
+| Problema | Qué hacer |
+|---|---|
+| No aparece **Nueva actividad** | Selecciona un club y confirma `activities:create`. |
+| No aparecen secciones | Comprueba el club y el tipo de club seleccionados. |
+| El formulario rechaza la imagen | Usa una URL completa y accesible. |
+| Editar o eliminar es rechazado | La visibilidad del botón no reemplaza la autorización final. Confirma `activities:update` o `activities:delete`. |
+| La asistencia aparece vacía | Revisa el identificador de actividad y la sección; después actualiza una vez. |
+
+## Procesos relacionados
+
+- [Planear una actividad y registrar asistencia](/procesos/actividad-y-asistencia/)
+- [Gestión de clubes](/clubes/gestion-clubes/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-21 con las rutas administrativas de actividades, `activities-calendar-client.tsx`, el formulario, el detalle, `attendance-panel.tsx` y los permisos declarados en el panel.

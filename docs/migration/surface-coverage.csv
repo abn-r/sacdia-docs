@@ -59,8 +59,8 @@ admin,certifications,/dashboard/certifications/[id],/investiduras/certificacione
 admin,certifications,/dashboard/certifications/reviews,/investiduras/certificaciones/,/procesos/formacion-e-investidura/,covered,documentation
 admin,clubs,/dashboard/clubs,/clubes/gestion-clubes/,/procesos/gestion-club-seccion/|/procesos/actividad-y-asistencia/|/procesos/carpeta-anual/|/procesos/formacion-e-investidura/,covered,documentation
 admin,clubs,/dashboard/clubs/[id],/clubes/gestion-clubes/,/procesos/gestion-club-seccion/|/procesos/actividad-y-asistencia/|/procesos/carpeta-anual/|/procesos/formacion-e-investidura/,covered,documentation
-admin,clubs,/dashboard/clubs/activities,/clubes/gestion-clubes/,/procesos/gestion-club-seccion/|/procesos/actividad-y-asistencia/|/procesos/carpeta-anual/|/procesos/formacion-e-investidura/,covered,documentation
-admin,clubs,/dashboard/clubs/activities/[id],/clubes/gestion-clubes/,/procesos/gestion-club-seccion/|/procesos/actividad-y-asistencia/|/procesos/carpeta-anual/|/procesos/formacion-e-investidura/,covered,documentation
+admin,activities,/dashboard/clubs/activities,/clubes/actividades/,/procesos/actividad-y-asistencia/,covered,documentation
+admin,activities,/dashboard/clubs/activities/[id],/clubes/actividades/,/procesos/actividad-y-asistencia/,covered,documentation
 admin,clubs,/dashboard/clubs/evidence-folders,/clubes/gestion-clubes/,/procesos/gestion-club-seccion/|/procesos/actividad-y-asistencia/|/procesos/carpeta-anual/|/procesos/formacion-e-investidura/,covered,documentation
 admin,clubs,/dashboard/clubs/evidence-folders/[folderId],/clubes/gestion-clubes/,/procesos/gestion-club-seccion/|/procesos/actividad-y-asistencia/|/procesos/carpeta-anual/|/procesos/formacion-e-investidura/,covered,documentation
 admin,clubs,/dashboard/clubs/evidence-folders/[folderId]/view,/clubes/gestion-clubes/,/procesos/gestion-club-seccion/|/procesos/actividad-y-asistencia/|/procesos/carpeta-anual/|/procesos/formacion-e-investidura/,covered,documentation

@@ -1,26 +1,26 @@
 ---
 title: Gestión de clubes
-description: Crear clubes, administrar secciones, miembros, cargos, actividades y carpetas relacionadas.
+description: Crear clubes y administrar sus secciones, miembros, cargos y carpetas relacionadas.
 surface: admin
 documentType: screen
 module: clubs
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-21
 ---
 
-Crear clubes, administrar secciones, miembros, cargos, actividades y carpetas relacionadas.
+Crear clubes y administrar sus secciones, miembros, cargos y carpetas relacionadas.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás crear clubes, administrar secciones, miembros, cargos, actividades y carpetas relacionadas.
+Al terminar este recorrido, podrás crear clubes y administrar sus secciones, miembros, cargos y carpetas relacionadas.
 
 ## Acceso requerido
 
 - clubs:read
 - clubs:create/update según acción
-- permisos específicos para roles, actividades y evidencias
+- permisos específicos para roles y evidencias
 
 El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso ni reemplaza la autorización del backend.
 
@@ -30,8 +30,6 @@ El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso n
 |---|---|
 | `/dashboard/clubs` | Listado o gestión de clubes. |
 | `/dashboard/clubs/[id]` | Detalle del registro seleccionado. |
-| `/dashboard/clubs/activities` | Pantalla operativa del módulo. |
-| `/dashboard/clubs/activities/[id]` | Detalle contextual del elemento seleccionado. |
 | `/dashboard/clubs/evidence-folders` | Pantalla operativa del módulo. |
 | `/dashboard/clubs/evidence-folders/[folderId]` | Detalle contextual del elemento seleccionado. |
 | `/dashboard/clubs/evidence-folders/[folderId]/view` | Pantalla operativa del módulo. |
@@ -53,7 +51,7 @@ El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso n
 - Crear manualmente o importar clubes.
 - Activar secciones por tipo de club.
 - Administrar responsables, miembros y unidades.
-- Consultar actividades, carpetas y validaciones vinculadas.
+- Consultar carpetas y validaciones vinculadas.
 
 ## Flujo recomendado
 
@@ -85,4 +83,4 @@ El club queda vinculado a la geografía correcta y sus secciones activas coincid
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las rutas, componentes, permisos de navegación y documentación canónica del módulo `clubs`.
+Manual contrastado el 2026-08-21 con las rutas, componentes, permisos de navegación y documentación canónica del módulo `clubs`.
