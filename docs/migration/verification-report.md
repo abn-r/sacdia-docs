@@ -18,7 +18,7 @@ Los tres comparten identidad visual, configuración tipada, schema editorial y n
 
 | Validación | Resultado |
 | --- | --- |
-| `pnpm test` | 13 archivos, 52 pruebas aprobadas |
+| `pnpm test` | 15 archivos, 61 pruebas aprobadas |
 | `pnpm check` | 3 portales, 0 errores, 0 warnings y 0 hints |
 | `git diff --check development...HEAD` | Sin errores de whitespace |
 | Schema de contenido | Las 102 entradas actuales del portal técnico sincronizan correctamente |
@@ -68,7 +68,7 @@ materiales** y **Registrar y supervisar finanzas**.
 
 Esta comprobación valida la presentación y navegación de muestras
 representativas; no sustituye una revisión editorial humana de cada uno de los
-96 archivos de guía.
+97 archivos de guía.
 
 ### Refuerzo editorial de formación e investidura
 
@@ -94,6 +94,57 @@ Playwright abrió los seis documentos modificados a 1440 × 1000, con ancho de
 documento igual al viewport. Las guías operativa y administrativa de
 Certificaciones también se revisaron a 390 × 844: conservaron ancho `390/390`,
 tablas de 358 px y consola sin errores ni warnings.
+
+### Refuerzo editorial de actividades y asistencia
+
+El bloque de actividades ahora diferencia consulta, creación, modalidad,
+actividad conjunta y asistencia. La guía móvil explica que **Mostrar mi QR**
+presenta la identidad del miembro, mientras que **Escanear QR** pertenece al
+responsable y registra asistencia únicamente cuando se abre desde una
+actividad.
+
+Se creó el manual administrativo `clubes/actividades.mdx` y las dos rutas del
+panel se remapearon desde la guía genérica de clubes sin modificar el inventario
+de 170 superficies. El nuevo manual cubre filtros territoriales, vistas de mes,
+semana y día, creación, detalle y consulta de asistencia.
+
+Los procesos compartidos documentan que una actividad conjunta requiere al
+menos dos secciones y que la asistencia se controla una vez por sección. La
+prueba `activity-manuals.test.ts` protege estas decisiones y la regla contra
+duplicados.
+
+La verificación del runtime también detectó una limitación que los manuales no
+ocultan: los listados filtran acciones por permiso, pero los detalles móvil y
+administrativo todavía muestran algunas acciones de edición/eliminación sin el
+mismo filtro visual. La autorización final continúa en backend.
+
+### Refuerzo editorial de informes mensuales
+
+Los manuales de informes separan datos automáticos y manuales, documentan el
+calendario de recordatorios y explican la única secuencia vigente:
+`draft` → `generated` → `submitted`. También aclaran que la generación es
+asíncrona, que el PDF usa un snapshot congelado y que no debe crearse otro
+informe para el mismo enrollment, mes y año.
+
+La guía administrativa corrige un permiso ficticio del texto anterior:
+supervisión no usa `reports:supervise`, sino una sesión administrativa acotada
+por territorio, junto con `reports:read` y `reports:download`.
+
+El contenido documenta explícitamente la deriva contractual actual del panel:
+los nombres del formulario manual no coinciden con el DTO del backend, el
+formulario se habilita fuera de `draft`, y Generar/Regenerar esperan un informe
+inmediato aunque el backend responde HTTP `202`. Además,
+`/reports/monthly-preview` mantiene estado local y no persiste. Por ello, la app
+queda como canal vigente de captura y el panel como canal verificado de lista,
+supervisión, detalle, envío desde `generated` y descarga.
+
+La prueba `monthly-report-manuals.test.ts` protege estados, responsabilidades,
+calendario, limitaciones y recuperación ante una generación encolada.
+
+Playwright abrió los nueve documentos de actividades, QR e informes a
+1440 × 1000 y 390 × 844. Todos respondieron HTTP 200, conservaron el ancho del
+documento igual al viewport (`1440/1440` y `390/390`), mantuvieron sus tablas en
+720 px y 358 px respectivamente, y no emitieron errores ni warnings de consola.
 
 ### Capturas reales en manuales prioritarios
 
@@ -142,7 +193,7 @@ consola sin errores.
 | Features móviles cubiertas | 37 de 37 |
 | Superficies cubiertas totales | 170 de 170 |
 | Manuales operativos de pantalla | 37 |
-| Manuales administrativos | 31 archivos para 32 módulos |
+| Manuales administrativos | 32 archivos para 33 módulos |
 | Procesos transversales | 14, disponibles en ambos portales |
 
 Los manuales se agrupan por recorrido funcional, pero cada superficie conserva su

@@ -1,58 +1,103 @@
 ---
 title: Completar y supervisar el informe mensual
-description: El informe del periodo combina datos automáticos y manuales y queda disponible para supervisión.
+description: Preparar el borrador, esperar el cierre automático y entregar un PDF verificable para supervisión.
 surface: cross-surface
 documentType: process
 module: informe-mensual
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-21
 ---
 
-El informe del periodo combina datos automáticos y manuales y queda disponible para supervisión.
+El informe mensual combina datos que SACDIA ya conoce con datos que dirección o secretaría deben declarar antes del cierre.
 
 ## Resultado esperado
 
-El informe del periodo combina datos automáticos y manuales y queda disponible para supervisión.
+Existe un solo informe por inscripción y periodo; el borrador queda completo antes del corte, la generación congela un snapshot y supervisión consulta el mismo PDF.
 
 ## Participantes
 
-- Dirección o secretaría de club
-- Supervisor territorial
+- Dirección o secretaría del club para preparar el `draft`.
+- SACDIA para generación automática y PDF.
+- Administración territorial para supervisar y, cuando corresponda, enviar.
 
 ## Antes de comenzar
 
-- Enrollment anual activo.
-- Mes y año correctos.
+- Confirma inscripción anual, club, sección, mes y año.
+- Cierra previamente membresía, cargos, actividades, asistencia y finanzas del periodo.
+- Define quién capturará los datos manuales.
+- Busca el informe antes de iniciar; la clave es inscripción + mes + año.
+
+## Separar datos automáticos y manuales
+
+| Tipo | Ejemplos | Dónde corregir antes del cierre |
+|---|---|---|
+| Automáticos | miembros, directiva, honores, actividades, asistencia y finanzas | En el módulo de origen correspondiente. |
+| Manuales | reuniones, misión, bautismos, servicio, certificados y libretas | En la aplicación móvil, no en el formulario administrativo actual. |
+
+No uses un campo manual para compensar un dato automático incorrecto. Corrige el origen y vuelve a revisar antes de generar.
+
+## Calendario operativo
+
+- **Durante el mes:** la app prepara el periodo actual y conserva un `draft`.
+- **Día 27:** recordatorio para completar información pendiente.
+- **Días 1 y 4 del mes siguiente:** recordatorios del ciclo de cierre.
+- **Día de generación configurado:** SACDIA genera los periodos vencidos; el valor de respaldo es el día 5.
+- **Día 6:** recordatorio posterior según el estado alcanzado.
+
+El proceso automático se revisa diariamente. La hora técnica del job no es una fecha límite para el usuario; completa el borrador antes del día de cierre definido por la organización.
+
+## Matriz de responsabilidades
+
+| Etapa | Responsable | Superficie | Evidencia de cierre |
+|---|---|---|---|
+| Actualizar orígenes | Responsables de cada módulo | Aplicación/panel | Datos del mes correctos. |
+| Preparar borrador | Dirección o secretaría | Aplicación | Datos manuales guardados en `draft`. |
+| Generar | SACDIA | Backend | Estado `generated`, snapshot y PDF. |
+| Revisar | Dirección | Aplicación/panel | Detalle y PDF corresponden al periodo. |
+| Supervisar | Administración territorial | Panel | Filtros y detalle del mismo informe. |
+| Enviar | Responsable autorizado | Panel/backend | Estado `submitted` y fecha de envío. |
 
 ## Flujo completo
 
-1. La app abre el informe del mes.
-2. El club captura y guarda los bloques manuales.
-3. Revisa el detalle y genera el PDF.
-4. El panel lista el informe del club.
-5. Supervisión filtra cumplimiento territorial y abre el detalle.
+1. Dirección prepara el periodo actual y guarda los datos manuales desde la aplicación.
+2. Revisa los datos automáticos y corrige sus módulos de origen antes del cierre.
+3. Espera la generación automática; la generación es asíncrona y puede tardar después de encolarse.
+4. En el panel, filtra el club y periodo hasta ver `generated`.
+5. Abre el detalle y descarga el PDF con `reports:download`.
+6. Compara club, periodo, snapshot y fechas.
+7. Si el procedimiento institucional lo exige, usa **Enviar al campo** desde `generated`.
+8. Actualiza la lista y confirma `submitted` y su fecha.
 
-## Cómo utilizar esta guía
+La secuencia válida es `draft` → `generated` → `submitted`.
 
-Comienza en el panel en la etapa de revisión o configuración que corresponda; la captura del usuario ocurre en la aplicación.
+## Recuperar un error
+
+- **Falta un dato y sigue `draft`:** pide que se edite el mismo informe desde la app.
+- **El dato automático está mal:** corrige el módulo de origen antes del cierre.
+- **Ya está `generated`:** no uses el formulario manual del panel; el snapshot quedó congelado.
+- **Generar mostró error:** espera y actualiza; la respuesta `202` puede haber encolado el trabajo. No repitas.
+- **Supervisión no lo encuentra:** verifica territorio, filtros, inscripción, mes, año e identificador.
+- **La plantilla imprimible tiene datos escritos:** no los consideres oficiales; esa pantalla no persiste.
+
+## Regla contra duplicados
+
+No crees otro informe para corregir un periodo existente. SACDIA mantiene unicidad por inscripción, mes y año. Trabaja siempre sobre el mismo registro y conserva su identificador para soporte.
 
 ## Manuales relacionados en este portal
 
 - [Informes mensuales y supervisión](/investiduras/informes/)
+- [Finanzas de clubes](/finanzas/finanzas-clubes/)
+- [Actividades y asistencia de clubes](/clubes/actividades/)
 
 ## Cómo verificarlo
 
-Detalle y PDF coinciden en periodo, club y datos; supervisión reconoce el informe como presente.
-
-## Errores frecuentes
-
-- **La siguiente etapa no aparece:** actualiza el estado antes de repetir y confirma que la etapa anterior terminó.
-- **La persona revisora no encuentra el registro:** verifica territorio, periodo, club y sección.
-- **Se rechazó la operación:** corrige sobre el mismo registro; no crees otro salvo que el sistema indique que el anterior quedó cancelado.
-- **El estado difiere entre superficies:** conserva folio o identificador visible y repórtalo sin reenviar la acción.
+- Solo existe un informe para la inscripción y periodo.
+- La lista, el detalle y el PDF usan el mismo identificador.
+- `generated` contiene snapshot y PDF.
+- `submitted` conserva fecha de envío y supervisión respeta el alcance territorial.
 
 ## Fuente de verificación
 
-Proceso contrastado el 2026-08-20 con los módulos involucrados y la documentación canónica de SACDIA.
+Proceso contrastado el 2026-08-21 con el flujo móvil, las rutas administrativas, los DTOs y servicios de informes, los cron de generación/recordatorios y el artefacto PDF privado.
