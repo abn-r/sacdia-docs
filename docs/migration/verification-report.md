@@ -18,7 +18,7 @@ Los tres comparten identidad visual, configuración tipada, schema editorial y n
 
 | Validación | Resultado |
 | --- | --- |
-| `pnpm test` | 15 archivos, 61 pruebas aprobadas |
+| `pnpm test` | 16 archivos, 68 pruebas aprobadas |
 | `pnpm check` | 3 portales, 0 errores, 0 warnings y 0 hints |
 | `git diff --check development...HEAD` | Sin errores de whitespace |
 | Schema de contenido | Las 102 entradas actuales del portal técnico sincronizan correctamente |
@@ -68,7 +68,7 @@ materiales** y **Registrar y supervisar finanzas**.
 
 Esta comprobación valida la presentación y navegación de muestras
 representativas; no sustituye una revisión editorial humana de cada uno de los
-97 archivos de guía.
+98 archivos de guía.
 
 ### Refuerzo editorial de formación e investidura
 
@@ -146,6 +146,68 @@ Playwright abrió los nueve documentos de actividades, QR e informes a
 documento igual al viewport (`1440/1440` y `390/390`), mantuvieron sus tablas en
 720 px y 358 px respectivamente, y no emitieron errores ni warnings de consola.
 
+### Refuerzo editorial de acceso y membresía
+
+El recorrido de alta ahora separa cuatro conceptos que el contenido anterior
+mezclaba: cuenta, post-registro, inscripción anual y membresía de sección. El
+runtime confirmó que el paso 3 crea en una sola transacción tanto la inscripción
+anual de la clase derivada como una asignación de miembro en estado `pending`.
+Por eso terminar el perfil abre el tablero, pero no habilita todavía las
+superficies operativas del club.
+
+La guía móvil documenta el acceso visible con correo y contraseña, el bloqueo
+local de 30 segundos después de tres intentos fallidos, los campos reales de
+registro y los tres pasos del perfil inicial. También explica la espera de 8
+días, los estados `rejected`, `cancelled` y `expired`, y cómo conservar la misma
+cuenta al corregir una sección. No presenta Google o Apple como opciones visibles
+porque la pantalla actual no incluye esos botones, aunque exista infraestructura
+OAuth.
+
+La revisión detectó una limitación adicional del runtime: el alta nueva en
+`pending` no tiene `activeAssignmentId`, por lo que el tablero restringido omite
+`MembershipStatusBanner` y puede no mostrar **Cancelar solicitud** o **Volver a
+solicitar**. Los manuales ya no prometen esas acciones; indican utilizarlas solo
+cuando sean visibles y escalar la corrección sin duplicar la cuenta cuando no lo
+sean. Por la misma causa, la verificación visual se limita al resultado `active`;
+un alta nueva `rejected` o `expired` puede quedar sin banner aunque la autorización
+ya haya cambiado.
+
+También se separó el canal de revisión por cargo. Dirección y otros cargos de
+club operan desde **Miembros → Solicitudes** en la app cuando sus permisos lo
+permiten; la ruta administrativa exige un rol admitido en el panel además de
+`club_members:approve` en el alcance. La app usa actualmente
+`club_roles:assign` o `club_roles:revoke` como control visual de los botones,
+pero el backend exige `club_members:approve`. Dirección recibe ambos; en cambio,
+subdirección, secretaría y secretaría-tesorería pueden estar autorizadas por el
+backend y aun así no ver los botones móviles. Los manuales registran este falso
+negativo y aclaran que un cargo de club no obtiene acceso al panel.
+
+El vencimiento también tiene dos fuentes actuales: el alta fija `expires_at` a
+8 días, mientras el proceso horario usa `membership.pending_timeout_days` contra
+`created_at`. El valor predeterminado coincide, pero si la configuración cambia,
+la fecha visible y el vencimiento automático pueden divergir; la limitación quedó
+explícita en los manuales.
+
+Se creó `clubes/solicitudes-membresia.mdx` para la ruta administrativa dedicada
+y se separó de las bandejas de cargos y traslados. El manual cubre el selector
+de sección, `club_members:approve`, la prioridad visual dentro de 48 horas, la
+aprobación inmediata sin diálogo, el rechazo con motivo opcional y el
+vencimiento automático. También registra la limitación actual de auditoría:
+`modified_at` conserva la hora de la última modificación, pero la asignación no
+guarda al actor ni campos semánticos `approved_at` o `rejected_at`.
+
+La cobertura mantiene las 170 superficies y remapea únicamente
+`/dashboard/requests/membership` al manual nuevo. La prueba
+`access-membership-manuals.test.ts` protege la separación, los estados, las
+responsabilidades y la regla de no duplicar cuentas. El registro de medios se
+actualizó para asociar la captura existente con la guía dedicada.
+
+Playwright abrió las siete páginas principales afectadas a 1440 × 1000 y 390 × 844. Todas
+mostraron el título y la sección esperados, conservaron el ancho del documento
+igual al viewport (`1440/1440` y `390/390`) y no emitieron errores ni warnings de
+consola. Las capturas de miembros y de solicitudes administrativas cargaron
+completas, con anchos naturales de 1206 px y 1120 px respectivamente.
+
 ### Capturas reales en manuales prioritarios
 
 Se integraron doce capturas del runtime efectivo en guías prioritarias:
@@ -193,7 +255,7 @@ consola sin errores.
 | Features móviles cubiertas | 37 de 37 |
 | Superficies cubiertas totales | 170 de 170 |
 | Manuales operativos de pantalla | 37 |
-| Manuales administrativos | 32 archivos para 33 módulos |
+| Manuales administrativos | 33 archivos para 34 módulos |
 | Procesos transversales | 14, disponibles en ambos portales |
 
 Los manuales se agrupan por recorrido funcional, pero cada superficie conserva su

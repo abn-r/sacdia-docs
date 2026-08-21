@@ -1,61 +1,126 @@
 ---
 title: Alta de cuenta y membresía
-description: La persona completa su cuenta, queda vinculada a una sección y obtiene su inscripción anual.
+description: Coordinar la creación de cuenta, el perfil inicial, la inscripción anual y la aprobación de membresía.
 surface: cross-surface
 documentType: process
 module: alta-y-membresia
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-21
 ---
 
-La persona completa su cuenta, queda vinculada a una sección y obtiene su inscripción anual.
+Este proceso comienza en la app, continúa en la sección que revisa la solicitud y termina cuando la membresía queda activa.
 
 ## Resultado esperado
 
-La persona completa su cuenta, queda vinculada a una sección y obtiene su inscripción anual.
+La persona conserva una sola cuenta, completa su perfil, recibe la inscripción anual correspondiente y entra a la sección correcta con una membresía aprobada.
+
+## No confundas cuenta y membresía
+
+SACDIA maneja registros distintos:
+
+- **Cuenta:** identidad con correo y contraseña que permite autenticarse.
+- **Post-registro:** foto, datos personales y selección territorial.
+- **Inscripción anual:** vínculo de la persona con una clase progresiva durante el año eclesiástico.
+- **Membresía:** asignación de miembro dentro de una sección, inicialmente `pending`.
+
+Una persona puede iniciar sesión y tener inscripción anual mientras su membresía sigue pendiente. En ese estado ve el tablero restringido, pero no las funciones operativas del club.
 
 ## Participantes
 
-- Miembro
-- Dirección o secretaría de club
-- Personal administrativo cuando existe una excepción
+- Persona solicitante.
+- Dirección, subdirección o secretaría de la sección cuando cuenta con los permisos efectivos para revisar desde la app.
+- Personal administrativo o territorial admitido en el panel y con alcance sobre la sección.
+- SACDIA, que deriva clase, controla estados y vence pendientes.
 
-## Antes de comenzar
+## Matriz de responsabilidades
 
-- Correo accesible.
-- Club y sección correctos identificados.
+| Etapa | Persona solicitante | Revisor de la sección | Sistema |
+|---|---|---|---|
+| Cuenta | Captura datos reales y conserva el correo. | No crea otra cuenta por la persona. | Crea identidad y sesión. |
+| Perfil inicial | Carga foto, datos, contactos y selección correcta. | Orienta sin pedir contraseñas ni datos médicos por canales externos. | Valida los tres pasos. |
+| Inscripción anual | Revisa la clase mostrada. | Corrige excepciones por el proceso autorizado. | Deriva clase por edad/tipo y crea o reactiva el registro anual. |
+| Membresía | Espera y conserva la misma cuenta; cancela o vuelve a solicitar solo si la app muestra la acción. | Aprueba o rechaza con `club_members:approve` en su alcance. | Crea la asignación `pending`, notifica y actualiza permisos. |
 
 ## Flujo completo
 
-1. La persona se registra e inicia sesión.
-2. Completa foto, datos personales, salud y selección de club/sección.
-3. El sistema deriva la clase y crea el enrollment anual.
-4. Si se genera una solicitud, dirección o administración revisa la membresía.
-5. La persona vuelve a entrar y confirma su contexto activo.
+1. La persona crea la cuenta y completa los tres pasos en la app.
+2. SACDIA deriva la clase y crea o reactiva la **inscripción anual**.
+3. En la misma operación crea la asignación de miembro como `pending`, con vencimiento inicial de 8 días.
+4. SACDIA notifica a los cargos revisores configurados de la sección.
+5. El revisor elige el canal permitido por su cargo: app para cargos de club o panel para roles administrativos y territoriales.
+6. En el panel, abre **Solicitudes → Membresía** y confirma el selector **Club · Tipo de sección**.
+7. Revisa persona, correo, cargo, fecha de solicitud y vencimiento.
+8. Con `club_members:approve`, aprueba o rechaza una sola vez.
+9. La solicitud desaparece de la cola y el contexto de autorización de la persona se invalida.
+10. La persona refresca o vuelve a entrar en la app para recibir el estado nuevo.
+
+La notificación puede llegar a dirección, subdirección, secretaría o secretaría-tesorería, pero el permiso efectivo y el alcance de sección son la autorización final.
+
+## Canal de revisión según el cargo
+
+- **Cargos de club:** revisan desde **Miembros → Solicitudes** en la app cuando la acción está disponible. El control visual móvil usa `club_roles:assign` o `club_roles:revoke`, pero el backend exige `club_members:approve` en la sección. Dirección recibe ambos permisos en la configuración inicial; subdirección, secretaría y secretaría-tesorería pueden tener autorización backend, pero sus botones quedan ocultos por el control visual actual.
+- **Roles administrativos o territoriales:** utilizan la ruta del panel descrita en esta guía. Además de un rol admitido en el panel, necesitan `club_members:approve` en el alcance correspondiente.
+
+Los canales no son intercambiables. Los cargos de club no obtienen acceso al panel solo por su cargo. Si una persona autorizada por backend no ve los botones en la app, debe reportar la inconsistencia de acceso; no debe intentar resolverla entrando al panel.
+
+## Estados de la solicitud
+
+La ruta esperada es `pending` → `active`.
+
+| Estado | Quién lo produce | Qué debe ocurrir después |
+|---|---|---|
+| `pending` | SACDIA al finalizar el paso 3. | La sección revisa antes del vencimiento. |
+| `active` | Revisor autorizado. | Se habilitan superficies según cargo y permisos. |
+| `rejected` | Revisor autorizado. | La persona corrige y vuelve a solicitar si la app muestra la acción; de lo contrario, pide asistencia. |
+| `cancelled` | Persona solicitante, cuando la acción está visible. | Se reabre la selección de club y sección. |
+| `expired` | Proceso automático. | La persona vuelve a solicitar si la app muestra la acción; de lo contrario, pide asistencia. |
+
+Al crear la solicitud, `expires_at` queda fijado en 8 días. El proceso automático se ejecuta cada hora y, por separado, compara `created_at` con `membership.pending_timeout_days`, cuyo valor predeterminado también es 8. Si la configuración cambia, la fecha visible y el vencimiento automático pueden divergir porque el proceso no consulta `expires_at`.
+
+## Corregir sin duplicar
+
+- Club o sección equivocados: la persona usa **Cancelar solicitud** si la app muestra la acción y repite solo el paso 3.
+- Rechazo o vencimiento: comunica la causa y pide usar **Volver a solicitar** si la acción está visible.
+- Error de datos personales: corrige el perfil por el canal autorizado.
+- Decisión concurrente: actualiza la bandeja; no envíes una segunda operación.
+
+La autocorrección no siempre aparece: una cuenta nueva sin asignación activa puede recibir un tablero restringido que solo enlaza al perfil. Aunque backend y componente soportan cancelar o volver a solicitar, si falta el botón debes orientar a conservar la cuenta y escalar la corrección por el canal autorizado.
+
+**No crees otra cuenta** ni otra asignación para compensar una solicitud incorrecta. Conserva la identidad y corrige el estado por el flujo correspondiente.
 
 ## Cómo utilizar esta guía
 
-Comienza en el panel en la etapa de revisión o configuración que corresponda; la captura del usuario ocurre en la aplicación.
+Comienza en el panel cuando la solicitud ya aparece en `pending` y el revisor pertenece al canal administrativo o territorial. La captura de la persona ocurre en la app y no debe repetirse desde administración como trámite normal. Los cargos exclusivos de club continúan desde **Miembros → Solicitudes** en la app.
 
 ## Manuales relacionados en este portal
 
-- [Solicitudes de membresía, cargos y traslados](/clubes/solicitudes/)
+- [Solicitudes de membresía](/clubes/solicitudes-membresia/)
 - [Administración de usuarios](/clubes/usuarios/)
 - [Inscripciones anuales](/clubes/inscripciones/)
+- [Solicitudes de cargos y traslados](/clubes/solicitudes/)
 
 ## Cómo verificarlo
 
-El tablero abre con club, sección y clase anual correctos.
+1. La fila deja la bandeja pendiente de la sección.
+2. Una actualización no vuelve a mostrarla.
+3. La comprobación visual confiable es `active`: después de aprobar, la persona refresca o vuelve a entrar y recibe el contexto autorizado.
+4. Una aprobación habilita únicamente los permisos del cargo en la sección correcta.
+5. La inscripción anual existente no se duplica.
+
+Para `rejected` o `expired`, confirma primero el dato actualizado en el servicio. Una cuenta nueva puede quedar sin banner ni acción visible en la app; en ese caso no prometas una comprobación móvil y orienta al canal de soporte documentado.
 
 ## Errores frecuentes
 
-- **La siguiente etapa no aparece:** actualiza el estado antes de repetir y confirma que la etapa anterior terminó.
-- **La persona revisora no encuentra el registro:** verifica territorio, periodo, club y sección.
-- **Se rechazó la operación:** corrige sobre el mismo registro; no crees otro salvo que el sistema indique que el anterior quedó cancelado.
-- **El estado difiere entre superficies:** conserva folio o identificador visible y repórtalo sin reenviar la acción.
+| Problema | Recuperación segura |
+|---|---|
+| No aparece la solicitud | Confirma la sección y actualiza; la bandeja solo muestra `pending` activos. |
+| Falta la acción | La cuenta no tiene `club_members:approve` en ese alcance. |
+| La acción devuelve conflicto | Otra persona o el vencimiento automático ya resolvió la solicitud. |
+| La app conserva el estado anterior | Pide refrescar o volver a iniciar sesión; no repitas la decisión. |
+| La clase no corresponde | Revisa nacimiento, sección y periodo; no crees otra inscripción. |
 
 ## Fuente de verificación
 
-Proceso contrastado el 2026-08-20 con los módulos involucrados y la documentación canónica de SACDIA.
+Proceso contrastado el 2026-08-21 con autenticación, post-registro, inscripción anual, contexto de autorización, notificaciones y `MembershipRequestsService`.

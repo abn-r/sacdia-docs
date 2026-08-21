@@ -1,72 +1,136 @@
 ---
 title: Completar el perfil inicial
-description: Completar foto, datos personales, salud y selección de club antes de utilizar las funciones operativas.
+description: Completar los tres pasos que preparan la cuenta y crean la solicitud de membresía y la inscripción anual.
 surface: app
 documentType: screen
 module: post_registration
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-21
 ---
 
-Completar foto, datos personales, salud y selección de club antes de utilizar las funciones operativas.
+El post-registro aparece después de crear una cuenta o al iniciar sesión con un perfil incompleto. La app retoma automáticamente el primer paso pendiente.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás completar foto, datos personales, salud y selección de club antes de utilizar las funciones operativas.
+Tendrás una foto, datos personales suficientes, al menos un contacto de emergencia y una solicitud de membresía vinculada al club y sección correctos.
 
 ## Quién puede utilizarlo
 
-Usuarios registrados cuyo perfil todavía no está completo.
-
-## Pantallas incluidas
-
-- Foto
-- Datos personales
-- Salud y contactos
-- Representante legal
-- Selección de club y sección
+Usuarios autenticados cuyo post-registro todavía no está completo. Cada persona completa su propia información; un cargo administrativo no debe reemplazar este recorrido salvo una corrección autorizada.
 
 ## Antes de comenzar
 
-- Inicia sesión y confirma el club o sección activos.
-- Mantén conexión estable para acciones que guardan o envían información.
-- Si una acción no aparece, revisa primero el cargo y el contexto.
+- Ten disponible una foto clara o permiso para usar la cámara.
+- Confirma fecha de nacimiento, estado de bautismo y datos de un contacto de emergencia.
+- Si eres menor de 18 años, prepara la información del representante legal.
+- Identifica país, unión, campo local y club antes de elegir la sección.
 
-## Tareas principales
+## Paso 1: foto
 
-- Subir una foto de perfil.
-- Capturar información personal y de salud.
-- Registrar contactos y representante cuando corresponda.
-- Seleccionar ubicación, club y sección.
-- Confirmar la inscripción anual derivada.
+1. Elige **Tomar foto** o **Seleccionar de galería**.
+2. Ajusta el recorte cuadrado y confirma.
+3. Espera a que termine la carga.
+4. Pulsa **Siguiente** cuando el botón quede habilitado.
 
-## Flujo recomendado
+La interfaz vigente exige una foto para completar este paso. No cierres la pantalla mientras se está cargando; si falla, vuelve a seleccionarla y espera la confirmación.
 
-1. Completa la foto y continúa.
-2. Revisa nombre, fecha de nacimiento, género, bautismo y tipo de sangre.
-3. Declara alergias, enfermedades y medicamentos, incluso cuando no tienes ninguno.
-4. Agrega contactos de emergencia y representante legal si aplica.
-5. Selecciona país, unión, campo local, club y sección; confirma el envío.
+## Paso 2: datos personales y contactos
+
+Completa primero los datos que bloquean el avance:
+
+- género;
+- fecha de nacimiento;
+- bautismo en **Sí** o **No**;
+- fecha de bautismo cuando elegiste **Sí**;
+- por lo menos un contacto de emergencia activo;
+- representante legal cuando el sistema determina que eres menor de 18 años.
+
+El tipo de sangre se puede registrar en el mismo paso, pero no bloquea el botón. La app permite hasta cinco contactos de emergencia; evita registrar a la misma persona varias veces.
+
+## Declarar salud sin ambigüedad
+
+Revisa por separado **Alergias**, **Enfermedades** y **Medicamentos**:
+
+1. Si tienes registros, abre cada catálogo y selecciona los correspondientes.
+2. Si no tienes ninguno, marca explícitamente la opción **No tengo** de esa categoría.
+3. No dejes una categoría vacía por olvido: una lista vacía no distingue por sí sola entre “sin información” y “sin padecimientos”.
+4. Antes de continuar, vuelve a la pantalla principal y confirma los contadores.
+
+Estas declaraciones ayudan a la operación segura del club. La validación técnica del paso se concentra en los datos personales, el contacto y el representante, por lo que debes revisar salud aunque el botón ya esté habilitado.
+
+## Paso 3: club, sección y clase
+
+1. Selecciona **País**.
+2. Selecciona la **Unión** disponible para ese país.
+3. Selecciona el **Campo local**.
+4. Elige el **Club** correcto.
+5. Revisa la **Sección** recomendada según tu edad.
+6. Confirma la clase progresiva mostrada y pulsa **Finalizar**.
+
+Cuando solo hay una opción, la app puede seleccionarla automáticamente. La sección, el tipo de club y la clase se derivan de la fecha de nacimiento y de los catálogos; el backend vuelve a calcular la clase al guardar, por lo que no debes intentar forzar otra desde la interfaz.
+
+Al finalizar ocurren dos cosas distintas dentro de la misma operación:
+
+- se crea o reactiva la **inscripción anual** de la clase correspondiente;
+- se crea la asignación de miembro en estado `pending` para que la sección la revise.
+
+La solicitud recibe una fecha de vencimiento de **8 días**. Completar el perfil no equivale todavía a tener una membresía activa.
+
+## Mientras la solicitud está pendiente
+
+La app abre el tablero y muestra el estado de espera. Mientras la asignación siga `pending`:
+
+- puedes consultar tu perfil;
+- los accesos operativos del club permanecen ocultos;
+- no debes crear otra cuenta ni repetir el post-registro.
+
+Cuando la sección aprueba, el estado cambia a `active` y las funciones se habilitan según el cargo y los permisos de esa asignación.
+
+## Cancelar y elegir otra sección
+
+Si el aviso muestra **Cancelar solicitud** y elegiste un club o sección incorrectos:
+
+1. En el aviso de solicitud pendiente, pulsa **Cancelar solicitud**.
+2. Confirma la cancelación.
+3. La app reabre el paso de selección de club.
+4. Elige la sección correcta y vuelve a finalizar.
+
+La cancelación cambia la solicitud anterior a `cancelled`, la desactiva y conserva la cuenta, la foto y los datos personales. Si aparece **Volver a solicitar** para un estado `rejected` o `expired`, úsalo para regresar al mismo paso; tampoco necesitas otra cuenta.
+
+## Limitación actual de autocorrección
+
+SACDIA ya cuenta con servicios y componentes para cancelar o volver a solicitar. Sin embargo, una cuenta nueva sin membresía activa puede abrir un tablero restringido que solo ofrece ir al perfil. En ese recorrido los botones **Cancelar solicitud**, **Volver a solicitar**, la carga de certificados y la fecha de vencimiento pueden no aparecer.
+
+Si la acción necesaria no está visible:
+
+1. No crees otra cuenta ni repitas el post-registro.
+2. Conserva el correo con el que te registraste.
+3. Informa el club y la sección que seleccionaste a una persona autorizada del club o a soporte.
+4. Espera la corrección del estado antes de volver a intentar.
 
 ## Cómo verificarlo
 
-El sistema marca los tres pasos completos, crea la inscripción anual aplicable y abre el tablero.
+Comprueba que el tablero muestre el estado pendiente y, cuando estén visibles, el club y la sección solicitados. Después de la aprobación, el estado de espera desaparece y se muestran solo las funciones permitidas por el cargo activo.
 
 ## Errores frecuentes
 
 | Problema | Qué hacer |
 |---|---|
-| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
-| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
-| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
-| Aparece otro club o sección | Vuelve al tablero y cambia o confirma el contexto activo antes de guardar información. |
+| **Siguiente** no se habilita en la foto | Espera a que termine la carga o selecciona otra imagen. |
+| No puedes completar los datos personales | Confirma género, nacimiento, bautismo, un contacto y representante legal si corresponde. |
+| No aparece una sección | Revisa país, unión, campo local y club; las opciones dependen de la selección anterior. |
+| La clase parece incorrecta | Verifica la fecha de nacimiento y la sección. La clase se deriva por edad y tipo de club. |
+| El tablero dice solicitud pendiente | El post-registro terminó; falta la decisión de una persona con permiso en esa sección. |
+| Elegiste la sección equivocada | Usa **Cancelar solicitud** si aparece; de lo contrario, pide la corrección a una persona autorizada del club o a soporte. No crees otra cuenta. |
 
 ## Procesos relacionados
 
-- [Abrir la guía del proceso](/procesos/alta-y-membresia/)
+- [Alta de cuenta y membresía](/procesos/alta-y-membresia/)
+- [Acceso, registro y recuperación](/pantallas/acceso-y-registro/)
+- [Tablero principal](/pantallas/tablero/)
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las vistas, rutas y controles efectivos del módulo `post_registration` de la aplicación.
+Manual contrastado el 2026-08-21 con el shell de post-registro, sus providers, el servicio `PostRegistrationService`, la bandeja de estado de membresía y la autorización efectiva de las superficies operativas.

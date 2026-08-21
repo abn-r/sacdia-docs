@@ -115,7 +115,7 @@ admin,reports,/dashboard/reports,/investiduras/informes/,/procesos/informe-mensu
 admin,reports,/dashboard/reports/[reportId],/investiduras/informes/,/procesos/informe-mensual/,covered,documentation
 admin,reports,/dashboard/reports/supervision,/investiduras/informes/,/procesos/informe-mensual/,covered,documentation
 admin,requests,/dashboard/requests/assignments,/clubes/solicitudes/,/procesos/alta-y-membresia/|/procesos/gestion-club-seccion/|/procesos/traslado-miembro/,covered,documentation
-admin,requests,/dashboard/requests/membership,/clubes/solicitudes/,/procesos/alta-y-membresia/|/procesos/gestion-club-seccion/|/procesos/traslado-miembro/,covered,documentation
+admin,membership-requests,/dashboard/requests/membership,/clubes/solicitudes-membresia/,/procesos/alta-y-membresia/|/procesos/gestion-club-seccion/,covered,documentation
 admin,requests,/dashboard/requests/transfers,/clubes/solicitudes/,/procesos/alta-y-membresia/|/procesos/gestion-club-seccion/|/procesos/traslado-miembro/,covered,documentation
 admin,resources,/dashboard/resources,/materiales/recursos/,/procesos/comunicacion-recursos/,covered,documentation
 admin,resources,/dashboard/resources/categories,/materiales/recursos/,/procesos/comunicacion-recursos/,covered,documentation

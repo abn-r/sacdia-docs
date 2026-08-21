@@ -1,69 +1,105 @@
 ---
 title: Acceso, registro y recuperación
-description: Crear una cuenta, iniciar sesión y recuperar el acceso con correo electrónico.
+description: Elegir entre crear una cuenta, iniciar sesión o recuperar la contraseña con el acceso visible de la app.
 surface: app
 documentType: screen
 module: auth
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-21
 ---
 
-Crear una cuenta, iniciar sesión y recuperar el acceso con correo electrónico.
+Utiliza esta guía cuando abras SACDIA sin una sesión activa.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás crear una cuenta, iniciar sesión y recuperar el acceso con correo electrónico.
+Podrás entrar con una cuenta existente, crear una nueva o solicitar la recuperación de la contraseña sin duplicar usuarios.
 
 ## Quién puede utilizarlo
 
-Personas sin sesión y usuarios registrados. Google y Apple no deben presentarse como disponibles mientras la app los marque como no operativos.
+- Personas que todavía no tienen cuenta.
+- Usuarios registrados que necesitan iniciar sesión.
+- Usuarios que olvidaron su contraseña.
+
+La pantalla vigente ofrece acceso con **correo y contraseña**. Aunque el sistema tiene infraestructura para Google y Apple, esos botones no aparecen en el inicio de sesión actual; no los presentes como una opción disponible.
 
 ## Pantallas incluidas
 
-- Inicio de sesión
-- Registro
-- Recuperar contraseña
-- Pantalla de carga
+- Inicio de sesión.
+- Registro.
+- Recuperar contraseña.
+- Pantalla de carga que decide el siguiente destino.
 
-## Antes de comenzar
+## Elegir el acceso correcto
 
-- Inicia sesión y confirma el club o sección activos.
-- Mantén conexión estable para acciones que guardan o envían información.
-- Si una acción no aparece, revisa primero el cargo y el contexto.
+| Situación | Acción correcta |
+|---|---|
+| Ya tienes una cuenta | Escribe el mismo correo con el que te registraste y tu contraseña. |
+| Nunca has utilizado SACDIA | Pulsa **Regístrate** y crea una sola cuenta. |
+| Olvidaste la contraseña | Pulsa **¿Olvidaste tu contraseña?**; no abras otra cuenta. |
+| Te registraste pero no terminaste el perfil | Inicia sesión normalmente. La app retomará el post-registro pendiente. |
+| Tu membresía fue rechazada o venció | Entra con la cuenta existente. Si la app no muestra **Volver a solicitar**, pide apoyo a una persona autorizada del club o a soporte; no abras otra cuenta. |
 
-## Tareas principales
+## Crear una cuenta
 
-- Iniciar sesión con correo y contraseña.
-- Crear una cuenta nueva.
-- Solicitar el correo de recuperación.
-- Cerrar sesión desde Inicio o Perfil.
+1. Desde **Iniciar sesión**, pulsa **Regístrate**.
+2. Captura nombre, apellido paterno y apellido materno.
+3. Escribe un correo al que tengas acceso. Será tu identificador para entrar y recuperar la contraseña.
+4. Crea una contraseña de al menos ocho caracteres con mayúscula, minúscula, número y carácter especial.
+5. Repite exactamente la contraseña.
+6. Pulsa **Crear cuenta** una sola vez y espera la confirmación.
 
-## Flujo recomendado
+El botón se habilita cuando todos los campos están completos, el correo tiene formato válido y ambas contraseñas coinciden. Después del registro, la sesión queda iniciada y la app dirige al perfil inicial de tres pasos.
 
-1. Escribe el correo y la contraseña en **Iniciar sesión**.
-2. Pulsa el botón de acceso una sola vez y espera la respuesta.
-3. Si es una cuenta nueva, completa el registro y después el post-registro.
-4. Si olvidaste la contraseña, abre **Recuperar contraseña** y revisa tu correo.
+## Iniciar sesión
+
+1. Escribe tu correo completo y revisa que no tenga espacios.
+2. Captura la contraseña respetando mayúsculas y minúsculas.
+3. Pulsa **Iniciar sesión** y espera el resultado antes de volver a intentarlo.
+
+Después de tres intentos fallidos consecutivos, la pantalla bloquea temporalmente el botón durante **30 segundos**. No uses ese tiempo para crear otra cuenta: revisa el correo o inicia la recuperación.
+
+## Recuperar la contraseña
+
+1. Pulsa **¿Olvidaste tu contraseña?**.
+2. Escribe el correo registrado.
+3. Pulsa **Enviar instrucciones**.
+4. Cuando aparezca la confirmación, revisa la bandeja de entrada y correo no deseado.
+5. Abre el enlace recibido y define la nueva contraseña.
+6. Regresa a la app e inicia sesión con la contraseña nueva.
+
+Si no recibes el mensaje, confirma primero que escribiste el mismo correo de la cuenta. Repetir la solicitud no corrige un correo distinto.
+
+## Después de autenticarte
+
+La pantalla de carga revisa el estado del perfil:
+
+- si el post-registro está incompleto, abre **Completar perfil** en el paso pendiente;
+- si ya está completo, abre el tablero;
+- si la membresía sigue `pending`, el tablero muestra el estado, pero oculta las superficies operativas del club hasta que la solicitud quede activa.
+
+Tener una sesión válida no significa que la membresía de club ya fue aprobada. Son estados diferentes.
 
 ## Cómo verificarlo
 
-La app abre el post-registro si el perfil está incompleto o el tablero si la cuenta ya está lista.
+La app deja la pantalla de acceso y abre el post-registro o el tablero correspondiente a la misma cuenta.
 
 ## Errores frecuentes
 
 | Problema | Qué hacer |
 |---|---|
-| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
-| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
-| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
-| Aparece otro club o sección | Vuelve al tablero y cambia o confirma el contexto activo antes de guardar información. |
+| El correo ya está registrado | Regresa a **Iniciar sesión** o recupera la contraseña. No crees otra cuenta. |
+| Las contraseñas no coinciden | Corrige ambos campos antes de enviar. |
+| El botón quedó bloqueado | Espera los 30 segundos y verifica las credenciales antes de reintentar. |
+| No llega el correo de recuperación | Revisa correo no deseado y confirma la dirección. Si persiste, repórtalo sin compartir tu contraseña. |
+| La app abre el perfil inicial | La cuenta es válida, pero todavía falta completar el post-registro. |
 
 ## Procesos relacionados
 
-- [Abrir la guía del proceso](/procesos/alta-y-membresia/)
+- [Alta de cuenta y membresía](/procesos/alta-y-membresia/)
+- [Completar el perfil inicial](/pantallas/completar-perfil/)
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las vistas, rutas y controles efectivos del módulo `auth` de la aplicación.
+Manual contrastado el 2026-08-21 con `login_view.dart`, `register_view.dart`, `forgot_password_view.dart`, el router móvil y los endpoints efectivos de autenticación.

@@ -1,0 +1,126 @@
+---
+title: Solicitudes de membresía
+description: Revisar la cola pendiente de una sección y aprobar o rechazar cada solicitud con el permiso efectivo.
+surface: admin
+documentType: screen
+module: membership-requests
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-21
+---
+
+import GuideScreenshot from '@sacdia/docs-ui/components/GuideScreenshot';
+
+Esta bandeja corresponde únicamente a las solicitudes de ingreso como miembro. Las solicitudes de cargos y los traslados siguen recorridos separados.
+
+## Resultado esperado
+
+Podrás revisar la sección correcta, decidir una solicitud pendiente y confirmar que desapareció de la cola sin duplicar asignaciones.
+
+## Acceso requerido
+
+- Sesión válida y un rol admitido en el panel administrativo.
+- Permiso `club_members:approve` dentro de la sección que vas a revisar.
+
+Los cargos de club no obtienen acceso al panel solo por su cargo: deben revisar desde **Miembros → Solicitudes** en la app cuando esa superficie muestre la acción. El backend valida el permiso y el alcance de cada decisión. Abrir la ruta no concede acceso a secciones fuera del cargo activo.
+
+## Ruta incluida
+
+`/dashboard/requests/membership`
+
+## Reconoce la pantalla
+
+<GuideScreenshot
+  src="/media/guides/membresia/solicitudes-membresia.png"
+  alt="Panel de Solicitudes de Membresía con selector de sección, contador de pendientes y botón Actualizar"
+  caption="Confirma la sección antes de decidir; la bandeja contiene solo solicitudes en estado pending y con la asignación activa dentro del contexto elegido."
+  kind="desktop"
+  width={1120}
+  height={406}
+/>
+
+## Seleccionar la sección
+
+1. Abre **Solicitudes → Membresía**.
+2. Revisa el selector **Sección del club** antes de utilizar la tabla.
+3. El panel selecciona inicialmente la primera sección disponible; no supongas que es la que vas a operar.
+4. Elige la opción identificada por **Club · Tipo de sección**.
+5. Espera a que el contador y la tabla terminen de actualizarse.
+
+Si aparece un error de permisos, confirma tu cargo y el contexto. No intentes resolverlo cambiando manualmente el identificador de la URL.
+
+## Revisar antes de decidir
+
+La cola muestra únicamente asignaciones en estado `pending` y con la bandera `active: true`, ordenadas desde la solicitud más antigua. Aquí `active` describe la vigencia del registro, no el estado aprobado de la membresía. Antes de actuar, verifica:
+
+- nombre y correo de la persona;
+- cargo solicitado, normalmente miembro;
+- fecha en que se creó la solicitud;
+- fecha y hora de vencimiento;
+- club y sección seleccionados en el filtro.
+
+Un icono de reloj resalta las solicitudes que vencen en menos de **48 horas**. Priorízalas, pero no apruebes sin confirmar la identidad y la sección.
+
+## Aprobar
+
+1. Revisa toda la fila.
+2. Pulsa el icono de aprobación una sola vez.
+3. Espera el mensaje de confirmación y la actualización automática de la tabla.
+4. Confirma que la persona ya no aparece en pendientes.
+
+La aprobación no abre un diálogo de confirmación: el clic envía la decisión inmediatamente. El estado cambia a `active`, se elimina la fecha de vencimiento y se invalida el contexto de autorización para que la app reciba los permisos del cargo.
+
+## Rechazar
+
+1. Pulsa el icono de rechazo.
+2. Revisa nuevamente el nombre mostrado en el diálogo.
+3. Escribe una razón clara cuando ayude a la persona a corregir la solicitud. El **motivo es opcional** y admite hasta 500 caracteres.
+4. Pulsa **Rechazar** y espera la confirmación.
+5. Comprueba que la fila desapareció de la cola.
+
+El estado cambia a `rejected` y la app puede mostrar la razón capturada. No incluyas datos médicos, contraseñas ni información que no sea necesaria para corregir el ingreso.
+
+## Estados y vencimiento
+
+| Estado | Significado | Siguiente acción |
+|---|---|---|
+| `pending` | La persona terminó el post-registro y espera decisión. | Aprobar o rechazar dentro del plazo. |
+| `active` | La sección aprobó la membresía. | La persona ya puede operar según su cargo. |
+| `rejected` | La solicitud fue rechazada. | La persona corrige y vuelve a solicitar si la app muestra la acción; de lo contrario, pide asistencia. |
+| `cancelled` | La persona canceló su propia solicitud. | Selecciona otra sección cuando la app reabra el paso. |
+| `expired` | El plazo terminó sin decisión. | La persona vuelve a solicitar si la app muestra la acción; de lo contrario, pide asistencia. |
+
+Al crear la solicitud, SACDIA fija `expires_at` en **8 días** y la tabla utiliza esa fecha para mostrar el vencimiento y la prioridad de 48 horas. Por separado, el proceso automático se ejecuta cada hora y vence solicitudes al comparar `created_at` con `membership.pending_timeout_days`, cuyo valor predeterminado también es 8.
+
+## Limitación del plazo
+
+Si `membership.pending_timeout_days` se configura con un valor distinto de 8, la fecha visible y el vencimiento automático pueden divergir: el proceso no consulta `expires_at`. No prometas la fecha mostrada como garantía exacta del cierre hasta que ambos cálculos usen la misma fuente.
+
+## Limitación de auditoría
+
+La asignación guarda el estado, el motivo de rechazo y actualiza `modified_at` al decidir. Esa marca conserva la hora de la última modificación, pero no demuestra por sí sola qué operación ocurrió ni quién la realizó: el modelo no persiste al actor ni campos semánticos `approved_at` o `rejected_at`. No uses esta bandeja como única evidencia de autoría; si el procedimiento institucional exige trazabilidad nominal, registra el respaldo en el canal autorizado hasta que existan esos campos en SACDIA.
+
+## Cómo verificarlo
+
+Pulsa **Actualizar** y confirma que la solicitud ya no aparece en la sección. Después de aprobar, la persona debe refrescar o volver a entrar y comprobar que la membresía quedó `active`. En cambio, un rechazo o vencimiento puede no mostrar un aviso ni las acciones de corrección en una cuenta nueva; si ocurre, conserva la cuenta y utiliza el canal de soporte documentado.
+
+## Errores frecuentes
+
+| Problema | Qué hacer |
+|---|---|
+| La persona no aparece | Confirma la sección; la bandeja no mezcla clubes ni muestra estados finalizados. |
+| Aparece acceso denegado | Falta `club_members:approve` o la sección está fuera de tu alcance. |
+| La solicitud desapareció antes de decidir | Pudo ser cancelada o vencer. Actualiza antes de repetir cualquier acción. |
+| La acción devuelve conflicto | Otra persona o el proceso automático ya cambió el estado. Actualiza la lista. |
+| Aprobaste la fila equivocada | No intentes compensarlo creando otra asignación; repórtalo con el identificador de la persona y la sección. |
+
+## Procesos relacionados
+
+- [Alta de cuenta y membresía](/procesos/alta-y-membresia/)
+- [Gestión de club y sección](/procesos/gestion-club-seccion/)
+- [Solicitudes de cargos y traslados](/clubes/solicitudes/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-21 con la ruta administrativa, `MembershipRequestsClientPage`, `PendingMembersTable`, el diálogo de rechazo y `MembershipRequestsService`.

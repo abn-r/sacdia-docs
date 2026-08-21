@@ -35,7 +35,7 @@ const captures: ManualCapture[] = [
   },
   {
     portal: 'administrativo',
-    manual: 'clubes/solicitudes.mdx',
+    manual: 'clubes/solicitudes-membresia.mdx',
     image: '/media/guides/membresia/solicitudes-membresia.png',
   },
   {
