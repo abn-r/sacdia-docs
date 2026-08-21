@@ -1,74 +1,128 @@
 ---
 title: Certificaciones de Guías Mayores
-description: Consultar catálogo, progreso de inscritos y revisiones de requisitos o cierre.
+description: Consultar inscritos, revisar requisitos y resolver el cierre de una certificación.
 surface: admin
 documentType: screen
 module: certifications
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-21
 ---
 
-Consultar catálogo, progreso de inscritos y revisiones de requisitos o cierre.
+Usa **Certificaciones de Guías Mayores** para consultar el avance de las
+inscripciones y resolver las bandejas de requisitos y cierres.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás consultar catálogo, progreso de inscritos y revisiones de requisitos o cierre.
+Podrás abrir el expediente correcto, revisar su evidencia dentro del alcance
+autorizado y ejecutar únicamente la transición que corresponde a su estado.
 
 ## Acceso requerido
 
-- user_certifications:read
-- certifications:review para revisiones
+- `user_certifications:read`: consultar catálogo, inscritos y progreso.
+- `certifications:review`: abrir bandejas y aprobar o solicitar cambios.
+- `certifications:certify`: ejecutar la certificación final después de aprobar
+  el cierre.
 
-El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso ni reemplaza la autorización del backend.
+Configurar o publicar versiones usa permisos distintos y se documenta en
+**Catálogos**. Ver una guía no concede acceso ni reemplaza la autorización del
+backend.
 
 ## Rutas incluidas
 
 | Ruta | Uso |
 |---|---|
-| `/dashboard/certifications` | Pantalla operativa del módulo. |
-| `/dashboard/certifications/[id]` | Detalle del registro seleccionado. |
-| `/dashboard/certifications/reviews` | Bandeja de revisiones. |
+| `/dashboard/certifications` | Catálogo operativo y acceso a inscripciones. |
+| `/dashboard/certifications/[id]` | Estructura, inscritos y progreso de una certificación. |
+| `/dashboard/certifications/reviews` | Bandejas institucionales de requisitos y cierres. |
 
 ## Antes de comenzar
 
-- Confirma la cuenta, el alcance territorial y el periodo que vas a operar.
-- Busca el registro antes de crearlo para evitar duplicados.
-- Si no ves una acción, no intentes saltar el control mediante una URL directa.
+- Confirma la cuenta y el campo local con el que vas a revisar.
+- Busca por certificación, participante y estado antes de tomar una decisión.
+- Comprueba que no estás revisando tu propio expediente.
+- No uses una URL directa para intentar ampliar el alcance.
 
-## Tareas principales
+## Elegir la bandeja correcta
 
-- Listar certificaciones y abrir su estructura.
-- Consultar módulos, secciones e inscritos.
-- Revisar requisitos enviados.
-- Resolver correcciones y cierre cuando el permiso esté disponible.
+La página de revisiones separa dos decisiones que NO son intercambiables:
 
-## Flujo recomendado
+| Bandeja | Qué recibes | Resultado posible |
+|---|---|---|
+| **Requisitos** | Un requisito enviado con respuestas, componentes y evidencias. | Aprobar o solicitar cambios sobre ese requisito. |
+| **Cierres** | El expediente con requisitos aprobados y comprobante de junta. | Aprobar el comprobante, solicitar cambios o certificar cuando corresponda. |
 
-1. Abre **Certificaciones GM**.
-2. Selecciona catálogo/progreso o revisiones.
-3. Filtra y abre la certificación o solicitud.
-4. Revisa requisito, evidencia e historial.
-5. Guarda la resolución y verifica el nuevo estado.
+Si buscas una respuesta o archivo de un requisito, usa **Requisitos**. Si la
+persona ya terminó el programa y presentó el comprobante, usa **Cierres**.
+
+## Revisar un requisito
+
+1. Abre **Revisiones > Requisitos**.
+2. Mantén el filtro en enviados o selecciona el estado que necesitas consultar.
+3. Abre el registro y confirma participante, certificación, módulo y requisito.
+4. Revisa todas las respuestas y componentes obligatorios.
+5. Pulsa **Ver** para solicitar el acceso temporal a cada evidencia.
+6. Elige una sola resolución:
+   - **Aprobar**, si el requisito está completo;
+   - **Solicitar cambios**, indicando claramente qué debe corregirse.
+7. Actualiza la bandeja y confirma el nuevo estado.
+
+La URL de descarga de una evidencia se genera al abrirla y tiene duración
+limitada. No copies el enlace a otro sistema ni lo uses como archivo permanente.
+
+## Solicitar cambios útiles
+
+El comentario es obligatorio al devolver un requisito o cierre. Escribe una
+instrucción que la persona pueda ejecutar:
+
+- identifica el componente incompleto;
+- explica qué evidencia o respuesta falta;
+- evita comentarios genéricos como “corregir”;
+- no solicites datos personales que el requisito no exige.
+
+La persona debe corregir el mismo requisito. No le pidas crear otra inscripción.
+
+## Resolver el cierre final
+
+1. Abre **Revisiones > Cierres**.
+2. Selecciona un expediente enviado para revisión final.
+3. Confirma que los requisitos obligatorios estén aprobados.
+4. Abre el comprobante de junta y valida que corresponda al expediente.
+5. Elige:
+   - **Aprobar comprobante**, si cumple;
+   - **Solicitar cambios**, si necesita corrección.
+6. Cuando el expediente esté `APPROVED`, pulsa **Certificar** solo si tienes
+   `certifications:certify`.
+7. Confirma la operación y actualiza la fila.
+
+**Aprobar comprobante** y **Certificar** son etapas diferentes. No certifiques un
+expediente que todavía esté enviado para revisión o con cambios solicitados.
 
 ## Cómo verificarlo
 
-La certificación y el requisito muestran la transición correcta sin saltar etapas de revisión.
+- El registro desaparece del filtro de enviados o muestra el nuevo estado.
+- La decisión queda asociada al requisito o cierre que abriste.
+- **Certificar** solo aparece con el permiso correcto y sobre filas aprobadas.
+- El expediente final cambia a certificado, no únicamente a aprobado.
 
 ## Errores frecuentes
 
 | Problema | Qué hacer |
 |---|---|
-| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
-| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
-| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
-| El registro está fuera de alcance | Revisa el filtro territorial y la cuenta activa. El panel limita los datos al alcance autorizado. |
+| No aparece la bandeja | Confirma `certifications:review` y el alcance territorial efectivo. |
+| La evidencia ya no abre | Regresa al detalle y pulsa **Ver** para solicitar una URL nueva. |
+| Solicita un comentario | Describe la corrección concreta; no envíes una devolución vacía. |
+| El registro cambió mientras lo revisabas | Actualiza el detalle y vuelve a evaluar el estado; no repitas la decisión anterior. |
+| No aparece **Certificar** | El cierre debe estar aprobado y tu cuenta necesita `certifications:certify`. |
+| El expediente está fuera de alcance | No cambies la URL ni la cuenta para saltar el control; solicita la asignación correcta. |
 
 ## Procesos relacionados
 
-- [Abrir la guía del proceso](/procesos/formacion-e-investidura/)
+- [Completar formación y solicitar investidura](/procesos/formacion-e-investidura/)
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las rutas, componentes, permisos de navegación y documentación canónica del módulo `certifications`.
+Manual contrastado el 2026-08-21 con las rutas, componentes, permisos y pruebas
+efectivas de las bandejas de requisitos y cierres de `sacdia-admin`, y con el
+contrato canónico de revisión de Certificaciones de Guías Mayores.

@@ -1,73 +1,139 @@
 ---
 title: Especialidades
-description: Explorar especialidades, inscribirse, registrar requisitos y enviar evidencia a revisión.
+description: Elegir una especialidad, completar su trabajo y enviarla a revisión.
 surface: app
 documentType: screen
 module: honors
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-21
 ---
 
-Explorar especialidades, inscribirse, registrar requisitos y enviar evidencia a revisión.
+Usa **Especialidades** para explorar el catálogo aplicable a tu sección,
+inscribirte y completar el trabajo dentro de la app o mediante un formato
+externo.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás explorar especialidades, inscribirse, registrar requisitos y enviar evidencia a revisión.
+Podrás elegir el modo de trabajo correcto, presentar la evidencia exigida y
+continuar sobre la misma inscripción cuando una revisión solicite cambios.
 
 ## Quién puede utilizarlo
 
-Miembros autenticados; supervisión y validación dependen del flujo y del cargo.
+Los miembros autenticados consultan las especialidades disponibles para su
+sección activa. La revisión y aprobación dependen del cargo y del alcance
+institucional de la persona revisora.
 
 ## Pantallas incluidas
 
-- Catálogo
+- Catálogo y categorías
 - Mis especialidades
-- Detalle
-- Requisitos
-- Evidencias
-- Finalización
+- Detalle e inscripción
+- Requisitos dentro de la app
+- Formato y evidencias externas
+- Historial de revisión
 
 ## Antes de comenzar
 
-- Inicia sesión y confirma el club o sección activos.
-- Mantén conexión estable para acciones que guardan o envían información.
-- Si una acción no aparece, revisa primero el cargo y el contexto.
+- Confirma el club y la sección activos; el catálogo se filtra con ese contexto.
+- Revisa si la especialidad ya aparece en **Mis especialidades**.
+- No vuelvas a inscribirte para cambiar de modo o corregir una devolución.
+- Prepara archivos legibles y evita adjuntar información ajena al requisito.
 
-## Tareas principales
+## Ruta rápida
 
-- Filtrar y abrir una especialidad aplicable.
-- Inscribirse y revisar sus requisitos.
-- Cargar evidencia o marcar avance.
-- Enviar a revisión y atender un rechazo.
-- Consultar la insignia obtenida al aprobar.
+1. Abre **Especialidades** y selecciona una tarjeta del catálogo.
+2. Inscríbete si todavía no aparece en tu perfil.
+3. Elige cómo completarás el trabajo y confirma la decisión.
+4. Termina requisitos o adjunta el formato, según el modo elegido.
+5. Envía a revisión y consulta el estado desde **Mis especialidades**.
 
-## Flujo recomendado
+## Elige cómo completar la especialidad
 
-1. Abre **Especialidades** y selecciona una opción del catálogo.
-2. Pulsa la acción de inscripción si todavía no está en tus especialidades.
-3. Abre **Requisitos** y registra el avance solicitado.
-4. Adjunta evidencia y envíala a revisión cuando esté completa.
-5. Consulta el estado hasta que sea aprobada o devuelta con observaciones.
+Una inscripción nueva comienza sin modo decidido. La app debe pedirte elegir
+una de estas rutas antes de permitir el envío:
+
+| Modo | Cuándo usarlo | Trabajo requerido |
+|---|---|---|
+| Dentro de la aplicación (`IN_APP`) | Completarás cada requisito en SACDIA. | Respuestas, avances y evidencia específica en los requisitos obligatorios. |
+| Con formato externo (`EXTERNAL`) | Trabajarás con el formato descargable fuera de SACDIA. | Formato completado y al menos una evidencia general. |
+
+Después de confirmar, detalle, requisitos y evidencias deben conservar el mismo
+modo. Puedes cambiarlo mediante la acción explícita mientras la inscripción
+siga editable; no uses Atrás o una nueva inscripción para simular el cambio.
+
+## Completar dentro de la aplicación
+
+1. Abre **Requisitos** desde el detalle.
+2. Responde o marca el avance solicitado en cada requisito.
+3. Adjunta evidencia cuando el requisito la exija.
+4. Confirma que los requisitos obligatorios y los grupos de elección estén
+   completos.
+5. Envía la especialidad desde el flujo activo.
+
+El backend realiza la comprobación final. Un porcentaje alto no sustituye una
+respuesta obligatoria ni una evidencia requerida.
+
+## Completar con formato externo
+
+1. Abre el flujo de formato y evidencia.
+2. Descarga el material cuando esté disponible.
+3. Completa el formato fuera de SACDIA.
+4. Carga el documento terminado en el espacio indicado.
+5. Agrega al menos una evidencia general y envía a revisión.
+
+El formato completado y las evidencias generales tienen funciones distintas.
+No cargues el mismo archivo repetidamente para cubrir ambos requisitos.
+
+## Estados de revisión
+
+| Estado | Qué significa | Qué puedes hacer |
+|---|---|---|
+| `IN_PROGRESS` | La especialidad está en trabajo. | Editar el modo y completar su contenido. |
+| `PENDING_REVIEW` | Fue enviada a revisión. | Consultar el contenido y esperar la resolución. |
+| `APPROVED` | La revisión institucional terminó. | Consultar el historial y la evidencia aprobada. |
+| `REJECTED` | Se solicitaron ajustes. | Leer la observación, modificar el mismo registro y reenviar. |
+
+Una especialidad pendiente o aprobada bloquea cambios libres de modo y archivos.
+
+## Corregir una devolución
+
+1. Abre la especialidad desde **Mis especialidades**.
+2. Lee la observación completa de la revisión.
+3. Mantén el modo de trabajo o cámbialo mediante la acción explícita si la app
+   todavía lo permite.
+4. Corrige respuestas, formato o evidencias en el mismo registro.
+5. Confirma que exista una modificación posterior al rechazo.
+6. Vuelve a enviar una sola vez.
+
+El sistema puede impedir el reenvío si no detecta cambios nuevos. Esa protección
+evita devolver exactamente el mismo paquete a la persona revisora.
 
 ## Cómo verificarlo
 
-El estado visible usa `IN_PROGRESS`, `PENDING_REVIEW`, `APPROVED` o `REJECTED`; al aprobar aparece la finalización.
+- La especialidad aparece una sola vez en **Mis especialidades**.
+- El modo elegido se conserva al cambiar de pantalla.
+- El estado de revisión coincide en el detalle y el perfil.
+- Una especialidad aprobada muestra historial de lectura en lugar de acciones
+  de edición.
 
 ## Errores frecuentes
 
 | Problema | Qué hacer |
 |---|---|
-| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
-| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
-| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
-| Aparece otro club o sección | Vuelve al tablero y cambia o confirma el contexto activo antes de guardar información. |
+| El catálogo no corresponde a tu sección | Vuelve al tablero y confirma la sección activa antes de inscribirte. |
+| No puedes enviar | Revisa el modo elegido y los requisitos específicos de esa ruta. |
+| La app pide otra vez el modo | Actualiza el detalle. No confirmes una opción distinta hasta verificar cuál quedó guardada. |
+| No permite reenviar después del rechazo | Realiza una corrección real y confirma que la carga o respuesta se guardó. |
+| La especialidad está pendiente | Espera la resolución; no la elimines ni abras otra inscripción. |
 
 ## Procesos relacionados
 
-- [Abrir la guía del proceso](/procesos/formacion-e-investidura/)
+- [Completar formación y solicitar investidura](/procesos/formacion-e-investidura/)
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las vistas, rutas y controles efectivos del módulo `honors` de la aplicación.
+Manual contrastado el 2026-08-21 con el catálogo, selector de modo, requisitos,
+evidencias, historial y estados efectivos del módulo `honors` de `sacdia-app`,
+y con la documentación canónica de Especialidades.

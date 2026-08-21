@@ -1,6 +1,6 @@
 # Informe de verificación de la migración Astro
 
-**Fecha:** 2026-08-20
+**Fecha:** 2026-08-21
 
 **Rama:** `codex/astro-documentation-portals`
 
@@ -18,7 +18,7 @@ Los tres comparten identidad visual, configuración tipada, schema editorial y n
 
 | Validación | Resultado |
 | --- | --- |
-| `pnpm test` | 12 archivos, 46 pruebas aprobadas |
+| `pnpm test` | 13 archivos, 52 pruebas aprobadas |
 | `pnpm check` | 3 portales, 0 errores, 0 warnings y 0 hints |
 | `git diff --check development...HEAD` | Sin errores de whitespace |
 | Schema de contenido | Las 102 entradas actuales del portal técnico sincronizan correctamente |
@@ -69,6 +69,31 @@ materiales** y **Registrar y supervisar finanzas**.
 Esta comprobación valida la presentación y navegación de muestras
 representativas; no sustituye una revisión editorial humana de cada uno de los
 96 archivos de guía.
+
+### Refuerzo editorial de formación e investidura
+
+El bloque de formación se amplió con instrucciones operativas verificadas para:
+
+- aplicación: Clases Progresivas, Especialidades y Certificaciones de Guías
+  Mayores;
+- panel: bandejas de requisitos y cierres de Certificaciones;
+- ambos portales: el proceso transversal de formación e investidura.
+
+Los manuales ahora distinguen las tres máquinas de estado, explican quién
+realiza cada entrega, separan los modos `IN_APP` y `EXTERNAL` de Especialidades,
+documentan el trabajo versionado y el comprobante de cierre de Certificaciones,
+y prohíben crear otra inscripción para corregir una devolución.
+
+La prueba `formation-manuals.test.ts` protege las secciones de decisión,
+responsabilidades, estados y recuperación de errores. El contenido se contrastó
+con el código efectivo de `sacdia-app` y `sacdia-admin`, porque la referencia
+canónica heredada de Certificaciones todavía describe como pendiente una parte
+del flujo móvil que ya existe en el runtime.
+
+Playwright abrió los seis documentos modificados a 1440 × 1000, con ancho de
+documento igual al viewport. Las guías operativa y administrativa de
+Certificaciones también se revisaron a 390 × 844: conservaron ancho `390/390`,
+tablas de 358 px y consola sin errores ni warnings.
 
 ### Capturas reales en manuales prioritarios
 
