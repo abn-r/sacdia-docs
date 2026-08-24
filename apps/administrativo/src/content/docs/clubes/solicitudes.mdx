@@ -1,70 +1,50 @@
 ---
 title: Solicitudes de cargos y traslados
-description: Revisar solicitudes de asignación de cargo y traslado sin mezclarlas con el ingreso de miembros.
+description: Índice de las bandejas administrativas de cargos y traslados, con su estado operativo actual.
 surface: admin
 documentType: screen
 module: requests
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-21
+lastReviewedAt: 2026-08-24
 ---
 
-Utiliza estas bandejas para solicitudes de **cargos** o **traslados**. La membresía inicial tiene su propia pantalla y manual.
+Este índice separa las dos bandejas administrativas relacionadas con cambios de cargo o de contexto. La membresía inicial se documenta en [Solicitudes de membresía](/clubes/solicitudes-membresia/) y no forma parte de estos recorridos.
 
 ## Resultado esperado
 
-Podrás abrir la bandeja correcta, revisar el detalle disponible y registrar una decisión dentro de tu alcance administrativo.
+Identificar qué bandeja corresponde al caso y abrir su manual específico. Este índice no permite operar solicitudes ni confirma que una acción se haya aplicado.
 
-## Acceso requerido
+## Estado de las bandejas
 
-- Sesión válida en el panel administrativo.
-- Cargo y alcance compatibles con la solicitud.
+Las dos bandejas están **no operativas**: sus rutas existen, pero sus clientes no son compatibles con las respuestas y acciones efectivas del backend. No las uses para confirmar un resultado, gestionar una petición ni determinar el alcance de una cuenta.
 
-El backend valida cada consulta y decisión. Si una bandeja devuelve acceso denegado, no intentes saltar el control con una URL directa.
+| Bandeja | Ruta | Estado actual | Manual específico |
+|---|---|---|---|
+| Solicitudes de cargos | `/dashboard/requests/assignments` | No operativa: datos, pestañas y controles incompatibles. | [Ver límites de cargos](/clubes/solicitudes-cargos/) |
+| Solicitudes de traslados | `/dashboard/requests/transfers` | No operativa: falta `sectionId`, y los datos y estados no coinciden. | [Ver límites de traslados](/clubes/solicitudes-traslados/) |
 
-## Rutas incluidas
+## Límites actuales
 
-| Ruta | Uso |
-|---|---|
-| `/dashboard/requests/assignments` | Solicitudes de asignación de cargo. |
-| `/dashboard/requests/transfers` | Solicitudes de traslado entre contextos. |
+No existe una acción administrativa segura en estas rutas. Los detalles concretos de incompatibilidad, evidencia que conservar y escalamiento están en el manual específico de cada bandeja.
 
-Para ingresos iniciales, utiliza [Solicitudes de membresía](/clubes/solicitudes-membresia/).
+## Canal seguro según la necesidad
 
-## Elegir la bandeja correcta
+- Para asignar un cargo efectivo desde Roles o Miembros, sigue [Asignación de cargo de club](/procesos/asignacion-cargo-club/).
+- Para iniciar o dar seguimiento a un cambio de club o sección, consulta [Traslado de miembro](/procesos/traslado-miembro/).
+- Para un ingreso inicial, usa exclusivamente [Solicitudes de membresía](/clubes/solicitudes-membresia/).
 
-- Abre **Cargos** cuando la persona ya pertenece al contexto y solicita una responsabilidad distinta.
-- Abre **Traslados** cuando la solicitud cambia el contexto de origen o destino.
-- No uses ninguna de estas bandejas para aprobar el ingreso inicial como miembro.
-
-## Flujo recomendado
-
-1. Abre la bandeja correspondiente.
-2. Filtra por estado y sección cuando esos controles estén disponibles.
-3. Revisa persona, contexto, cargo u origen/destino antes de decidir.
-4. Registra la aprobación o rechazo una sola vez.
-5. Actualiza la lista y confirma que el estado cambió.
+Una solicitud de cargo, un traslado y una membresía son operaciones diferentes. No sustituyas un flujo por otro ni crees registros para compensar una pantalla que no responde como corresponde.
 
 ## Cómo verificarlo
 
-La solicitud deja la cola pendiente y el cargo o traslado se refleja en el contexto correcto, sin crear una segunda solicitud para compensar la primera.
+Comprueba que el caso se dirige al manual de cargos o al de traslados según corresponda y que el canal indicado no se confunde con membresía inicial. La confirmación de un resultado debe obtenerse solo desde el proceso funcional o del equipo responsable, nunca desde estas bandejas.
 
-## Errores frecuentes
+## Escalamiento
 
-| Problema | Qué hacer |
-|---|---|
-| La solicitud no aparece | Revisa tipo de bandeja, estado y alcance territorial. |
-| El registro está fuera de alcance | Confirma la cuenta y el contexto administrativo activos. |
-| El estado no cambia | Actualiza antes de repetir; otra persona pudo resolver la solicitud. |
-| Abriste una membresía inicial | Vuelve a la bandeja específica de membresía. |
-
-## Procesos relacionados
-
-- [Alta de cuenta y membresía](/procesos/alta-y-membresia/)
-- [Gestión de club y sección](/procesos/gestion-club-seccion/)
-- [Traslado de miembro](/procesos/traslado-miembro/)
+Si el caso depende de una solicitud ya existente, conserva el identificador visible, el club o sección implicados, la fecha aproximada y una captura. Escálalo a soporte o desarrollo sin compartir credenciales ni datos personales innecesarios.
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-21 con las rutas `/dashboard/requests/assignments` y `/dashboard/requests/transfers` y sus clientes API efectivos.
+Índice contrastado el 2026-08-24 con las rutas `/dashboard/requests/assignments` y `/dashboard/requests/transfers`, sus clientes administrativos y sus contratos backend efectivos.

@@ -1,65 +1,54 @@
 ---
-title: Mis cargos y asignaciones
-description: Consultar cargos activos, revocados y el club o sección a los que pertenecen.
+title: Estado de la ruta de asignaciones de cargo
+description: Conocer los límites de la pantalla de asignaciones y usar el proceso funcional para asignar un cargo.
 surface: app
 documentType: screen
 module: role_assignments
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 ---
 
-Consultar cargos activos, revocados y el club o sección a los que pertenecen.
+Esta pantalla está registrada en la aplicación, pero no es una consulta operativa de cargos para usuarios.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás consultar cargos activos, revocados y el club o sección a los que pertenecen.
+Identificar que la ruta no puede usarse para consultar o administrar cargos y continuar por el proceso directo cuando corresponda.
 
-## Quién puede utilizarlo
+## Acceso
 
-Cada usuario consulta sus propias asignaciones.
+La ruta runtime registrada es `/role-assignments`; puede alcanzarse mediante navegación interna o **deep-link**. No tiene entrada visible. No se muestra como una opción utilizable desde Perfil.
 
-## Pantallas incluidas
+## Estado operativo
 
-- Asignaciones de cargo
+`role_assignments` no está operativo como pantalla de cargos. Consume el endpoint de solicitudes globales `GET /requests/assignments`, no un recurso de cargos propios ni de asignaciones efectivas del usuario. Además, su modelo intenta interpretar un UUID como int, por lo que la respuesta no cumple el contrato que espera la vista.
 
-## Antes de comenzar
+No hay Mis cargos que consultar en esta ruta: No promete Mis cargos ni cargos efectivos. Tampoco debe usarse para interpretar altas, revocaciones ni el estado real de una asignación.
 
-- Inicia sesión y confirma el club o sección activos.
-- Mantén conexión estable para acciones que guardan o envían información.
-- Si una acción no aparece, revisa primero el cargo y el contexto.
+## Límites
 
-## Tareas principales
+- La existencia de una ruta o de un deep-link no equivale a una entrada visible ni a una pantalla disponible para la operación diaria.
+- No se deben inferir cargos efectivos a partir de solicitudes globales.
+- No se deben usar los estados de esta vista como estado de dominio del cargo. En backend, una asignación efectiva usa `active` y, al revocarse, queda `ended`.
 
-- Revisar nombre del cargo y sección.
-- Distinguir asignación activa de revocada.
-- Confirmar fechas de asignación o retiro.
+## Alternativa funcional
 
-## Flujo recomendado
-
-1. Abre **Mis cargos** desde Perfil.
-2. Revisa cada tarjeta y su club o sección.
-3. Comprueba la fecha y el estado.
-4. Si detectas un error, comunícate con la dirección de tu sección.
+Las personas responsables autorizadas pueden realizar la asignación directa siguiendo el proceso [Asignación de cargo en club o sección](/procesos/asignacion-cargo-club/). Ese flujo define permisos, alcance y validaciones del cargo.
 
 ## Cómo verificarlo
 
-Cada asignación muestra cargo, club, sección y estado sin mezclar contextos.
+Verifica que Perfil no incluya una entrada para esta pantalla. Si se abre por un deep-link, no la tomes como evidencia de cargos vigentes ni como base para una decisión operativa.
 
-## Errores frecuentes
+## Si algo falla
 
-| Problema | Qué hacer |
-|---|---|
-| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
-| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
-| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
-| Aparece otro club o sección | Vuelve al tablero y cambia o confirma el contexto activo antes de guardar información. |
+- **Se necesita crear o cambiar un cargo:** no intentes resolverlo desde esta ruta; usa el proceso directo o solicita apoyo a una persona responsable autorizada.
+- **La ruta muestra un error o información inconsistente:** conserva el mensaje y repórtalo como incompatibilidad entre la vista y el contrato de solicitudes; no repitas acciones ni extraigas conclusiones sobre cargos.
 
 ## Procesos relacionados
 
-- [Abrir la guía del proceso](/procesos/gestion-club-seccion/)
+- [Asignación de cargo en club o sección](/procesos/asignacion-cargo-club/)
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las vistas, rutas y controles efectivos del módulo `role_assignments` de la aplicación.
+Manual contrastado el 2026-08-24 con la ruta, el cliente `role_assignments` y el contrato efectivo del endpoint de solicitudes de la aplicación.

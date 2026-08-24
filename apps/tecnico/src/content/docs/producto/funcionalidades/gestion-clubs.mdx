@@ -7,7 +7,7 @@ module: producto
 status: published
 owners:
   - "Abner Reyes"
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 generated: false
 ---
 El club es la entidad organizacional raiz del sistema SACDIA. En la estructura de la Iglesia Adventista, cada iglesia local puede tener un club que opera una o mas secciones por tipo: Aventureros (ninos de 6-9 anos), Conquistadores (jovenes de 10-15 anos) y Guias Mayores (16+ anos). El club es la identidad institucional permanente; las secciones son las unidades operativas donde se ejecuta el programa formativo.
@@ -83,15 +83,27 @@ Las unidades (`units`) son subdivisiones informales dentro de una seccion (tipic
 - **Contexto activo**: `users_pr.active_club_assignment_id` persiste el contexto de club activo del usuario, usado por `ClubRolesGuard` para resolver autorizacion
 - **Autorizacion por jerarquia de roles**: Director tiene todos los permisos; subdirector la mayoria; secretary puede gestionar roles y secciones
 
+## Transferencias implementadas
+
+El backend tiene **transferencias implementadas con gaps**. Expone creación, lista, detalle y revisión mediante `POST /requests/transfers`, `GET /requests/transfers`, `GET /requests/transfers/:requestId` y `POST /requests/transfers/:requestId/review`. El ciclo de estados es `pending`, `approved` y `rejected`; no existe cancelación.
+
+- La creación exige que quien solicita tenga una asignación de cargo activa en la sección de origen, valida que el destino sea del mismo tipo de club y bloquea crear otra solicitud de traslado mientras exista cualquier solicitud `pending` de la misma persona.
+- La revisión requiere `requests:review` y valida el alcance sobre la sección destino. Al aprobar, mueve las asignaciones de cargo activas de la sección origen a la destino.
+- **No crea ni cambia membresía, enrollment ni clase.** Puede quedar `approved` con cero asignaciones movidas si ninguna asignación sigue activa al momento de la transacción.
+
+### Clientes y autorizacion pendientes
+
+- **Admin y app**: persiste un mismatch de shape, `sectionId` y comentario. El backend usa estados en minusculas, `transfer_request_id`, `user` y `review_comment`; el cliente admin espera estados en mayusculas, `request_id`, `requester`, envia `section_id` y consume `comment`. La app lee `reviewer_comment` y no implementa la revision. Por ello, el cliente admin de traslados esta roto aunque los endpoints existan.
+- **Solicitudes de cargo**: `POST /requests/assignments` representa una solicitud y no la asignacion directa `POST /clubs/:clubId/sections/:sectionId/roles`. La solicitud exige `requests:review`, pero lista, detalle y revision no aplican alcance de seccion; ese gap de scope debe corregirse antes de exponer una bandeja administrativa confiable.
+
 ## Gaps y pendientes
 
 - **Vinculacion institucional incompleta**: Canon define estados de vinculacion (activo, cerrado, suspendido, pendiente) y tipos (formativa, liderazgo, apoyo) — el runtime solo tiene `club_role_assignments` sin esa granularidad
 - **Sin trayectoria historica**: Canon define preservar transiciones entre secciones — no hay estructura dedicada para historico de secciones
 - **Units sin data layer en app**: El feature de unidades en la app es solo presentacion, sin endpoints propios ni logica de datos
 - **Sin invitaciones**: No hay flujo para invitar miembros a un club/seccion; la vinculacion es manual
-- **Sin transferencias**: No hay proceso para transferir un miembro entre clubes o secciones de forma trazable
 
 ## Prioridad y siguiente accion
 
-- **Prioridad**: Baja — feature completamente funcional en las tres capas
-- **Siguiente accion**: Implementar data layer para units en la app. Considerar agregar estados de vinculacion al modelo de `club_role_assignments` para alinearse con el canon.
+- **Prioridad**: Media — La gestión base de clubs es funcional en las tres capas; las transferencias siguen incompletas en los clientes admin y app.
+- **Siguiente accion**: Alinear los clientes de transferencias con el contrato API y aplicar alcance de sección a las solicitudes de cargo; después, implementar data layer para units en la app y considerar estados de vinculación en `club_role_assignments`.

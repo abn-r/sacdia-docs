@@ -1,0 +1,89 @@
+---
+title: Asignar un cargo de club
+description: Asigna o revoca cargos de una sección por el flujo directo que crea una asignación efectiva.
+surface: cross-surface
+documentType: process
+module: asignacion-cargo-club
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+Este proceso asigna un cargo efectivo a una persona dentro de una sección. No sustituye los flujos de solicitudes.
+
+## Resultado esperado
+
+La persona queda con el cargo, la sección y las fechas correctas en una asignación con estado `active`; al revocarla, la misma asignación queda `ended`.
+
+## Responsabilidades
+
+| Etapa | Responsable | Superficie o contrato | Cambio de responsable |
+|---|---|---|---|
+| Preparar en el panel | Personal autorizado del club | Admin Club → Roles | La persona autorizada confirma por separado que club y sección corresponden antes de guardar. |
+| Crear el cargo efectivo | Backend con `club_roles:assign` | `POST /clubs/:clubId/sections/:sectionId/roles` | El cargo pasa a estar bajo la responsabilidad operativa de la persona asignada en esa sección. |
+| Preparar desde móvil | Persona autorizada en la aplicación | Miembros → editar | La aplicación conserva la sección del contexto y deja que la persona seleccione solo el rol. |
+| Revocar | Personal con `club_roles:revoke` | Panel, sobre asignación existente | El cargo deja de estar activo; la aplicación móvil no expone esta acción. |
+
+## Antes de comenzar
+
+- En el panel, confirma por separado club, sección, persona y rol antes de guardar.
+- Si usas móvil, confirma la sección contextual: **Miembros → editar** permite seleccionar únicamente el rol y envía `start_date` con la fecha actual.
+- Verifica que las fechas de inicio y fin sean válidas cuando operes desde el panel.
+- Confirma que el rol todavía tiene cupo y que no incumple exclusividad.
+- Comprueba que tu autorización cubre el club objetivo; una vista visible no reemplaza `club_roles:assign`.
+- El backend no valida que el `sectionId` pertenezca al `clubId`: el endpoint autoriza el `clubId`, pero no comprueba esa relación. Detén la operación ante cualquier duda y confirma la relación por los datos del club; no intentes forzar combinaciones de URL.
+
+## Flujo completo
+
+El flujo comienza con la verificación de la persona, el contexto y el rol; continúa con la asignación directa y termina al confirmar el estado efectivo o la revocación desde el panel.
+
+## Flujo directo funcional
+
+### Desde Admin Club → Roles
+
+1. Confirma que la persona, el club y la sección corresponden entre sí; el backend no valida que `sectionId` pertenezca al `clubId` autorizado.
+2. Selecciona el rol y registra las fechas aplicables.
+3. Envía la asignación por `POST /clubs/:clubId/sections/:sectionId/roles` con `club_roles:assign`.
+4. El backend valida persona, rol, fechas, cupo y exclusividad antes de crear el registro.
+5. Si la validación termina correctamente, el cargo se crea de inmediato con estado `active`; no queda pendiente de revisión.
+6. Para retirar el cargo desde el panel, usa la revocación autorizada con `club_roles:revoke`. La asignación existente queda `ended` y deja de estar activa.
+
+### Desde la aplicación → Miembros → editar
+
+1. Confirma que la persona está en la sección contextual correcta.
+2. Selecciona únicamente el rol.
+   La aplicación usa la sección contextual y envía `start_date` con la fecha actual; no permite elegir sección ni fechas.
+3. Confirma el resultado efectivo `active`. La aplicación no expone la revocación; utiliza el panel si es necesario retirar el cargo.
+
+## Director de sección
+
+El director tiene un flujo especializado: la primera asignación de director y la sucesión anual no se resuelven como un reemplazo genérico. Ambas rutas exigen un rol global `super-admin`, `admin`, `director-lf` o `assistant-lf`, además de gestión sobre el club; un permiso genérico por sí solo no basta. La asignación inicial solo procede cuando todavía no hay director activo. La sucesión anual cierra el director activo anterior y crea el siguiente director para el año eclesiástico, con `club_roles:assign` y `club_roles:revoke`.
+
+## Solicitudes y asignaciones son cosas distintas
+
+Una solicitud no es una asignación. Esta guía documenta el flujo directo funcional: una solicitud no demuestra que un cargo exista, y una asignación efectiva no depende de prometer revisión de bandejas incompatibles.
+
+## Recuperar un error
+
+- **Persona, sección o rol equivocados:** no intentes compensarlo creando otro cargo. Detén la operación y corrige la asignación efectiva con la autorización adecuada.
+- **Fechas, cupo o exclusividad rechazados:** revisa esos datos y la asignación activa que causa el conflicto antes de reenviar.
+- **Sin permiso:** verifica el alcance de `club_roles:assign` o `club_roles:revoke`; no cambies de sección ni de cuenta para eludirlo.
+- **La pantalla tarda en actualizarse:** confirma el estado de la asignación antes de repetir la acción.
+
+## Manuales relacionados en este portal
+
+- [Gestionar clubes](/clubes/gestion-clubes/)
+- [Administrar usuarios](/clubes/usuarios/)
+- [Procesos de SACDIA](/procesos/)
+
+## Cómo verificarlo
+
+- La asignación muestra la persona, el rol, la sección y las fechas esperadas.
+- Después de crearla, su estado es `active`.
+- Después de revocarla, el mismo registro aparece como `ended` y no participa como cargo activo.
+- No se confunde un registro de solicitud con un cargo efectivo.
+
+## Fuente de verificación
+
+Proceso contrastado el 2026-08-24 con el endpoint de asignación de roles, sus validaciones de fechas y cupos, las autorizaciones de cargos de club y el flujo especializado de sucesión de director.

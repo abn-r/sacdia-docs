@@ -1,60 +1,74 @@
 ---
 title: Trasladar un miembro
-description: El miembro cambia de club o sección sin perder su trayectoria y con enrollment anual consistente.
+description: El miembro solicita desde la aplicación y el contrato backend resuelve el traslado de cargos activos entre secciones.
 surface: cross-surface
 documentType: process
 module: traslado-miembro
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 ---
 
-El miembro cambia de club o sección sin perder su trayectoria y con enrollment anual consistente.
+El traslado es una solicitud creada en la aplicación. La resolución cambia el contexto de las asignaciones de cargo activas entre sección de origen y destino; no reconstruye la trayectoria de la persona.
 
 ## Resultado esperado
 
-El miembro cambia de club o sección sin perder su trayectoria y con enrollment anual consistente.
+La solicitud pasa de `pending` a `approved` o `rejected`. Si se aprueba, las asignaciones de cargo activas de la persona se mueven de origen a destino, incluso cuando el resultado sea cero asignaciones movidas.
 
-## Participantes
+## Responsabilidades
 
-- Miembro solicitante
-- Revisor administrativo
+| Etapa | Responsable | Superficie o contrato | Cambio de responsable |
+|---|---|---|---|
+| Crear solicitud | Miembro | Aplicación | El miembro mantiene la solicitud mientras está `pending`. |
+| Revisar | Persona con `requests:review` y alcance de destino | Contrato backend de revisión | La responsabilidad de decidir pasa al revisor con alcance sobre la sección de destino. |
+| Escalar bloqueo de cliente | Personal administrativo | Incidencia al equipo responsable del cliente o del contrato | No hay una acción de botones en el portal administrativo para completar esta revisión. |
+
+La revisión administrativa está bloqueada por el cliente. Aunque el backend exige `requests:review` y alcance de destino, el cliente administrativo es incompatible; no documentes pasos de botones para aprobar o rechazar. Conserva el identificador de la solicitud y escálala por el canal operativo establecido.
 
 ## Antes de comenzar
 
-- Membresía activa.
-- Club y sección destino compatibles.
+- El miembro debe tener una asignación de cargo activa en la sección de origen.
+- El destino debe ser del mismo tipo de club que el origen.
+- Para cada usuario, cualquier solicitud `pending` bloquea crear otra solicitud, aunque cambien origen o destino.
+- La persona revisora debe tener `requests:review` y alcance de destino.
 
 ## Flujo completo
 
-1. El miembro crea una solicitud y explica el motivo.
-2. El panel muestra la solicitud de traslado.
-3. El revisor contrasta origen, destino y alcance.
-4. Aprueba o rechaza con comentario.
-5. Al aprobar, el sistema actualiza contexto y deriva la clase aplicable.
+1. El miembro crea la solicitud real desde la aplicación para una sección destino compatible.
+2. La solicitud queda `pending`; no existe cancelación.
+3. El expediente cambia de responsable: del miembro a la persona revisora con alcance sobre el destino.
+4. La revisión se resuelve en el contrato backend como `approved` o `rejected`; el portal administrativo no ofrece una ruta de botones funcional para realizarla.
+5. Si se rechaza, la API admite `comment` de forma opcional. Si se proporciona, el backend lo persiste como `review_comment`.
+6. Si se aprueba, se mueven todas las asignaciones de cargo activas de la persona desde la sección de origen a la sección de destino. La solicitud puede terminar aprobada con cero asignaciones movidas.
+7. Confirma el estado final y el identificador de solicitud antes de dar por cerrado el caso.
 
-## Cómo utilizar esta guía
+## Límites del resultado
 
-Comienza en el panel en la etapa de revisión o configuración que corresponda; la captura del usuario ocurre en la aplicación.
+No crea ni cambia membresía, enrollment ni clase. El traslado no agrega una inscripción anual, no recalcula la clase progresiva y no crea cargos nuevos; solo mueve las asignaciones de cargo activas que coinciden con la sección de origen.
+
+## Comentarios y recuperación
+
+El campo `comment` es opcional en la API. Si se proporciona, el contrato lo persiste como `review_comment`; la aplicación puede esperar `reviewer_comment`, por lo que un comentario válido puede no mostrarse en el detalle móvil. Conserva el identificador y escala ese desajuste en vez de repetir o duplicar la solicitud.
+
+- **Destino no compatible o sin asignación activa de origen:** corrige el contexto antes de crear una nueva solicitud.
+- **Duplicado pendiente:** no envíes otra; una sola solicitud `pending` debe concentrar el seguimiento.
+- **Cliente administrativo bloqueado:** no simules una decisión. Escala con identificador, origen, destino y estado actual.
+- **Resultado sin movimiento de cargos:** una aprobación puede ser válida con cero asignaciones movidas; confirma el estado final antes de corregir datos fuera de este proceso.
 
 ## Manuales relacionados en este portal
 
-- [Solicitudes de cargos y traslados](/clubes/solicitudes/)
-- [Inscripciones anuales](/clubes/inscripciones/)
-- [Administración de usuarios](/clubes/usuarios/)
+- [Solicitudes de membresía](/clubes/solicitudes-membresia/)
+- [Gestionar clubes](/clubes/gestion-clubes/)
+- [Procesos de SACDIA](/procesos/)
 
 ## Cómo verificarlo
 
-La solicitud queda resuelta y la app muestra el nuevo contexto sin duplicar inscripciones activas.
-
-## Errores frecuentes
-
-- **La siguiente etapa no aparece:** actualiza el estado antes de repetir y confirma que la etapa anterior terminó.
-- **La persona revisora no encuentra el registro:** verifica territorio, periodo, club y sección.
-- **Se rechazó la operación:** corrige sobre el mismo registro; no crees otro salvo que el sistema indique que el anterior quedó cancelado.
-- **El estado difiere entre superficies:** conserva folio o identificador visible y repórtalo sin reenviar la acción.
+- La solicitud termina en `approved` o `rejected`, nunca queda en un estado intermedio inventado.
+- Una resolución aprobada solo modifica el contexto de cargos activos de origen a destino.
+- Membresía, enrollment y clase permanecen sin cambios por este proceso.
+- El bloqueo del cliente administrativo se registra y se escala, en lugar de presentar una revisión inexistente.
 
 ## Fuente de verificación
 
-Proceso contrastado el 2026-08-20 con los módulos involucrados y la documentación canónica de SACDIA.
+Proceso contrastado el 2026-08-24 con la creación y revisión de solicitudes de traslado, el control de alcance sobre la sección destino, el movimiento de asignaciones activas y las incompatibilidades vigentes del cliente administrativo.

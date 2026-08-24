@@ -18,7 +18,8 @@ Los tres comparten identidad visual, configuración tipada, schema editorial y n
 
 | Validación | Resultado |
 | --- | --- |
-| `pnpm test` (2026-08-24) | 18 archivos y 99 pruebas aprobadas. |
+| `pnpm test` (2026-08-24) | 19 archivos y 119 pruebas aprobadas. |
+| `pnpm exec vitest run tests/role-transfer-manuals.test.ts` (2026-08-24) | 1 archivo y 20 pruebas aprobadas. |
 | `pnpm check` (2026-08-24) | 3 portales, 0 errores, 0 warnings y 0 hints |
 | Inventario de cobertura (2026-08-24) | 171 superficies: 134 administrativas y 37 de aplicación; 0 filas fuera de `covered`. `manual-coverage` aprobó dentro de `pnpm test`. |
 | `git diff --check development...HEAD` | Sin errores de whitespace |
@@ -240,7 +241,7 @@ notificaciones es una profundización enlazada, no otra superficie.
 
 El contrato editorial `notifications-manuals.test.ts` protege la separación de
 canales, preferencias, modalidades, límites de `queued`, recursos y rutas. En
-la ejecución del 2026-08-24, `pnpm test` aprobó 99 pruebas en 18 archivos y
+la ejecución del 2026-08-24, `pnpm test` aprobó 119 pruebas en 19 archivos y
 `pnpm check` finalizó en los tres portales sin diagnósticos.
 
 Playwright revisó 10 páginas del lote a 1440 × 1000: todas respondieron HTTP
@@ -285,6 +286,34 @@ con ancho de documento y `main` de `390/390`, sin warnings ni errores. La
 inspección visual de Auditoría y Matriz móvil, junto con Roles, Auditoría técnica
 y Contrato canónico en escritorio, confirmó jerarquía, tablas y navegación
 correctas.
+
+### Refuerzo editorial de cargos y traslados
+
+Las rutas administrativas de solicitudes de cargos y traslados se separaron en
+manuales específicos, pero se documentan como bandejas no operativas. La de
+cargos no tiene cliente para crear solicitudes, espera un shape incompatible y
+no expone aprobación ni rechazo; la de traslados no envía `sectionId`, recibe
+IDs, campos y estados incompatibles y tampoco ofrece decisiones. Ninguna debe
+usarse como evidencia de una resolución ni como canal para revisar solicitudes
+pendientes.
+
+La alternativa real para cargos es la asignación directa desde Roles o Miembros
+del club, que valida permisos, club, sección, cupo y exclusividad antes de crear
+una asignación efectiva. La ruta móvil `role_assignments` tampoco es una vista
+operativa de cargos: no tiene entrada visible, consulta solicitudes globales e
+interpreta un UUID como entero. Para traslados, la aplicación sí permite crear
+una solicitud desde Ajustes hacia una sección activa del mismo tipo cuando hay
+una asignación de cargo activa; su revisión administrativa sigue bloqueada por
+el cliente y se escala por el canal institucional.
+
+Playwright recorrió las páginas objetivo administrativas
+`/clubes/solicitudes{,-cargos,-traslados}/`, operativas
+`/pantallas{,/cargos,/traslados}/` y técnicas
+`/producto/funcionalidades{,/gestion-clubs}/`; sus índices y enlaces resolvieron
+correctamente. La muestra de cinco páginas objetivo mostró H1, HTTP 200 y cero
+errores de consola, sin overflow a 1440 px ni a 390 px. Esta evidencia confirma
+la navegación y presentación de las rutas, sin presentar los clientes
+incompatibles como flujos funcionales.
 
 ### Capturas reales en manuales prioritarios
 

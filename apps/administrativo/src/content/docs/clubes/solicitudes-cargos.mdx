@@ -1,0 +1,67 @@
+---
+title: Solicitudes de cargos
+description: Consulta la bandeja administrativa de solicitudes de cargo y sus límites operativos actuales.
+surface: admin
+documentType: screen
+module: role-assignment-requests
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+Esta pantalla corresponde a la ruta administrativa `/dashboard/requests/assignments`. Separa las solicitudes de cargo de la membresía inicial y de los traslados, pero hoy no constituye un canal seguro para gestionar cambios.
+
+## Resultado esperado
+
+Reconocer los límites de esta bandeja y redirigir el caso al proceso directo de asignación cuando corresponda. Esta pantalla no confirma un cargo vigente ni el resultado de una solicitud.
+
+## Estado operativo
+
+La ruta existe, pero la integración actual no es confiable para operar una solicitud.
+
+- No existe un cliente que cree `POST /requests/assignments`.
+- El shape esperado por admin difiere del backend.
+- La interfaz espera valores con mayúsculas y campos `target_user`, `role_to_assign`, `section` y `requested_by`; el backend entrega valores en minúsculas y `user`, `role`, `club_section` y `requester`.
+- Las pestañas y controles visibles no se comunican de forma compatible con la respuesta real.
+- La aprobación y el rechazo no están disponibles.
+- El backend no aplica el alcance de sección al listar o revisar.
+
+Por estos límites, la bandeja no es operativa ni una fuente válida para decisiones sobre solicitudes de cargo. No utilices su información para determinar permisos, asignaciones vigentes ni el resultado de una petición.
+
+## Qué puedes consultar con seguridad
+
+Si necesitas identificar el problema, conserva la ruta, la cuenta que lo reporta y una captura donde se vea el registro. No modifiques parámetros de la URL ni intentes compensar un resultado incierto creando cargos duplicados.
+
+La pantalla no reemplaza la comprobación del cargo efectivo de una persona ni la revisión del contexto de club y sección en el canal funcional.
+
+## Alternativa funcional
+
+Para asignar un cargo de club, utiliza el flujo directo documentado en [Asignación de cargo de club](/procesos/asignacion-cargo-club/). Ese proceso comienza desde **Roles** o **Miembros** del club y valida club, sección, cupo, exclusividad y permisos antes de registrar la asignación.
+
+La alternativa no crea una solicitud: registra un cargo efectivo cuando la persona responsable ya confirmó que corresponde hacerlo. Mantén la evidencia institucional fuera de esta bandeja mientras la integración no sea compatible.
+
+## Cómo verificarlo
+
+Comprueba que la ruta identificada sea `/dashboard/requests/assignments` y que el caso se derive a [Asignación de cargo de club](/procesos/asignacion-cargo-club/) cuando se requiera un cargo efectivo. La verificación del resultado debe hacerse en el proceso funcional o con el equipo responsable, no en esta bandeja.
+
+## Límites y escalamiento
+
+Escala a soporte o desarrollo cuando:
+
+- el caso exige resolver una solicitud de cargo ya existente;
+- hay discrepancia entre la persona, el cargo o la sección mostrados;
+- se requiere revisar el alcance de quien interviene;
+- el flujo directo no está disponible para la cuenta autorizada.
+
+Incluye el identificador visible, club, sección, fecha aproximada y captura. No compartas contraseñas, tokens ni información personal innecesaria.
+
+## Manuales relacionados
+
+- [Índice de solicitudes de cargos y traslados](/clubes/solicitudes/)
+- [Asignación de cargo de club](/procesos/asignacion-cargo-club/)
+- [Solicitudes de membresía](/clubes/solicitudes-membresia/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-24 con la ruta administrativa, su cliente efectivo y los contratos de solicitudes de cargos del backend.

@@ -1,22 +1,22 @@
 ---
 title: Miembros y cargos
-description: Consultar miembros de la sección, revisar solicitudes y administrar cargos autorizados.
+description: Consultar miembros de la sección, revisar solicitudes y asignar un rol dentro del contexto activo.
 surface: app
 documentType: screen
 module: members
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-21
+lastReviewedAt: 2026-08-24
 ---
 
 import GuideScreenshot from '@sacdia/docs-ui/components/GuideScreenshot';
 
-Consultar miembros de la sección, revisar solicitudes y administrar cargos autorizados.
+Consultar miembros de la sección, revisar solicitudes y asignar un rol dentro del contexto activo.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás consultar miembros de la sección, revisar solicitudes y administrar cargos autorizados.
+Al terminar este recorrido, podrás consultar miembros de la sección, revisar solicitudes y asignar un rol dentro de la sección contextual.
 
 ## Quién puede utilizarlo
 
@@ -50,7 +50,7 @@ Miembros con lectura de su sección. La app utiliza `club_roles:assign` o `club_
 - Buscar miembros y filtrar por clase.
 - Abrir perfil, clases, especialidades y datos permitidos.
 - Revisar solicitudes de ingreso.
-- Asignar, cambiar o revocar un cargo dentro de la sección.
+- Asignar un rol dentro de la sección contextual.
 
 ## Revisar solicitudes en la app
 
@@ -70,11 +70,14 @@ Existe una diferencia conocida entre permisos: dirección recibe el permiso visu
 2. Selecciona la pestaña **Miembros** o **Solicitudes**.
 3. Para una solicitud, sigue el recorrido anterior y decide una sola vez.
 4. Para un miembro activo, abre su perfil y, si tienes permiso, selecciona **Asignar cargo**.
-5. Elige el rol, guarda y comprueba el cargo en la lista.
+5. El formulario usa la sección contextual y permite elegir únicamente el rol.
+6. Guarda una sola vez. La app envía `start_date` con la fecha actual; no permite elegir sección ni fechas.
+
+La app no expone revocación de cargos desde esta pantalla. Para terminar una asignación o administrar fechas y sección, continúa por el proceso de gestión correspondiente.
 
 ## Cómo verificarlo
 
-Una solicitud resuelta deja la cola pendiente después de actualizar. Para cambios de cargo, el miembro aparece en la sección correcta y el cargo activo coincide con la asignación guardada.
+Una solicitud resuelta deja la cola pendiente después de actualizar. Al asignar un rol, confirma el mensaje de éxito y actualiza la lista; la operación se realizó sobre la sección contextual, sin selector de sección ni fechas.
 
 ## Errores frecuentes
 
@@ -85,6 +88,7 @@ Una solicitud resuelta deja la cola pendiente después de actualizar. Para cambi
 | Tu cargo puede revisar, pero no aparecen los botones | El control visual móvil puede excluir subdirección o secretaría. Reporta la inconsistencia; el cargo de club no habilita el panel. |
 | La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
 | El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
+| Se necesita terminar una asignación o definir otra sección o fecha | La pantalla solo permite seleccionar el rol y envía `start_date` con la fecha actual. Usa el proceso de gestión de club y sección; no intentes forzar esos datos desde la app. |
 | Aparece otro club o sección | Vuelve al tablero y cambia o confirma el contexto activo antes de guardar información. |
 
 ## Procesos relacionados
@@ -94,4 +98,4 @@ Una solicitud resuelta deja la cola pendiente después de actualizar. Para cambi
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-21 con las vistas, rutas, permisos backend y controles efectivos del módulo `members` de la aplicación.
+Manual contrastado el 2026-08-24 con las vistas, rutas, permisos backend y controles efectivos del módulo `members` de la aplicación.

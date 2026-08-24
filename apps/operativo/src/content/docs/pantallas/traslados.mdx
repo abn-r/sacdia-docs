@@ -1,69 +1,69 @@
 ---
 title: Traslados de club o sección
-description: Solicitar un traslado y consultar su revisión hasta la resolución.
+description: Enviar una solicitud de traslado desde Ajustes cuando existe un destino compatible.
 surface: app
 documentType: screen
 module: transfers
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 ---
 
-Solicitar un traslado y consultar su revisión hasta la resolución.
+Usa esta pantalla para enviar una solicitud de traslado a una sección compatible. La aplicación ofrece una entrada visible para el formulario, no para el listado ni el detalle de solicitudes.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás solicitar un traslado y consultar su revisión hasta la resolución.
+Enviar una única solicitud hacia una sección de destino válida. El envío queda sujeto a revisión; la aplicación no permite cancelar la solicitud después de crearla.
 
-## Quién puede utilizarlo
+## Acceso
 
-Usuarios con membresía activa que necesitan cambiar de club o sección.
+Desde **Ajustes**, abre **Cambiar club**. Esta es la entrada visible y abre directamente el formulario de traslado.
 
-## Pantallas incluidas
-
-- Solicitudes de traslado
-- Nuevo traslado
-- Detalle
+El listado y el detalle existen como rutas de la aplicación, pero no tienen entrada visible desde Ajustes. No se documentan como pasos operativos para consultar el seguimiento.
 
 ## Antes de comenzar
 
-- Inicia sesión y confirma el club o sección activos.
-- Mantén conexión estable para acciones que guardan o envían información.
-- Si una acción no aparece, revisa primero el cargo y el contexto.
+- Debes contar con una asignación de cargo activa en la sección de origen; el backend la valida al crear la solicitud.
+- Debe existir una sección destino activa del mismo tipo que tu sección de origen.
+- Si ya tienes cualquier solicitud `pending`, resuélvela antes de intentar otro envío: bloquea cualquier otra solicitud aunque cambien origen o destino.
 
-## Tareas principales
+## Crear una solicitud de traslado
 
-- Consultar solicitudes anteriores.
-- Elegir club y sección destino compatibles.
-- Explicar el motivo y enviar.
-- Consultar comentarios y resolución del revisor.
+1. En **Ajustes**, abre **Cambiar club**.
+2. Selecciona, en orden, país, unión, campo local y club.
+3. Elige la sección destino disponible. La aplicación deriva el destino de mismo tipo que la sección activa de origen.
+4. Revisa la selección y pulsa **Enviar solicitud** una sola vez.
 
-## Flujo recomendado
+La app no solicita motivo. El payload enviado contiene los identificadores de origen y destino, sin un campo de motivo desde este formulario.
 
-1. Abre **Traslados** y revisa si ya existe una solicitud activa.
-2. Pulsa **Nueva solicitud**.
-3. Selecciona país, unión, campo local, club y sección destino.
-4. Escribe el motivo y envía una sola vez.
-5. Abre el detalle para seguir estado y comentario del revisor.
+## Estados y límites
+
+- Los únicos estados de dominio son `pending`, `approved` y `rejected`.
+- No existe cancelación.
+- No puedes seleccionar la misma sección como origen y destino.
+- El backend rechaza un destino de tipo distinto y cualquier segunda solicitud mientras exista una `pending` de la misma persona. Ese bloqueo de duplicado pendiente aplica aunque cambien origen o destino.
+- La resolución no debe interpretarse como un cambio automático de membresía, inscripción anual o clase desde esta pantalla.
+
+## Comentarios de revisión
+
+El modelo de la app busca `reviewer_comment`, mientras que el backend envía `review_comment`. Por esa incompatibilidad, no se promete que el comentario de la persona revisora aparezca en la aplicación, aunque exista en el registro del backend.
 
 ## Cómo verificarlo
 
-La solicitud muestra número, destino, fecha, motivo y resolución; al aprobar, cambia el contexto y enrollment según la regla del sistema.
+Tras enviar, confirma únicamente el mensaje de éxito del formulario. Para verificar una resolución o un comentario, solicita la confirmación por el canal institucional correspondiente; la interfaz no ofrece una entrada visible desde Ajustes al listado o detalle.
 
-## Errores frecuentes
+## Si algo falla
 
-| Problema | Qué hacer |
-|---|---|
-| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
-| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
-| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
-| Aparece otro club o sección | Vuelve al tablero y cambia o confirma el contexto activo antes de guardar información. |
+- **No aparece un destino:** confirma que la jerarquía país, unión, campo local y club esté completa y que exista una sección activa del mismo tipo. No elijas un tipo diferente para forzar el envío.
+- **El envío se rechaza por origen, destino o cargo:** verifica que la asignación de cargo activa pertenezca a la sección de origen y que origen y destino sean distintos.
+- **Ya existe una solicitud pendiente:** no intentes otro envío, aunque cambies origen o destino. Espera la resolución o solicita seguimiento por el canal institucional.
+- **No aparece el comentario de revisión:** no supongas que no existe; la app espera `reviewer_comment` y el backend entrega `review_comment`. Solicita confirmación a la persona responsable.
 
 ## Procesos relacionados
 
-- [Abrir la guía del proceso](/procesos/traslado-miembro/)
+- [Traslado de miembro](/procesos/traslado-miembro/)
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las vistas, rutas y controles efectivos del módulo `transfers` de la aplicación.
+Manual contrastado el 2026-08-24 con el formulario accesible desde Ajustes, las rutas de traslados, el cliente de la aplicación y las validaciones efectivas del backend.

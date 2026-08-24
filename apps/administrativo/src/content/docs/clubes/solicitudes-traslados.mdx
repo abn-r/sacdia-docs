@@ -1,0 +1,51 @@
+---
+title: Solicitudes de traslados
+description: Consulta la bandeja administrativa de traslados y sus límites operativos actuales.
+surface: admin
+documentType: screen
+module: transfer-requests
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+Esta pantalla corresponde a `/dashboard/requests/transfers`. Un traslado cambia el contexto de club o sección; no es una solicitud de membresía inicial ni una asignación de cargo.
+
+## Resultado esperado
+
+Reconocer que la bandeja no permite una revisión administrativa segura y dirigir el caso al proceso o canal de escalamiento indicado. Esta pantalla no confirma el estado final de un traslado.
+
+## Estado operativo
+
+No hay bandeja funcional de traslados. La ruta existe, pero la consulta no envía `sectionId`, por lo que el backend devuelve solicitudes propias en lugar de una cola administrativa del contexto que la interfaz intenta mostrar.
+
+Además, hay ID, campos y estados incompatibles: el backend entrega `transfer_request_id` y `user`, mientras la interfaz espera `request_id` y `requester`; los estados recibidos están en minúsculas y la interfaz espera mayúsculas. No hay decisiones UI disponibles.
+
+Por ello, esta bandeja no es operativa y no debe utilizarse como evidencia del estado de un traslado ni para gestionar una petición pendiente.
+
+## Qué hacer ante un traslado
+
+No se puede aprobar, rechazar ni repetir una solicitud desde esta pantalla. Si una persona necesita iniciar el trámite, consulta el proceso [Traslado de miembro](/procesos/traslado-miembro/) para conocer el canal que sí está disponible y sus requisitos reales.
+
+No inventes llamadas API, no alteres `sectionId` manualmente y no conviertas los campos mostrados en una confirmación administrativa. La ausencia de una fila o de un control no confirma que el traslado se haya completado.
+
+## Cómo verificarlo
+
+Comprueba que el caso se refiera a un cambio de club o sección y consulta [Traslado de miembro](/procesos/traslado-miembro/) para identificar el canal disponible. La confirmación de un resultado debe provenir del proceso funcional o del equipo responsable, nunca de esta bandeja.
+
+## Límites y escalamiento
+
+Escala a soporte o desarrollo cualquier revisión administrativa de un traslado mientras exista esta incompatibilidad. Incluye el identificador visible, la cuenta afectada, club y sección de origen y destino, fecha aproximada y una captura del error o de la pantalla.
+
+El equipo técnico debe evaluar la alineación de `sectionId`, del shape de respuesta y de los estados antes de habilitar una operación administrativa. No compartas datos personales innecesarios ni credenciales en el reporte.
+
+## Manuales relacionados
+
+- [Índice de solicitudes de cargos y traslados](/clubes/solicitudes/)
+- [Traslado de miembro](/procesos/traslado-miembro/)
+- [Solicitudes de membresía](/clubes/solicitudes-membresia/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-24 con la ruta administrativa, su cliente efectivo y la respuesta actual del backend para solicitudes de traslado.
