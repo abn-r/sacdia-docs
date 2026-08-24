@@ -1,0 +1,81 @@
+---
+title: Auditoría global
+description: Consultar eventos administrativos globales y revisar el contexto disponible de cada registro.
+surface: admin
+documentType: screen
+module: audit
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+Consulta los eventos administrativos globales registrados por el sistema. Esta pantalla sirve para revisión: no modifica eventos.
+
+## Resultado esperado
+
+Al terminar, podrás localizar eventos dentro de los filtros visibles, cargar la siguiente página y revisar los datos disponibles de un evento.
+
+## Acceso requerido
+
+La ruta es `/dashboard/configuration/audit` y exige **conjuntamente**:
+
+- el rol global exacto `super-admin`;
+- el permiso efectivo `audit:read`;
+- el recurso de autorización global.
+
+El menú también requiere el rol y el permiso. La página vuelve a comprobar `super-admin` y el backend aplica ambos controles. `audit:read` por sí solo no da acceso y una cuenta `admin` no está autorizada para esta pantalla.
+
+El listado tiene **alcance global**: no aplica alcance territorial.
+
+## Filtros disponibles
+
+Usa solamente los filtros que muestra la pantalla:
+
+- **Entidad**: texto de tipo de entidad.
+- **Acción**: `CREATED`, `UPDATED` o `DELETED`.
+- **Resultado**: exitoso o fallido.
+- **Origen**: `http` o `service`.
+- **Fechas**: fecha desde y hasta.
+
+Los resultados se reciben por páginas de 50 registros y el botón de cargar más usa un `cursor` devuelto por el servicio. Aunque el backend acepta actor, club y correlación, la interfaz no ofrece filtros para actor, club ni correlación.
+
+No hay exportación en esta pantalla.
+
+## Consultar el detalle
+
+1. Abre **Configuración > Auditoría**.
+2. Completa los filtros necesarios y espera la carga de resultados.
+3. Selecciona una fila para abrir su panel de detalle.
+4. Revisa la entidad, la acción, el actor, el resultado y, cuando existan, `changes` y `request_context`.
+5. Si hay más resultados, selecciona **Cargar más**; no repitas un cursor manualmente.
+
+El listado no incluye los campos amplios del detalle. Si el detalle no puede cargarse, el panel conserva la información disponible de la fila y muestra el aviso correspondiente.
+
+## Cómo verificarlo
+
+El evento seleccionado muestra su entidad, acción, fecha y resultado. Cuando el registro los contiene, el panel muestra `changes` y `request_context`; si no existen, esos bloques no se presentan.
+
+## Límites
+
+- No hay alcance territorial.
+- No hay exportación.
+- No hay retención documentada para estos eventos.
+- La pantalla no sustituye la investigación del flujo de negocio ni concede permisos para corregir registros.
+
+## Errores frecuentes
+
+| Problema | Qué hacer |
+|---|---|
+| No aparece Auditoría o la ruta redirige al panel | Confirma que la cuenta tenga el rol global exacto `super-admin` y `audit:read`; no intentes acceder mediante una URL directa. |
+| Se muestra un error de acceso al cargar | Conserva el mensaje y solicita la revisión del rol, permiso y recurso global. |
+| No hay resultados | Ajusta únicamente los filtros visibles o el rango de fechas y vuelve a consultar. |
+| El detalle no está disponible | Revisa los datos de la fila, intenta abrirla otra vez y reporta el identificador del evento si persiste. |
+
+## Procesos relacionados
+
+- Consulta el [índice de configuración](/configuracion/) para otros controles administrativos.
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-24 con `/dashboard/configuration/audit`, `AuditLogsViewer`, el control de navegación y `AdminAuditLogsController`.

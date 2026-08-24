@@ -1,77 +1,87 @@
 ---
 title: "Audit Logs"
-description: "Trazabilidad de cambios en entidades criticas (clubs, ordenes, evidencias) — tabla audit_logs y endpoints de consulta."
+description: "Contrato técnico de consulta global y trazabilidad de mutaciones HTTP y de dominio."
 surface: technical
 documentType: reference
 module: producto
 status: published
 owners:
   - "Abner Reyes"
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 generated: false
 ---
-## Proposito
 
-Registrar quien hizo que, en que entidad y cuando. Soporta auditoria operativa y compliance basico. No reemplaza event sourcing pero da timeline consultable.
+## Propósito
 
-## Tabla `audit_logs`
+`audit_logs` es la traza persistente de acciones de dominio y mutaciones HTTP. Sirve para investigación operativa; no implementa event sourcing ni convierte cada lectura en un evento auditable.
 
-| Campo | Tipo | Notas |
-|-------|------|-------|
-| `audit_log_id` | BigInt | PK autoincrement |
-| `entity_type` | VARCHAR(50) | Ej: `club`, `materiales_order`, `evidence`, `user_role_assignment` |
-| `entity_id` | VARCHAR(64) | ID del registro afectado (UUID o int como string) |
-| `action` | VARCHAR(20) | `created`, `updated`, `deleted`, `approved`, `rejected`, etc. |
-| `club_id` | Int? | Scope de club si aplica (FK `clubs`, `ON DELETE SET NULL`) |
-| `actor_user_id` | UUID? | Quien hizo la accion |
-| `summary` | VARCHAR(500)? | Descripcion humana del cambio |
-| `changes` | Json? | Diff estructurado de campos relevantes |
-| `created_at` | TIMESTAMPTZ | Default `now()` |
+Cada registro identifica la entidad, actor, acción, resultado, origen, correlación y momento. Los eventos de dominio pueden incluir `changes`; los eventos HTTP conservan únicamente contexto seguro de la solicitud.
 
-**Indices**:
-- `(club_id, created_at DESC)` — para timeline por club
-- `(entity_type, entity_id)` — para historial de un registro especifico
+## Consulta global
 
-## Endpoints
+| Método | Ruta | Autorización |
+| --- | --- | --- |
+| GET | `GET /api/v1/admin/audit-logs` | JWT, rol global `super-admin`, `audit:read` y recurso global |
+| GET | `GET /api/v1/admin/audit-logs/:id` | JWT, rol global `super-admin`, `audit:read` y recurso global |
 
-| Method | Path | Permiso |
-|--------|------|---------|
-| GET | `/api/v1/clubs/:clubId/history` | `clubs:read_detail` |
-| GET | `/api/v1/audit-logs?entity_type=X&entity_id=Y` | `audit_logs:read` |
+Ambas rutas declaran `@Audit({ skip: true })`: consultar la traza no genera una nueva fila de la misma traza. No tienen alcance territorial.
 
-## Modulo backend
+### Lista paginada
 
-`src/audit-logs/` — `AuditLogsModule` + `AuditLogsService`. Otros servicios llaman `AuditLogsService.log(...)` para registrar acciones.
+La lista es descendente por `audit_log_id` (más reciente primero) y devuelve:
 
-## Patron de uso (en otros servicios)
-
-```typescript
-await this.auditLogs.log({
-  entity_type: 'club',
-  entity_id: clubId.toString(),
-  action: 'updated',
-  club_id: clubId,
-  actor_user_id: userId,
-  summary: `Director cambiado de ${prev.name} a ${next.name}`,
-  changes: { director: { from: prev, to: next } },
-});
+```ts
+type AuditLogPage = {
+  items: Array<{
+    audit_log_id: string;
+    entity_type: string;
+    entity_id: string;
+    action: string;
+    result: string;
+    source: string;
+    summary: string | null;
+    club_id: number | null;
+    correlation_id: string | null;
+    actor: { user_id: string; name: string | null; paternal_last_name: string | null } | null;
+    created_at: string;
+  }>;
+  next_cursor: string | null;
+};
 ```
 
-## Donde se genera
+Filtros de backend:
 
-Servicios que registran audit hoy:
-- `clubs` (cambios de director, leadership, status)
-- `materiales` (transiciones de orden, aprobaciones de comprobantes)
-- `investitures` (validaciones)
-- `evidence-review` (aprobaciones/rechazos de evidencias)
-- `rbac` (asignaciones de roles)
+| Query | Restricción |
+| --- | --- |
+| `entity_type` | cadena de hasta 50 caracteres |
+| `actor_user_id` | UUID del actor |
+| `action` | cadena de hasta 64 caracteres |
+| `result` | `succeeded` o `failed` |
+| `source` | `http` o `service` |
+| `from` / `to` | fecha ISO; límites inclusivos |
+| `club_id` | entero positivo |
+| `correlation_id` | UUID de correlación |
+| `limit` | entero de 1 a 100; predeterminado 50 |
+| `cursor` | `audit_log_id` decimal recibido en `next_cursor` |
 
-## UI admin
+La lista omite `changes` y `request_context`. El detalle por `:id` incluye ambos campos cuando existen; `:id` debe ser un decimal válido.
 
-`app/(dashboard)/dashboard/clubs/[clubId]/history` muestra timeline filtrable por `entity_type` y rango de fechas.
+## Historial de club
 
-## Limites actuales
+`GET /api/v1/clubs/:clubId/history` es una vista acotada al club: requiere JWT, `clubs:read` y autorización sobre el recurso club. También ordena en forma descendente y usa `limit`/`cursor` con `next_cursor`; no es sustituto de la consulta global.
 
-- No es event sourcing — solo registra resumen.
-- `changes` no esta normalizado entre servicios (cada uno decide que diff guardar).
-- Sin TTL — la tabla crece indefinidamente. Plan futuro: rotacion mensual a cold storage.
+## Interceptor HTTP de auditoría
+
+`HttpAuditInterceptor` se registra globalmente mediante `APP_INTERCEPTOR` en `AuditLogsModule`.
+
+- Persiste mutaciones `POST/PUT/PATCH/DELETE` como eventos con `source: "http"`; las lecturas no se persisten.
+- Excluye `health`, `auth/refresh`, handlers con `@Audit({ skip: true })` y solicitudes que ya emitieron un evento de dominio o crítico más rico.
+- Registra éxito o fallo en `result` y conserva contexto técnico seguro (método, ruta saneada, estado, duración, IP y agente de usuario truncado).
+- Nunca persiste el body. `changes` queda reservado para eventos explícitos de dominio, evitando registrar credenciales o datos sensibles.
+- La escritura es **best-effort**: una falla al registrar no modifica la respuesta de la operación original.
+
+## Límites verificables
+
+- La traza no garantiza una estructura uniforme de `changes` entre dominios.
+- La presencia de un evento depende de que la ruta sea una mutación interceptable o de que el flujo de dominio emita un evento explícito.
+- `request_context` del detalle no representa ni reconstruye el body de la solicitud.

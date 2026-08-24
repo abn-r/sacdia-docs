@@ -7,7 +7,7 @@ module: seguridad
 status: published
 owners:
   - "Abner Reyes"
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 generated: false
 ---
 > Este documento es el catálogo canónico de nombres de permisos y su convención.
@@ -31,13 +31,14 @@ SACDIA usa RBAC con permisos granulares.
 
 `GET /auth/me` entrega:
 
-- `authorization.grants`
+- `authorization.grants`, incluido `grants.direct_permissions`
 - `authorization.active_assignment`
 - `authorization.effective`
 
 Regla:
 
-- `authorization.effective.permissions` es la fuente operativa para habilitar acciones en cliente.
+- `effective.permissions` es la fuente operativa para habilitar acciones en cliente.
+- `grants.direct_permissions` es una lista de permisos directos del usuario y contribuye como candidato global a `effective.permissions`.
 - El arreglo plano legacy `permissions` no es fuente oficial para consumidores nuevos.
 
 ### Enforcement en backend
@@ -104,7 +105,7 @@ Notas canónicas del modelo vigente:
 
 - las familias sensibles son `health`, `emergency_contacts`, `legal_representative` y `post_registration`;
 - OR transicional vigente: para terceros, lectura fina acepta `family:read` o el legado `users:read_detail`; escritura fina acepta `family:update` o el legado `users:update`;
-- excepción: los endpoints `POST /step-{1,2,3}/complete` ahora usan `registration:complete` (permiso global dedicado) en lugar de `post_registration:update` con fallback a `users:update`. Roles asignados: super_admin, admin, assistant-lf, director-lf (y equivalentes union/dia por herencia). El owner siempre puede completar su propio registro;
+- excepción: los endpoints `POST /step-{1,2,3}/complete` ahora usan `registration:complete` (permiso global dedicado) en lugar de `post_registration:update` con fallback a `users:update`. Roles asignados: super-admin, admin, assistant-lf, director-lf (y equivalentes union/dia por herencia). El owner siempre puede completar su propio registro;
 - exclusiones fuera de scope: `GET/PATCH /users/:userId`, `POST/DELETE /users/:userId/profile-picture`, `GET /users/:userId/age` y `GET /users/:userId/requires-legal-representative` siguen en metadata legacy `users:*`.
 
 ### Roles y Permisos
@@ -118,6 +119,7 @@ Notas canónicas del modelo vigente:
 | `roles:assign` | Asignar roles globales a usuarios |
 | `permissions:read` | Ver permisos |
 | `permissions:assign` | Asignar permisos a roles |
+| `audit:read` | Consultar la bitácora global de auditoría; el visor exige además `super-admin` y no tiene alcance territorial |
 
 ### Clubes
 
@@ -218,7 +220,7 @@ Notas canónicas del modelo vigente:
 |---------|-------------|
 | `notifications:send` | Enviar notificación directa |
 | `notifications:broadcast` | Enviar notificación masiva |
-| `notifications:club` | Enviar notificación a miembros de club |
+| `notifications:club` | Consultar destinos o enviar notificación al club de la `active_assignment`; no es un permiso global de Stage 1 |
 
 ### Reportes y Dashboard
 
@@ -237,6 +239,10 @@ Notas canónicas del modelo vigente:
 | `ecclesiastical_years:read` | Ver años eclesiásticos |
 | `ecclesiastical_years:create` | Crear año eclesiástico |
 | `ecclesiastical_years:update` | Editar año eclesiástico |
+
+## Estado de permisos y revocación
+
+La baja lógica de un permiso impide que un permiso directo inactivo contribuya a la autorización resuelta. Sin embargo, existe un gap runtime: desactivar un permiso NO garantiza la revocación inmediata de los grants por rol ya resueltos. No documentar ese comportamiento como garantía hasta cerrar el gap.
 
 ## Consumo por Cliente
 

@@ -80,9 +80,9 @@ function portalPathExists(portal: 'operativo' | 'administrativo', path: string):
 describe('manual coverage matrix', () => {
   const rows = readCoverage();
 
-  it('keeps the complete 170-surface inventory', () => {
-    expect(rows).toHaveLength(170);
-    expect(rows.filter((row) => row.surface === 'admin')).toHaveLength(133);
+  it('keeps the complete 171-surface inventory', () => {
+    expect(rows).toHaveLength(171);
+    expect(rows.filter((row) => row.surface === 'admin')).toHaveLength(134);
     expect(rows.filter((row) => row.surface === 'app')).toHaveLength(37);
   });
 

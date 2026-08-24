@@ -1,20 +1,20 @@
 ---
 title: Centro de configuración
-description: Acceder a configuración territorial, notificaciones, roles, permisos, variables y logros.
+description: Acceder a configuración territorial, notificaciones, variables y logros; derivar RBAC a sus manuales específicos.
 surface: admin
 documentType: screen
 module: configuration
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 ---
 
-Acceder a configuración territorial, notificaciones, roles, permisos, variables y logros.
+Accede a familias generales de configuración. Las tareas RBAC se documentan en manuales específicos para no mezclar sus controles de acceso.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás acceder a configuración territorial, notificaciones, roles, permisos, variables y logros.
+Al terminar este recorrido, podrás acceder a configuración territorial, notificaciones, variables y logros, y llegar al manual RBAC adecuado cuando corresponda.
 
 ## Acceso requerido
 
@@ -33,15 +33,10 @@ El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso n
 | `/dashboard/configuration/achievements/[categoryId]/new` | Formulario para crear un registro. |
 | `/dashboard/configuration/local-field/delivery` | Pantalla operativa del módulo. |
 | `/dashboard/configuration/local-field/payment-methods` | Pantalla operativa del módulo. |
-| `/dashboard/configuration/matrix` | Matriz de roles y permisos. |
 | `/dashboard/configuration/notifications` | Centro de notificaciones. |
 | `/dashboard/configuration/notifications/categories` | Administración de categorías. |
 | `/dashboard/configuration/notifications/history` | Historial de operaciones. |
 | `/dashboard/configuration/notifications/send` | Acceso a composición de mensajes. |
-| `/dashboard/configuration/permissions` | Catálogo de permisos. |
-| `/dashboard/configuration/roles` | Administración de roles. |
-| `/dashboard/configuration/roles/[roleId]` | Detalle contextual del elemento seleccionado. |
-| `/dashboard/configuration/roles/new` | Formulario para crear un registro. |
 | `/dashboard/configuration/variables` | Variables del sistema. |
 
 ## Antes de comenzar
@@ -55,7 +50,6 @@ El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso n
 - Abrir una familia de configuración.
 - Configurar entrega y métodos de pago del campo local.
 - Administrar notificaciones.
-- Consultar o modificar RBAC.
 - Mantener variables del sistema.
 
 ## Flujo recomendado
@@ -69,6 +63,15 @@ El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso n
 ## Cómo verificarlo
 
 La configuración aparece en la subsección correcta y no afecta otro territorio.
+
+## Administración RBAC
+
+No uses esta guía genérica para modificar autorización. Abre el manual específico según la tarea:
+
+- [Administración de roles](/configuracion/roles/)
+- [Catálogo de permisos](/configuracion/permisos/)
+- [Matriz de permisos](/configuracion/matriz-de-permisos/)
+- [Permisos directos por usuario](/configuracion/permisos-directos-usuario/)
 
 ## Errores frecuentes
 
@@ -85,4 +88,4 @@ La configuración aparece en la subsección correcta y no afecta otro territorio
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las rutas, componentes, permisos de navegación y documentación canónica del módulo `configuration`.
+Manual contrastado el 2026-08-24 con las rutas de configuración del panel administrativo y los manuales RBAC específicos.

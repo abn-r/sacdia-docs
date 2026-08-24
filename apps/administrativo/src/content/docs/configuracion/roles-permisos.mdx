@@ -1,74 +1,72 @@
 ---
-title: Roles y permisos
-description: Consultar y administrar roles, permisos, matriz y excepciones directas de acceso.
+title: Guía de roles y permisos
+description: Elige el manual RBAC adecuado según necesites administrar roles, catálogo, matriz o excepciones directas.
 surface: admin
 documentType: screen
 module: rbac
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 ---
 
-Consultar y administrar roles, permisos, matriz y excepciones directas de acceso.
+Esta página orienta hacia el manual RBAC correcto. No sustituye los controles del backend ni replica los pasos de cada pantalla.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás consultar y administrar roles, permisos, matriz y excepciones directas de acceso.
+Podrás identificar si tu tarea corresponde a roles, catálogo de permisos, matriz o una excepción directa por usuario.
 
 ## Acceso requerido
 
-- roles:read
-- permissions:read
-- super_admin para mutaciones sensibles
+- **Roles:** consulta con `roles:read`.
+- **Permisos:** consulta con `permissions:read`.
+- **Cambios RBAC sensibles:** requieren rol exacto `super-admin` y `permissions:assign`.
 
 El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso ni reemplaza la autorización del backend.
 
-## Rutas incluidas
+## Elegir el manual
 
-| Ruta | Uso |
+| Necesidad | Manual |
 |---|---|
-| `/dashboard/rbac/user-permissions` | Pantalla operativa del módulo. |
+| Crear, revisar, copiar, desactivar o sincronizar un rol | [Administración de roles](/configuracion/roles/) |
+| Consultar o desactivar una clave técnica | [Catálogo de permisos](/configuracion/permisos/) |
+| Revisar o sincronizar permisos de un rol | [Matriz de permisos](/configuracion/matriz-de-permisos/) |
+| Gestionar una excepción global por persona | [Permisos directos por usuario](/configuracion/permisos-directos-usuario/) |
 
 ## Antes de comenzar
 
-- Confirma la cuenta, el alcance territorial y el periodo que vas a operar.
-- Busca el registro antes de crearlo para evitar duplicados.
+- Distingue el cargo organizacional, el permiso backend, el gate visual y el alcance: no son sinónimos.
+- Confirma si el caso es un rol, una relación rol-permiso o una excepción directa.
 - Si no ves una acción, no intentes saltar el control mediante una URL directa.
-
-## Tareas principales
-
-- Consultar roles y permisos con sus etiquetas.
-- Crear o editar permisos cuando esté autorizado.
-- Sincronizar permisos de un rol.
-- Copiar configuración entre roles permitidos.
-- Buscar permisos directos de una persona.
 
 ## Flujo recomendado
 
-1. Abre **Configuración > Roles** o **Permisos**.
-2. Selecciona el rol o permiso.
-3. Revisa la clave técnica y el alcance antes de cambiarla.
-4. Guarda o sincroniza la configuración.
-5. Comprueba la matriz y vuelve a iniciar contexto si necesitas validar visibilidad.
+1. Identifica el tipo de cambio que necesitas realizar.
+2. Abre el manual específico desde la tabla anterior.
+3. Confirma los permisos y límites indicados para esa pantalla.
+4. Ejecuta una sola operación y verifica su resultado en el mismo manual.
 
 ## Cómo verificarlo
 
-La matriz refleja la relación guardada; el menú puede cambiar porque se filtra por permisos efectivos y rol global.
+Llegas al manual específico que describe el permiso, la ruta, la verificación y los límites de la tarea elegida.
 
-## Errores frecuentes
+## Límites actuales
 
-| Problema | Qué hacer |
-|---|---|
-| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
-| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
-| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
-| El registro está fuera de alcance | Revisa el filtro territorial y la cuenta activa. El panel limita los datos al alcance autorizado. |
+- Esta guía no otorga acceso ni detalla las reglas operativas de cada pantalla.
+- La visualización del menú no reemplaza la autorización efectiva del backend.
 
-## Procesos relacionados
+## Si algo falla
 
-- Consulta el [índice de procesos](/procesos/) para recorridos entre módulos.
+- **No sabes qué manual abrir:** identifica primero si cambias un rol, un permiso, una relación o una excepción por persona.
+- **No aparece la acción:** consulta el manual específico y verifica el permiso backend y el rol exacto exigido antes de solicitar acceso.
+
+## Manuales relacionados
+
+- [Administración de roles](/configuracion/roles/)
+- [Catálogo de permisos](/configuracion/permisos/)
+- [Matriz de permisos](/configuracion/matriz-de-permisos/)
+- [Permisos directos por usuario](/configuracion/permisos-directos-usuario/)
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las rutas, componentes, permisos de navegación y documentación canónica del módulo `rbac`.
+Índice contrastado el 2026-08-24 con las rutas y controles RBAC efectivos del panel administrativo y el backend.

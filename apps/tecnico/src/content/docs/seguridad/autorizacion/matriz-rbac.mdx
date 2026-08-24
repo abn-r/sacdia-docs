@@ -7,7 +7,7 @@ module: seguridad
 status: published
 owners:
   - "Abner Reyes"
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 generated: false
 ---
 **Fecha**: 2026-03-10
@@ -39,12 +39,12 @@ Nota de implementación:
 
 ## Reglas de Evaluación
 
-1. Para recursos globales, solo cuentan grants globales.
+1. Para recursos globales, los candidatos son permisos de roles globales y `grants.direct_permissions`; el guard aplica además la regla del recurso y del rol cuando corresponda.
 2. Para recursos de club, puede entrar:
    - un permiso global suficiente dentro del territorio;
    - o la asignación activa exacta del usuario.
-3. Los permisos de club salen solo de `active_assignment`.
-4. No se unen todas las asignaciones del usuario para una request.
+3. Los permisos de club salen solo de `active_assignment`; no se unen todas las asignaciones del usuario para una request.
+4. `grants.direct_permissions` no sustituye scope, rol requerido ni metadata del recurso: es una fuente de candidatos globales para `effective.permissions`.
 5. JWT-only solo es aceptable en self-service estricto con ownership real.
 
 ## Matriz Operativa
@@ -81,10 +81,23 @@ Nota de implementación:
 | `inventory:delete` | Eliminar item | `club_instance` | permiso efectivo + asignación activa exacta o bypass global | Admin |
 | `notifications:send` | Enviar notificación directa | `global` | permiso global explícito | Admin |
 | `notifications:broadcast` | Enviar notificación masiva | `global` | permiso global explícito | Admin |
-| `notifications:club` | Enviar notificación a club | `global` (Stage 1) | permiso global explícito | Admin |
-| `permissions:read` | Ver RBAC | `global` | permiso global | Admin |
+| `notifications:club` | Consultar destinos o enviar a un club | `active_assignment` | permiso efectivo + asignación activa exacta; el servicio valida nuevamente el destino | Admin |
+| `audit:read` | Consultar bitácora de auditoría | `global` | exige `super-admin` y permiso global; no aplica scope territorial | Admin |
+| `permissions:read` | Consultar RBAC | `global` | permiso global | Admin |
 | `permissions:assign` | Cambiar permisos | `global` | permiso global | Admin |
 | `roles:read` | Ver roles | `global` | permiso global | Admin |
+
+## Consulta y mutación
+
+La matriz separa consultas de mutaciones: que un permiso permita consultar una superficie no implica permiso para crear, editar, revocar o eliminar en ella. Cada ruta declara su propio requisito y recurso.
+
+### Consulta global de auditoría
+
+`audit:read` es un permiso global, pero no habilita el visor por sí solo: la ruta exige también el rol `super-admin`. No tiene alcance territorial.
+
+### Notificaciones de club
+
+`notifications:club` no se resuelve como acceso global en Stage 1. Tanto `POST /notifications/club/:instanceType/:instanceId` como `GET /notifications/targets/club` usan el recurso `active_assignment`; el servicio valida la asignación exacta contra el destino solicitado.
 
 ## Cobertura y Límites de Stage 1
 
@@ -108,7 +121,7 @@ Notas:
 - `PermissionsGuard` permite owner fallback antes de resolver permisos explícitos en recursos `user`.
 - Para actores no owner, solo cuentan permisos globales; un `active_assignment` con permisos de club no abre acceso a datos `user` de terceros.
 - OR transicional vigente en backend: permiso fino de familia o fallback legacy de la familia `users:*` (`users:read_detail` para lectura, `users:update` para escritura). Excepción: `registration:complete` no tiene fallback legacy.
-- `registration:complete` es un permiso global dedicado asignado a roles de campo (super_admin, admin, assistant-lf, director-lf y equivalentes union/dia por herencia). El owner siempre puede completar su propio registro sin este permiso.
+- `registration:complete` es un permiso global dedicado asignado a roles de campo (super-admin, admin, assistant-lf, director-lf y equivalentes union/dia por herencia). El owner siempre puede completar su propio registro sin este permiso.
 - Baseline health activo verificado: `allergies` + `diseases` + `medicines`.
 - `medicines` se limita a catálogo + relación sensible `user -> medicines`; no existe vínculo runtime `medicine <-> disease` en esta fase.
 - Excepción mínima vigente: `post_registration` de terceros mantiene lectura administrativa mínima y completion con `registration:complete`, sin feedback sensible detallado.

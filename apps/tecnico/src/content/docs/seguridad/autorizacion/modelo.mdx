@@ -7,7 +7,7 @@ module: seguridad
 status: published
 owners:
   - "Abner Reyes"
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 generated: false
 ---
 ## Propósito
@@ -34,6 +34,7 @@ SACDIA usa un modelo de **RBAC contextual**, compuesto por:
 - scope territorial para limitar grants globales;
 - club assignments para representar responsabilidades de club;
 - `active_assignment` para definir el contexto efectivo de club por sesión;
+- `grants.direct_permissions` como permisos directos candidatos para la capa global;
 - `effective.permissions` y `effective.scope` como salida resuelta del backend.
 
 ## Por qué no alcanza RBAC puro
@@ -80,7 +81,7 @@ La autorización de SACDIA debe leerse así:
 2. el backend identifica sus grants globales;
 3. el backend identifica sus asignaciones de club disponibles;
 4. el backend determina cuál asignación de club está activa;
-5. el backend calcula permisos efectivos y scope efectivo;
+5. el backend combina roles globales aplicables, `grants.direct_permissions` y permisos de la asignación activa para calcular `effective.permissions` y scope efectivo;
 6. los clientes consumen esa resolución, no la reinventan.
 
 En otras palabras:
@@ -96,9 +97,9 @@ Los roles representan responsabilidades agrupadas.
 
 Ejemplos conceptuales:
 
-- `super_admin`
+- `super-admin`
 - `admin`
-- `assistant_admin`
+- `assistant-admin`
 - `coordinator`
 - roles de club como director, secretario, consejero u otros equivalentes
 
@@ -120,6 +121,7 @@ Ejemplos:
 Los permisos pueden venir de:
 
 - grants globales;
+- `grants.direct_permissions` como candidatos globales;
 - asignación activa de club.
 
 ### 3. Scope territorial
@@ -173,8 +175,11 @@ Este punto es CRITICO. Sin esto, la autorización de club se vuelve ambigua y pe
 
 Se calcula combinando:
 
-- permisos globales aplicables;
+- permisos de roles globales aplicables;
+- `grants.direct_permissions` como candidatos globales;
 - permisos de la asignación activa de club.
+
+Un permiso directo inactivo no contribuye; los clientes no deben derivar ni filtrar esta lista por su cuenta.
 
 No representa "todo lo que el usuario podría llegar a hacer en algún contexto".
 Representa lo que puede hacer AHORA en la sesión actual.
@@ -198,6 +203,7 @@ Esta diferencia no es opcional. Es estructural.
 
 `grants` responde:
 - qué roles globales tiene el usuario;
+- qué permisos directos tiene en `grants.direct_permissions`;
 - qué asignaciones de club tiene disponibles.
 
 `grants` describe inventario de acceso.

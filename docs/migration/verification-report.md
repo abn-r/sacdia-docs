@@ -18,9 +18,9 @@ Los tres comparten identidad visual, configuración tipada, schema editorial y n
 
 | Validación | Resultado |
 | --- | --- |
-| `pnpm test` (2026-08-24) | 17 archivos y 81 pruebas aprobadas. |
-| `pnpm check` | 3 portales, 0 errores, 0 warnings y 0 hints |
-| Inventario de cobertura (2026-08-24) | 170 superficies: 133 administrativas y 37 de aplicación; 0 filas fuera de `covered`. `manual-coverage` aprobó dentro de `pnpm test`. |
+| `pnpm test` (2026-08-24) | 18 archivos y 99 pruebas aprobadas. |
+| `pnpm check` (2026-08-24) | 3 portales, 0 errores, 0 warnings y 0 hints |
+| Inventario de cobertura (2026-08-24) | 171 superficies: 134 administrativas y 37 de aplicación; 0 filas fuera de `covered`. `manual-coverage` aprobó dentro de `pnpm test`. |
 | `git diff --check development...HEAD` | Sin errores de whitespace |
 | Schema de contenido | Las 102 entradas actuales del portal técnico sincronizan correctamente |
 | Generadores técnicos | Endpoints, Prisma y versiones escriben en el portal técnico de forma atómica |
@@ -240,7 +240,7 @@ notificaciones es una profundización enlazada, no otra superficie.
 
 El contrato editorial `notifications-manuals.test.ts` protege la separación de
 canales, preferencias, modalidades, límites de `queued`, recursos y rutas. En
-la ejecución del 2026-08-24, `pnpm test` aprobó 81 pruebas en 17 archivos y
+la ejecución del 2026-08-24, `pnpm test` aprobó 99 pruebas en 18 archivos y
 `pnpm check` finalizó en los tres portales sin diagnósticos.
 
 Playwright revisó 10 páginas del lote a 1440 × 1000: todas respondieron HTTP
@@ -252,6 +252,39 @@ La revisión visual incluyó las capturas de los tres portales.
 En el mismo corte, `endpoints.mdx` se regeneró oficialmente desde el OpenAPI
 del runtime. El inventario pasó de 189 a 780 endpoints por drift general, no
 como una ampliación específica del lote de notificaciones.
+
+### Refuerzo editorial de auditoría y RBAC
+
+El visor global de auditoría quedó documentado como una superficie propia:
+`/dashboard/configuration/audit` estaba omitida del inventario anterior y eleva
+la cobertura vigente a 171 superficies (134 administrativas y 37 de
+aplicación). Exige el doble gate de rol global exacto `super-admin`, permiso
+efectivo `audit:read` y recurso global. El visor ofrece únicamente filtros por
+entidad, acción, resultado, origen y fechas; pagina mediante `cursor`, no tiene
+alcance territorial ni exportación y no expone filtros de actor, club o
+correlación en la interfaz.
+
+Las rutas administrativas ahora apuntan a manuales de pantalla específicos para
+roles, catálogo de permisos, matriz de permisos, permisos directos por usuario y
+detalle de usuario. El contrato distingue `grants.direct_permissions` de
+`effective.permissions`, aplica enforcement **fail-closed** cuando faltan los
+metadatos de autorización y usa nombres canónicos de roles con guion, como
+`super-admin` y `assistant-admin`.
+
+El refuerzo conserva dos límites relevantes. Desactivar un permiso es una baja
+lógica, pero no garantiza revocar de inmediato los grants obtenidos por rol:
+ese resolver no filtra `permissions.active`, aunque los permisos directos sí lo
+hacen. Además, el detalle de usuario filtra roles `GLOBAL` en la interfaz, pero
+el backend no valida `role_category`; por ello no debe utilizarse para
+administrar cargos ni roles de club.
+
+Playwright recorrió 14 páginas del lote a 1440 × 1000: todas respondieron HTTP
+200, conservaron ancho de documento `1440/1440` y no emitieron warnings ni
+errores de consola. También recorrió 8 páginas representativas a 390 × 844,
+con ancho de documento y `main` de `390/390`, sin warnings ni errores. La
+inspección visual de Auditoría y Matriz móvil, junto con Roles, Auditoría técnica
+y Contrato canónico en escritorio, confirmó jerarquía, tablas y navegación
+correctas.
 
 ### Capturas reales en manuales prioritarios
 
@@ -296,16 +329,16 @@ consola sin errores.
 | Páginas listas según reglas automáticas | 93 |
 | Páginas que requieren revisión editorial/MDX | 5 |
 | Archivos generados | 3 |
-| Rutas administrativas cubiertas | 133 de 133 |
+| Rutas administrativas cubiertas | 134 de 134 |
 | Features móviles cubiertas | 37 de 37 |
-| Superficies cubiertas totales | 170 de 170 |
+| Superficies cubiertas totales | 171 de 171 |
 | Manuales operativos de pantalla | 37 |
 | Manuales administrativos | 33 archivos para 34 módulos |
 | Procesos transversales | 14, disponibles en ambos portales |
 
 Los manuales se agrupan por recorrido funcional, pero cada superficie conserva su
 trazabilidad en `surface-coverage.csv`. La prueba `manual-coverage.test.ts` exige
-que las 170 filas permanezcan cubiertas, que sus archivos existan y que los
+que las 171 filas permanezcan cubiertas, que sus archivos existan y que los
 enlaces internos de ambos portales resuelvan a contenido real.
 
 ## Limitaciones pendientes

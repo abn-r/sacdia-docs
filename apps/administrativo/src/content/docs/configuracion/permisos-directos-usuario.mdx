@@ -1,0 +1,79 @@
+---
+title: Permisos directos por usuario
+description: Consulta y administra excepciones globales de permisos para una persona, separadas de sus roles.
+surface: admin
+documentType: screen
+module: rbac
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+Los permisos directos son excepciones globales por usuario. Úsalos con cuidado: se suman al cálculo efectivo y no reemplazan la revisión de roles ni de cargos.
+
+## Resultado esperado
+
+Podrás localizar las excepciones directas de una persona y, con autorización reforzada, asignarlas o revocarlas dejando trazabilidad en auditoría.
+
+## Acceso requerido
+
+- La interfaz redirige a quien no tenga el rol exacto `super-admin`.
+- **Listado:** `permissions:read`.
+- **Asignar o revocar:** rol exacto `super-admin` y permiso `permissions:assign`.
+- **Consulta opcional del visor de auditoría:** rol exacto `super-admin` y permiso independiente `audit:read`.
+
+El rol, el permiso backend y la redirección visual son controles distintos. Gestionar permisos directos no concede acceso al visor de auditoría; una ruta visible o conocida tampoco sustituye la validación del backend.
+
+## Ruta incluida
+
+| Ruta | Uso |
+|---|---|
+| `/dashboard/rbac/user-permissions` | Consulta y gestión de excepciones de permisos por usuario. |
+
+## Flujo recomendado
+
+1. Abre **Configuración > Permisos directos por usuario** con una cuenta `super-admin`.
+2. Busca a la persona y consulta sus excepciones vigentes con `permissions:read`.
+3. Diferencia los permisos que provienen de roles de las excepciones directas.
+4. Para asignar o revocar, confirma `permissions:assign`, realiza una única operación y guarda la respuesta.
+5. Verifica primero el resultado en `effective.permissions`.
+6. Solo si también cuentas con `super-admin` y `audit:read`, consulta el visor de auditoría para localizar el registro de la operación.
+
+## Asignar y revocar excepciones
+
+- La excepción es global y participa en `effective.permissions`.
+- La asignación y la revocación se registran en auditoría.
+- Revocar aplica una desactivación lógica de la excepción; conserva la trazabilidad histórica.
+- Un duplicado activo da conflicto. Consulta primero las excepciones existentes y no reenvíes la misma asignación.
+
+## Cómo verificarlo
+
+- La excepción activa aparece para la persona correcta y el permiso se refleja en `effective.permissions`.
+- Después de una revocación, confirma el estado de la excepción y `effective.permissions` antes de concluir que cambió el acceso.
+- Verifica también los roles del usuario para no atribuir a una excepción directa un permiso que continúa llegando por rol.
+- Si tienes además `super-admin` y el permiso independiente `audit:read`, puedes usar el visor de auditoría como trazabilidad adicional; no es la verificación primaria ni está concedido por gestionar directos.
+
+## Límites actuales
+
+- Es una excepción global; no define alcance territorial ni equivale a un cargo.
+- La pantalla no sustituye los permisos otorgados por roles.
+- La gestión de directos no otorga `audit:read` ni acceso al visor de auditoría.
+- Una asignación duplicada activa se rechaza; no uses reintentos para sortear el conflicto.
+
+## Si algo falla
+
+- **La interfaz redirige:** confirma el rol exacto `super-admin`; no intentes acceder por URL directa.
+- **No puedes listar o guardar:** verifica `permissions:read` para consultar y `permissions:assign` junto con `super-admin` para mutar.
+- **No puedes abrir auditoría:** esa consulta requiere también el rol exacto `super-admin` y el permiso independiente `audit:read`.
+- **Recibes un conflicto:** busca un duplicado activo y verifica su estado antes de repetir la asignación.
+
+## Manuales relacionados
+
+- [Administración de roles](/configuracion/roles/)
+- [Catálogo de permisos](/configuracion/permisos/)
+- [Matriz de permisos](/configuracion/matriz-de-permisos/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-24 con la ruta, las redirecciones, los permisos efectivos y la auditoría de excepciones directas del runtime RBAC.

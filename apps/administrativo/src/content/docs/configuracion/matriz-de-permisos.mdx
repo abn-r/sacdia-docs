@@ -1,0 +1,70 @@
+---
+title: Matriz de permisos
+description: Revisa y sincroniza la relación entre roles y permisos, con sus controles de acceso completos.
+surface: admin
+documentType: screen
+module: rbac
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+La matriz relaciona roles con permisos. Sirve para revisar y cambiar esa relación, no para administrar territorios ni cargos organizacionales.
+
+## Resultado esperado
+
+Podrás consultar la relación de un rol con sus permisos y, si cuentas con autorización reforzada, sincronizar una lista completa de permisos.
+
+## Acceso requerido
+
+- **Consulta operativa completa:** `roles:read` y `permissions:read`, porque la página consulta ambos conjuntos.
+- **Mutaciones:** rol exacto `super-admin` y permiso `permissions:assign`.
+
+El menú usa OR; no equivale a acceso completo. Puede mostrar una ruta con uno de los permisos de lectura, aunque la página no pueda cargar toda la información sin el otro. El gate visual tampoco sustituye los controles del backend.
+
+## Ruta incluida
+
+| Ruta | Uso |
+|---|---|
+| `/dashboard/configuration/matrix` | Consulta y sincronización de permisos por rol. |
+
+## Flujo recomendado
+
+1. Abre **Configuración > Matriz de permisos**.
+2. Confirma que tienes `roles:read` y `permissions:read` antes de interpretar la carga de la pantalla.
+3. Selecciona el rol y revisa los permisos actuales.
+4. Para cambiar la relación, confirma `super-admin` y `permissions:assign`.
+5. Selecciona el conjunto final, sincroniza y vuelve a consultar el rol.
+
+## Sincronizar una relación
+
+La sincronización reemplaza el conjunto completo. Antes de confirmar, compara la selección con los permisos actuales: todo permiso no incluido deja de pertenecer al rol tras la sincronización.
+
+## Cómo verificarlo
+
+- La matriz muestra el rol esperado y los permisos seleccionados tras recargar.
+- Comprueba el resultado desde [Administración de roles](/configuracion/roles/) cuando el cambio afecta un rol crítico.
+- Si la ruta se ve en el menú pero no carga completa, verifica ambos permisos de lectura antes de solicitar soporte.
+
+## Límites actuales
+
+- La matriz no tiene alcance territorial.
+- No es un editor de cargos; describe grants de un rol hacia permisos backend.
+- La visibilidad de menú por OR no demuestra acceso operativo completo.
+
+## Si algo falla
+
+- **La pantalla aparece pero falta información:** confirma `roles:read` y `permissions:read`; el menú usa OR y puede haber mostrado la ruta con acceso parcial.
+- **No se puede sincronizar:** verifica el rol exacto `super-admin` y `permissions:assign`.
+- **Un permiso dejó de aparecer:** revisa la lista completa enviada en la sincronización antes de repetir; la operación reemplaza el conjunto completo.
+
+## Manuales relacionados
+
+- [Administración de roles](/configuracion/roles/)
+- [Catálogo de permisos](/configuracion/permisos/)
+- [Permisos directos por usuario](/configuracion/permisos-directos-usuario/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-24 con las consultas, gates de navegación y validaciones de mutación RBAC del panel administrativo y del backend.

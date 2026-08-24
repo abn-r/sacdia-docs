@@ -1,0 +1,86 @@
+---
+title: Detalle de usuario
+description: Revisar el perfil administrativo de una persona, su acceso y sus roles globales.
+surface: admin
+documentType: screen
+module: users
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+Revisa la información disponible de una persona desde `/dashboard/users/:userId`. Este manual cubre el detalle; el listado, alta e importación se documentan en [Administración de usuarios](/clubes/usuarios/).
+
+## Resultado esperado
+
+Al terminar, podrás revisar el perfil, identificar los bloques a los que tu cuenta tiene acceso y administrar roles globales únicamente cuando corresponda.
+
+## Acceso requerido
+
+La pantalla requiere una sesión administrativa con rol `admin` o `super-admin`. La autorización efectiva de cada consulta o cambio también se valida en el backend.
+
+Para el panel de roles globales:
+
+- leer los roles asignados requiere `roles:read`;
+- asignar o remover un rol requiere `permissions:assign`;
+- ambas operaciones exigen el gate de rol `admin` o `super-admin`.
+
+El cargo no sustituye al permiso y la presencia visual de un bloque no garantiza que una mutación esté autorizada.
+
+## Revisar el detalle
+
+1. En [Administración de usuarios](/clubes/usuarios/), selecciona una persona.
+2. Revisa identidad, ubicación, trayectoria y el resumen de acceso antes de iniciar un cambio.
+3. Abre **Roles y acceso** para consultar las asignaciones globales y el estado de acceso a aplicación, panel y cuenta.
+4. Abre **Seguridad** o **Sesiones** solo para el caso que debas atender y confirma el resultado del servicio antes de repetir una acción.
+
+## Roles globales
+
+El selector de la interfaz muestra y administra únicamente roles con categoría `GLOBAL`. No administra cargos ni roles de club.
+
+1. En **Roles y acceso**, verifica primero las asignaciones actuales.
+2. Para asignar, selecciona un rol disponible de categoría `GLOBAL` y confirma.
+3. Para remover, selecciona la acción del rol correspondiente y confirma la advertencia.
+4. Actualiza el detalle y comprueba que la asignación refleje el resultado esperado.
+
+super-admin es protegido: un `admin` no puede asignar, reactivar ni remover ese rol. Solo un `super-admin` puede mutarlo.
+
+**Límite conocido:** El backend no valida `role_category`. La UI filtra `GLOBAL`, pero una llamada directa que eluda la interfaz podría intentar asignar un `role_id` de otra categoría. No uses este detalle para administrar cargos ni roles de club.
+
+## Bloques que aparecen de forma condicional
+
+- **Acceso y roles:** la pestaña se renderiza tras cargar el detalle; la lista de roles puede quedar vacía si su consulta falla y las mutaciones requieren los controles indicados arriba.
+- **MFA:** la pestaña Seguridad se muestra, pero las acciones administrativas de reinicio o desactivación solo aparecen para quien tenga `users:update:admin`. Si no se obtiene el estado, se muestra como no configurado.
+- **Sesiones:** la pestaña se muestra; si la consulta de sesiones falla, presenta reintento. Consultar o revocar sesiones requiere el gate administrativo y `users:update:admin` en el servicio.
+- **Datos sensibles:** Salud se muestra únicamente cuando la cuenta puede leer esa familia. Los contactos de emergencia y el representante legal también se muestran de forma condicional según sus permisos de lectura; no se muestran por el simple hecho de abrir el perfil.
+
+## Cómo verificarlo
+
+El detalle muestra la información permitida para tu cuenta. En el panel de roles, las opciones disponibles son `GLOBAL`; tras una operación autorizada, la asignación se actualiza. Un intento de un `admin` sobre `super-admin` debe ser rechazado.
+
+## Límites
+
+- No administra cargos ni roles de club.
+- La categoría `GLOBAL` es un filtro visual y no reemplaza la validación del backend.
+- Los datos sensibles, MFA y sesiones pueden no estar disponibles si la autorización o la consulta falla.
+- No asumas que un rol de interfaz cambia el alcance territorial de la persona.
+
+## Errores frecuentes
+
+| Problema | Qué hacer |
+|---|---|
+| El detalle muestra acceso restringido | Confirma que la sesión tenga `admin` o `super-admin` y solicita la revisión de permisos; no uses una URL de otro usuario. |
+| No aparece una acción de roles o falla al confirmarla | Verifica `roles:read` para consulta, `permissions:assign` para cambios y el gate administrativo. |
+| No puedes cambiar `super-admin` | Es un rol protegido; la operación solo puede realizarla un `super-admin`. |
+| No se muestra Salud, contactos o representante legal | Es información sensible condicionada por permiso de lectura; solicita el acceso adecuado si el caso lo justifica. |
+| Sesiones o MFA no cargan | Usa el reintento cuando aparezca y registra el mensaje de error antes de escalarlo. |
+
+## Procesos relacionados
+
+- [Administración de usuarios](/clubes/usuarios/) — listado, alta e importación.
+- [Gestión de clubes](/clubes/gestion-clubes/) — cargos, miembros y operaciones de club.
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-24 con `/dashboard/users/[userId]`, `UserRolesPanel`, `MfaTab`, `SessionsTab`, `UserAccessToggles` y los endpoints administrativos de RBAC.

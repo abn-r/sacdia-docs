@@ -1,0 +1,74 @@
+---
+title: Administración de roles
+description: Consulta y administra los roles globales y de club sin confundir el cargo con los permisos efectivos.
+surface: admin
+documentType: screen
+module: rbac
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+Usa esta pantalla para revisar los roles que existen y, cuando tu autorización lo permite, crear, editar, desactivar, copiar o sincronizar sus permisos.
+
+## Resultado esperado
+
+Podrás identificar el rol correcto, su categoría y sus permisos asociados sin asumir que un cargo visible concede acceso por sí solo.
+
+## Acceso requerido
+
+- **Consulta:** `roles:read`.
+- **Crear, editar, desactivar, copiar o sincronizar:** rol exacto `super-admin` y permiso `permissions:assign`.
+- **Categoría del rol:** `GLOBAL` o `CLUB`; la categoría describe el tipo de asignación, no un permiso adicional.
+
+Un cargo, un permiso del backend y un gate visual son controles distintos. El menú puede ocultar acciones, pero el backend vuelve a validar la mutación.
+
+## Ruta incluida
+
+| Ruta | Uso |
+|---|---|
+| `/dashboard/configuration/roles` | Listado, alta, edición y gestión de permisos de roles. |
+
+## Flujo recomendado
+
+1. Abre **Configuración > Roles** y confirma que cuentas con `roles:read`.
+2. Busca el rol antes de crear otro y verifica si corresponde a `GLOBAL` o `CLUB`.
+3. Revisa el nombre y la categoría antes de guardar: el nombre es inmutable después de crear el rol.
+4. Para cambiar sus permisos, usa la sincronización solo cuando la lista seleccionada sea definitiva.
+5. Confirma el resultado desde el detalle del rol y desde la [matriz de permisos](/configuracion/matriz-de-permisos/).
+
+## Copiar y sincronizar permisos
+
+- Copiar toma como referencia un rol existente; revisa el destino antes de confirmar.
+- Sincronizar permisos reemplaza el conjunto completo: no agrega únicamente los permisos marcados.
+- El rol super-admin es protegido y no debe tratarse como un rol ordinario durante las operaciones administrativas.
+- No desactives un rol que todavía tenga asignaciones activas: el backend rechaza esa operación.
+
+## Cómo verificarlo
+
+- El rol aparece con la categoría esperada y sus permisos seleccionados coinciden con la lista guardada.
+- Tras una sincronización, confirma que no quedó un permiso anterior no seleccionado.
+- Si la operación afecta asignaciones, verifica que las asignaciones activas cumplan las reglas antes de intentar desactivar el rol.
+
+## Límites actuales
+
+- La pantalla no convierte un cargo organizacional en un permiso backend.
+- Las mutaciones no se habilitan solo por conocer la URL: requieren `super-admin` y `permissions:assign`.
+- El nombre de un rol ya creado no se puede renombrar.
+
+## Si algo falla
+
+- **No aparece la acción:** confirma primero el rol exacto `super-admin` y después `permissions:assign`; un gate visual no sustituye al backend.
+- **No se puede desactivar:** revisa si el rol conserva asignaciones activas y resuélvelas antes de reintentar.
+- **La sincronización dio un resultado inesperado:** vuelve a consultar el rol; no repitas la operación sin reconstruir la lista completa de permisos deseada.
+
+## Manuales relacionados
+
+- [Catálogo de permisos](/configuracion/permisos/)
+- [Matriz de permisos](/configuracion/matriz-de-permisos/)
+- [Permisos directos por usuario](/configuracion/permisos-directos-usuario/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-24 con las rutas, gates visuales y validaciones RBAC efectivas del panel administrativo y del backend.

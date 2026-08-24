@@ -1,78 +1,73 @@
 ---
 title: Administración de usuarios
-description: Buscar, crear, importar y revisar perfiles, acceso, roles, MFA y sesiones.
+description: Buscar personas, crear un usuario e importar registros.
 surface: admin
 documentType: screen
 module: users
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 ---
 
-Buscar, crear, importar y revisar perfiles, acceso, roles, MFA y sesiones.
+Busca personas, inicia un alta e importa registros. Para revisar acceso, roles, MFA o sesiones de una persona existente, usa el [Detalle de usuario](/clubes/detalle-usuario/).
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás buscar, crear, importar y revisar perfiles, acceso, roles, MFA y sesiones.
+Al terminar este recorrido, podrás localizar una persona en el listado, iniciar un alta o abrir la importación sin confundir esas tareas con la administración del detalle.
 
 ## Acceso requerido
 
-- users:read
-- permisos específicos para crear, actualizar acceso o gestionar roles
-
-El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso ni reemplaza la autorización del backend.
+El listado y sus acciones dependen de la cuenta administrativa, sus permisos efectivos y el alcance que aplique a la consulta. El menú puede ocultar una acción; verlo no concede autorización y el backend confirma cada operación.
 
 ## Rutas incluidas
 
 | Ruta | Uso |
 |---|---|
-| `/dashboard/users` | Listado de usuarios. |
-| `/dashboard/users/[userId]` | Detalle del registro seleccionado. |
-| `/dashboard/users/bulk-upload` | Pantalla operativa del módulo. |
-| `/dashboard/users/new` | Formulario para crear un registro. |
+| `/dashboard/users` | Listado de usuarios y acceso al detalle. |
+| `/dashboard/users/new` | Formulario para iniciar un alta. |
+| `/dashboard/users/bulk-upload` | Pantalla para importar registros. |
 
-## Antes de comenzar
+## Buscar y abrir un detalle
 
-- Confirma la cuenta, el alcance territorial y el periodo que vas a operar.
-- Busca el registro antes de crearlo para evitar duplicados.
-- Si no ves una acción, no intentes saltar el control mediante una URL directa.
+1. Abre **Usuarios**.
+2. Usa la búsqueda y los filtros que la pantalla tenga disponibles para ubicar a la persona.
+3. Confirma identidad y contexto antes de seleccionarla.
+4. Selecciona el registro para abrir el [Detalle de usuario](/clubes/detalle-usuario/).
 
-## Tareas principales
+No edites acceso, roles, MFA ni sesiones desde el listado: esas acciones pertenecen al detalle de la persona.
 
-- Buscar y filtrar usuarios.
-- Crear una cuenta o importar una hoja.
-- Abrir perfil, enrollment, trayectoria y cargos.
-- Gestionar acceso a app/panel y revisión por excepción.
-- Consultar roles, MFA y sesiones según permiso.
+## Crear o importar
 
-## Flujo recomendado
-
-1. Abre **Usuarios** y usa los filtros.
-2. Selecciona una persona o inicia alta/importación.
-3. En el detalle, revisa identidad y alcance antes de cambiar acceso.
-4. Realiza una sola acción y confirma los mensajes.
-5. Vuelve al resumen para verificar estado, roles y última actualización.
+1. Antes de crear o importar, busca la persona para reducir duplicados.
+2. Para un registro individual, selecciona **Nuevo usuario** y completa el formulario solicitado.
+3. Para una carga masiva, selecciona **Importar** y sigue las validaciones visibles de esa pantalla.
+4. Al finalizar, vuelve al listado, busca el registro y verifica que aparezca antes de continuar con su detalle.
 
 ## Cómo verificarlo
 
-La cuenta conserva su identidad y muestra correctamente acceso a app/panel, roles y contexto; una cuenta eliminada se etiqueta como tal.
+La persona creada o importada aparece en el listado cuando el proceso finaliza correctamente. Al seleccionar un registro existente se abre su [Detalle de usuario](/clubes/detalle-usuario/), que concentra acceso, roles, MFA y sesiones.
+
+## Límites
+
+- Este manual no documenta cambios de acceso, roles, MFA ni sesiones; se realizan en el detalle de usuario.
+- La importación no sustituye la revisión de posibles duplicados.
+- No intentes obtener acciones ocultas mediante una URL directa.
 
 ## Errores frecuentes
 
 | Problema | Qué hacer |
 |---|---|
-| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
-| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
-| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
-| El registro está fuera de alcance | Revisa el filtro territorial y la cuenta activa. El panel limita los datos al alcance autorizado. |
+| No encuentras a la persona | Revisa la búsqueda y los filtros visibles antes de iniciar un alta. |
+| No aparece Nuevo usuario o Importar | Confirma el permiso efectivo de la cuenta y solicita la revisión de acceso si corresponde. |
+| La importación rechaza registros | Corrige los datos indicados por la pantalla y vuelve a validar antes de repetir el envío. |
+| El registro no aparece después de finalizar | Actualiza el listado y verifica el resultado del proceso antes de crear un duplicado. |
 
 ## Procesos relacionados
 
-- [Abrir la guía del proceso](/procesos/alta-y-membresia/)
-- [Abrir la guía del proceso](/procesos/gestion-club-seccion/)
-- [Abrir la guía del proceso](/procesos/traslado-miembro/)
+- [Detalle de usuario](/clubes/detalle-usuario/) — acceso, roles, MFA y sesiones de una persona.
+- [Índice de gestión de clubes y personas](/clubes/) — otros manuales del módulo.
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las rutas, componentes, permisos de navegación y documentación canónica del módulo `users`.
+Manual contrastado el 2026-08-24 con `/dashboard/users`, `/dashboard/users/new`, `/dashboard/users/bulk-upload`, la tabla y las acciones de usuarios.

@@ -1,0 +1,72 @@
+---
+title: Catálogo de permisos
+description: Consulta y mantiene permisos técnicos que luego se asignan a roles o, de forma excepcional, a usuarios.
+surface: admin
+documentType: screen
+module: rbac
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+Este catálogo define permisos técnicos; no asigna por sí solo acceso a una persona ni sustituye un cargo organizacional.
+
+## Resultado esperado
+
+Podrás consultar una clave de permiso, distinguir su estado y gestionar el catálogo solo con la autorización reforzada requerida.
+
+## Acceso requerido
+
+- **Consulta:** `permissions:read`.
+- **Crear, editar o desactivar:** rol exacto `super-admin` y permiso `permissions:assign`.
+
+El permiso backend y el gate visual son independientes. Que la interfaz muestre una opción no elimina la validación de doble gate en el backend.
+
+## Ruta incluida
+
+| Ruta | Uso |
+|---|---|
+| `/dashboard/configuration/permissions` | Consulta y mantenimiento del catálogo de permisos. |
+
+## Flujo recomendado
+
+1. Abre **Configuración > Permisos** y confirma `permissions:read`.
+2. Busca la clave antes de crear otra y valida que siga el formato `resource:action`.
+3. Revisa las relaciones en roles antes de cambiar el estado de un permiso existente.
+4. Si la mutación corresponde, confirma `super-admin` y `permissions:assign` antes de guardar.
+5. Consulta de nuevo el catálogo y la [matriz de permisos](/configuracion/matriz-de-permisos/) para verificar el cambio.
+
+## Baja y vigencia
+
+Desactivar aplica una baja lógica: el permiso se conserva como registro, pero queda inactivo para los flujos que filtran permisos activos.
+
+No garantiza la revocación inmediata de los grants por rol. El resolver de grants por rol no filtra `permissions.active`; los permisos directos sí aplican ese filtro. Trata una desactivación como una restricción de catálogo y valida el acceso efectivo antes de declarar una revocación.
+
+## Cómo verificarlo
+
+- La clave guardada respeta `resource:action` y el estado mostrado corresponde a la operación realizada.
+- Para un permiso desactivado, confirma el resultado en el flujo consumidor; no deduzcas la revocación efectiva solo desde el catálogo.
+- Si el permiso era directo, verifica nuevamente los permisos efectivos del usuario afectado.
+
+## Límites actuales
+
+- Un permiso no es un cargo ni asigna por sí mismo responsabilidades organizacionales.
+- La interfaz no omite el control de `super-admin` y `permissions:assign` para mutar.
+- La baja lógica no prueba por sí sola la revocación inmediata de los grants que llegan por rol.
+
+## Si algo falla
+
+- **No carga el catálogo:** confirma `permissions:read` y conserva el mensaje de error antes de volver a intentar.
+- **No puedes guardar:** verifica ambos controles, `super-admin` y `permissions:assign`.
+- **Esperabas revocar acceso de inmediato:** revisa primero si el permiso procede de un rol; no comuniques una revocación sin verificar el acceso efectivo.
+
+## Manuales relacionados
+
+- [Administración de roles](/configuracion/roles/)
+- [Matriz de permisos](/configuracion/matriz-de-permisos/)
+- [Permisos directos por usuario](/configuracion/permisos-directos-usuario/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-24 con el contrato RBAC efectivo del backend, las rutas y los gates visuales del panel administrativo.
