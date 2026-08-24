@@ -1,83 +1,66 @@
 ---
 title: "Comunicaciones"
-description: "Notificaciones push via Firebase Cloud Messaging con gestion de tokens FCM por dispositivo."
+description: "Bandeja persistente, preferencias y entrega push mediante Firebase Cloud Messaging (FCM)."
 surface: technical
 documentType: reference
 module: producto
 status: published
 owners:
   - "Abner Reyes"
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 generated: false
 ---
-El modulo de comunicaciones gestiona las notificaciones push a los dispositivos moviles de los miembros de SACDIA. En el contexto de clubes de Conquistadores, Aventureros y Guias Mayores, las notificaciones son esenciales para coordinar actividades, avisar cambios de horario, convocar a campamentos, comunicar decisiones de la directiva y mantener informados a los padres/representantes legales.
 
-El sistema utiliza Firebase Cloud Messaging (FCM) como proveedor de push notifications. Cada dispositivo registra su token FCM al autenticarse, y el backend puede enviar notificaciones a tres niveles: directa a un usuario especifico, broadcast a todos los usuarios registrados, o segmentada a los miembros de una seccion de club especifica.
+El módulo de comunicaciones combina una bandeja persistente por destinatario y la entrega push mediante Firebase Cloud Messaging (FCM). Sirve para los avisos directos, globales y por instancia de club; no convierte el resultado de un envío en una confirmación de lectura ni de entrega en el dispositivo.
 
-Los tokens FCM se gestionan por usuario y dispositivo, permitiendo que un usuario reciba notificaciones en multiples dispositivos simultaneamente. El ciclo de vida del token incluye registro al login, desregistro al logout, y consulta de tokens activos.
+## Bandeja persistente
 
-## Que existe (verificado contra codigo)
+Cada envío visible crea un registro de auditoría y una entrega en `notification_deliveries` para cada destinatario permitido. La bandeja se consulta con `GET /api/v1/notifications/history`, paginada con `page` y `limit` (valor por defecto 20; máximo 100). Para el usuario regular, el historial es su propia bandeja; para roles administrativos es un historial de auditoría sujeto a su alcance, salvo el superadministrador.
 
-### Backend (NotificationsModule)
-- **Controller**: `src/notifications/notifications.controller.ts` (maneja tanto notificaciones como FCM tokens)
-- **Services**: `src/notifications/notifications.service.ts`, `src/notifications/fcm-tokens.service.ts`
-- **Module**: `src/notifications/notifications.module.ts`
-- **Integracion**: FirebaseAdminModule (FCM)
-- **7 endpoints totales**:
-  - Notificaciones:
-    - `POST /api/v1/notifications/send` — Enviar notificacion a usuario especifico (JWT)
-    - `POST /api/v1/notifications/broadcast` — Enviar notificacion a todos los usuarios (roles: super_admin, admin)
-    - `POST /api/v1/notifications/club/:sectionId` — Enviar notificacion a miembros de seccion (roles: super_admin, admin)
-  - FCM Tokens:
-    - `POST /api/v1/fcm-tokens` — Registrar token FCM (JWT)
-    - `DELETE /api/v1/fcm-tokens/:token` — Desregistrar token FCM (JWT)
-    - `GET /api/v1/fcm-tokens` — Obtener tokens propios (JWT)
-    - `GET /api/v1/fcm-tokens/user/:userId` — Obtener tokens por userId (owner/admin only)
+La lectura se gestiona sobre la entrega, no sobre el mensaje push:
 
-### Admin
-- **1 pagina funcional**: Formularios de envio de notificaciones
-  - Notificacion directa a un usuario especifico
-  - Broadcast a todos los usuarios
-  - Notificacion a seccion de club
-- Consume `POST /notifications/send`, `POST /notifications/broadcast`, `POST /notifications/club/:sectionId`
+- `GET /api/v1/notifications/unread-count` devuelve los no leídos del usuario autenticado.
+- `PATCH /api/v1/notifications/{deliveryId}/read` marca una entrega propia como leída; una entrega inexistente o ajena devuelve 404.
+- `PATCH /api/v1/notifications/read-all` marca como leídas todas las entregas no leídas del usuario autenticado.
 
-### App Movil
-- **Tiene bandeja de notificaciones** (`lib/features/notifications/` — Clean Architecture completa: data/domain/presentation)
-- Firebase Messaging integrado para recepcion de push notifications
-- Registro/desregistro automatico de tokens FCM via providers
-- **Realtime cache invalidation**: `RealtimeInvalidationHandler` procesa silent push (`data.type == 'cache_invalidate'`) y dispara `ref.invalidate(...)` sobre providers Riverpod afectados
-- **iOS push pendiente** de configuracion infra (Xcode/Apple Dev/Firebase) — la bandeja funciona 95% sin esa config; el codigo del cliente esta correcto
+La bandeja persistente y el push son canales separados. Si FCM no está configurado o el destinatario no tiene tokens activos, la entrega de bandeja puede existir aunque no haya push. El push es best-effort y no representa una garantía de recepción, visualización ni lectura.
 
-### Base de datos
-- `user_fcm_tokens` — Tokens FCM por usuario/dispositivo
+## Preferencias por categoría
 
-## Requisitos funcionales
+Las preferencias canónicas de la app móvil se consultan y actualizan en:
 
-1. Solo super_admin y admin deben poder enviar broadcast y notificaciones a secciones de club
-2. Cualquier usuario autenticado debe poder enviar notificacion directa a otro usuario
-3. Los tokens FCM deben registrarse automaticamente al autenticarse en la app
-4. Los tokens deben desregistrarse al cerrar sesion
-5. Un usuario puede tener multiples tokens (multiples dispositivos)
-6. Las notificaciones deben incluir titulo, cuerpo y datos opcionales (deep link, tipo de evento)
-7. El envio a seccion debe resolver los tokens de todos los miembros activos de esa seccion
-8. El admin debe ofrecer formularios simples para los tres tipos de envio
+- `GET /api/v1/users/me/notification-preferences`
+- `PATCH /api/v1/users/me/notification-preferences`
 
-## Decisiones de diseno
+El contrato expone un interruptor maestro y las categorías `activities`, `achievements`, `approvals`, `invitations` y `reminders`. Una categoría sin fila persistida queda habilitada por defecto (modelo opt-out). Al actualizar en la misma solicitud el maestro y categorías individuales, primero se aplica el maestro y después las categorías indicadas lo sobrescriben.
 
-- **Firebase FCM como unico proveedor**: Se usa exclusivamente FCM para push notifications; no hay fallback por SMS o email
-- **Tokens gestionados por el backend**: El registro/desregistro de tokens se hace via API, no directamente desde Firebase
-- **Envio fire-and-forget**: Las notificaciones se envian pero no se persisten en base de datos; no hay tabla de historial de notificaciones enviadas
-- **Sin colas**: El envio es sincrono; para broadcast masivos esto podria ser un bottleneck
-- **Segmentacion por seccion**: La granularidad de envio por grupo es la seccion de club, no unidades o roles especificos
+Las preferencias se evalúan antes de crear la entrega de bandeja y antes de intentar el push. Las fuentes `admin:*` no admiten opt-out, por lo que no quedan filtradas por preferencias. Existen además `GET /api/v1/notifications/preferences` y `PUT /api/v1/notifications/preferences/{category}` para compatibilidad administrativa; la app debe usar el contrato canónico bajo `/users/me`.
 
-## Gaps y pendientes
+## Entrega asíncrona
 
-- **Sin preferencias**: Los usuarios no pueden configurar que tipo de notificaciones quieren recibir
-- **Sin programacion**: No hay capacidad para programar notificaciones futuras (ej: recordatorio de actividad 1 hora antes)
-- **Sin notificaciones a roles**: No se puede enviar a un rol especifico (ej: todos los directores)
-- **iOS push setup pendiente** — config en Apple Developer + Firebase aun por completar
+Los envíos manuales requieren JWT y permisos explícitos:
 
-## Prioridad y siguiente accion
+- `POST /api/v1/notifications/send` requiere `notifications:send` y alcance global.
+- `POST /api/v1/notifications/broadcast` requiere `notifications:broadcast` y alcance global.
+- `POST /api/v1/notifications/club/{instanceType}/{instanceId}` y `GET /api/v1/notifications/targets/club` requieren `notifications:club` y validan el recurso `active_assignment`.
 
-- **Prioridad**: Baja — feature funcional; las mejoras son incrementales
-- **Siguiente accion**: Agregar tabla de historial de notificaciones enviadas para auditoria. Considerar implementar bandeja de notificaciones en la app. Evaluar colas (Redis/BullMQ) para broadcast masivo asincrono.
+Cuando Redis y FCM están disponibles, el módulo encola la entrega con BullMQ. Una respuesta con `queued: true` solo confirma que el trabajo se encoló; no equivale a entregado. Los trabajos tienen hasta 3 intentos y reintentos con backoff exponencial de 2, 4 y 8 segundos. Si el broadcast se solicita en producción sin cola disponible, falla en vez de ejecutarse de forma síncrona.
+
+Para envíos directo o por club, el runtime puede usar un fallback síncrono cuando la cola o FCM no están disponibles. Esa degradación no cambia la separación entre persistencia de bandeja y push, ni transforma un resultado técnico en garantía de entrega.
+
+## tokens FCM
+
+Los tokens FCM se administran por dispositivo con el contrato canónico autenticado:
+
+- `POST /api/v1/users/me/fcm-tokens` registra o reactiva un token y lo reasocia al usuario autenticado cuando ya existía.
+- `DELETE /api/v1/users/me/fcm-tokens/{tokenId}` desactiva un token propio por su UUID; el valor secreto del token no viaja en la URL.
+
+El backend conserva como máximo cinco tokens activos por usuario y elimina los más antiguos cuando se supera el límite. Solo los errores permanentes de FCM desactivan un token; los errores transitorios se registran para reintento. La limpieza elimina tokens sin uso durante más de 90 días los domingos a las 03:00.
+
+También existen endpoints bajo `/api/v1/fcm-tokens` para compatibilidad y administración (`GET`, `POST`, `DELETE /by-token`, `DELETE /{id}` y `GET /user/{userId}` con guard owner/admin). No sustituyen las rutas canónicas `/users/me` para el cliente móvil.
+
+## Límites operativos
+
+- No hay confirmación de que el sistema operativo haya mostrado el push ni de que el usuario lo haya leído; la lectura se registra únicamente en la entrega de bandeja.
+- Los destinos de club están limitados por `active_assignment`; el endpoint de objetivos devuelve solo las instancias autorizadas para el actor.
+- La segmentación manual soportada es directo, global y por instancia de club. No se deben inferir segmentos territoriales o por categoría fuera de los permisos y destinos que devuelve el runtime.

@@ -7,7 +7,7 @@ module: api
 status: published
 owners:
   - "Auto-generated"
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 generated: true
 ---
 
@@ -25,43 +25,115 @@ generated: true
 | Metrica | Valor |
 | --- | --- |
 | API version | `2.2.0` |
-| Total endpoints | **189** |
-| Autenticados (Bearer) | 158 |
-| Tags / modulos | 27 |
-| Generado | 2026-08-20 |
+| Total endpoints | **780** |
+| Autenticados (Bearer) | 740 |
+| Tags / modulos | 99 |
+| Generado | 2026-08-24 |
 | Spec fuente | `sacdia-backend/sacdia-api-spec.json` |
 
 > Esta pagina se regenera desde el OpenAPI spec del backend. Si ves drift contra el codigo, regenera con `pnpm sync:endpoints`. La autoridad final es `SwaggerModule.createDocument` corriendo sobre el codigo NestJS.
 
 ## Indice de modulos
 
-- [auth](#auth) — 16 endpoints
-- [users](#users) — 10 endpoints
-- [clubs](#clubs) — 11 endpoints
-- [activities](#activities) — 7 endpoints
-- [admin-geography](#admin-geography) — 20 endpoints
-- [admin-reference](#admin-reference) — 16 endpoints
-- [admin-users](#admin-users) — 2 endpoints
+- [auth](#auth) — 20 endpoints
+- [users](#users) — 15 endpoints
+- [admin](#admin) — 2 endpoints
+- [clubs](#clubs) — 16 endpoints
+- [Achievements](#achievements) — 4 endpoints
+- [activities](#activities) — 8 endpoints
+- [Admin - Achievements](#admin-achievements) — 12 endpoints
+- [Admin - Certifications](#admin-certifications) — 10 endpoints
+- [Admin - Honors Requirements](#admin-honors-requirements) — 7 endpoints
+- [Admin - Phase E Catalogs (i18n)](#admin-phase-e-catalogs-i18n-) — 35 endpoints
+- [admin-audit-logs](#admin-audit-logs) — 2 endpoints
+- [admin-auth](#admin-auth) — 6 endpoints
+- [admin-camporee-event-types](#admin-camporee-event-types) — 4 endpoints
+- [admin-certificate-bulk-imports](#admin-certificate-bulk-imports) — 6 endpoints
+- [admin-coordination](#admin-coordination) — 9 endpoints
+- [admin-geography](#admin-geography) — 24 endpoints
+- [admin-notifications](#admin-notifications) — 3 endpoints
+- [admin-reference](#admin-reference) — 38 endpoints
+- [admin-support](#admin-support) — 3 endpoints
+- [admin-users](#admin-users) — 7 endpoints
+- [analytics](#analytics) — 8 endpoints
+- [Annual Evidence Folders](#annual-evidence-folders) — 13 endpoints
+- [Annual Evidence Folders - Evaluation](#annual-evidence-folders-evaluation) — 5 endpoints
+- [Annual Evidence Folders - Rankings](#annual-evidence-folders-rankings) — 4 endpoints
+- [Annual Evidence Folders - Templates](#annual-evidence-folders-templates) — 9 endpoints
+- [Annual Ranking Configs](#annual-ranking-configs) — 4 endpoints
+- [Annual Ranking Progress](#annual-ranking-progress) — 1 endpoints
+- [Annual Rankings](#annual-rankings) — 1 endpoints
+- [annual-reports](#annual-reports) — 9 endpoints
 - [App](#app) — 1 endpoints
-- [camporees](#camporees) — 8 endpoints
-- [catalogs](#catalogs) — 14 endpoints
-- [certifications](#certifications) — 7 endpoints
-- [classes](#classes) — 3 endpoints
+- [Award Categories](#award-categories) — 5 endpoints
+- [camporee-club-registration](#camporee-club-registration) — 4 endpoints
+- [camporee-event-templates](#camporee-event-templates) — 5 endpoints
+- [camporee-events](#camporee-events) — 16 endpoints
+- [camporee-scoring](#camporee-scoring) — 19 endpoints
+- [camporee-staff](#camporee-staff) — 8 endpoints
+- [camporee-venues](#camporee-venues) — 9 endpoints
+- [camporees](#camporees) — 46 endpoints
+- [catalogs](#catalogs) — 16 endpoints
+- [certificate-bulk-imports](#certificate-bulk-imports) — 6 endpoints
+- [certifications](#certifications) — 14 endpoints
+- [certifications - closeout](#certifications-closeout) — 8 endpoints
+- [certifications - review](#certifications-review) — 5 endpoints
+- [class-counselor-assignments](#class-counselor-assignments) — 4 endpoints
+- [class-progress-scope](#class-progress-scope) — 2 endpoints
+- [classes](#classes) — 4 endpoints
+- [club-enrollments](#club-enrollments) — 7 endpoints
 - [club-roles](#club-roles) — 2 endpoints
+- [coordination](#coordination) — 1 endpoints
+- [dashboard](#dashboard) — 1 endpoints
+- [data-export](#data-export) — 3 endpoints
 - [emergency-contacts](#emergency-contacts) — 5 endpoints
-- [FCM Tokens](#fcm-tokens) — 4 endpoints
-- [finances](#finances) — 7 endpoints
-- [folders](#folders) — 7 endpoints
-- [health](#health) — 1 endpoints
-- [honors](#honors) — 4 endpoints
-- [inventory](#inventory) — 6 endpoints
+- [evidence-review](#evidence-review) — 7 endpoints
+- [FCM Tokens](#fcm-tokens) — 5 endpoints
+- [field payment orders](#field-payment-orders) — 15 endpoints
+- [finances](#finances) — 9 endpoints
+- [health](#health) — 2 endpoints
+- [honors](#honors) — 5 endpoints
+- [insurance](#insurance) — 11 endpoints
+- [insurance purchases](#insurance-purchases) — 7 endpoints
+- [insurance reassignments](#insurance-reassignments) — 4 endpoints
+- [inventory](#inventory) — 8 endpoints
+- [investiture](#investiture) — 20 endpoints
 - [legal-representatives](#legal-representatives) — 4 endpoints
-- [Notifications](#notifications) — 3 endpoints
+- [Materials — Catalog](#materials-catalog) — 4 endpoints
+- [Materials — Categories (admin)](#materials-categories-admin-) — 4 endpoints
+- [Materials — Config](#materials-config) — 4 endpoints
+- [Materials — Inventory](#materials-inventory) — 5 endpoints
+- [Materials — Orders](#materials-orders) — 8 endpoints
+- [Materials — Receipts](#materials-receipts) — 4 endpoints
+- [Member Ranking Weights](#member-ranking-weights) — 5 endpoints
+- [Member Rankings](#member-rankings) — 4 endpoints
+- [member-of-month](#member-of-month) — 4 endpoints
+- [membership-requests](#membership-requests) — 3 endpoints
+- [monthly-reports](#monthly-reports) — 10 endpoints
+- [Notifications](#notifications) — 10 endpoints
 - [OAuth](#oauth) — 5 endpoints
-- [post-registration](#post-registration) — 4 endpoints
-- [rbac](#rbac) — 10 endpoints
-- [user-classes](#user-classes) — 4 endpoints
-- [user-honors](#user-honors) — 8 endpoints
+- [post-registration](#post-registration) — 6 endpoints
+- [qr](#qr) — 6 endpoints
+- [quarterly-reports](#quarterly-reports) — 9 endpoints
+- [Ranking Tiers](#ranking-tiers) — 2 endpoints
+- [Ranking Weights](#ranking-weights) — 5 endpoints
+- [rbac](#rbac) — 19 endpoints
+- [rbac-bootstrap](#rbac-bootstrap) — 1 endpoints
+- [requests](#requests) — 8 endpoints
+- [resource-categories](#resource-categories) — 5 endpoints
+- [Resources](#resources) — 8 endpoints
+- [Resources (App)](#resources-app-) — 3 endpoints
+- [scoring-categories](#scoring-categories) — 12 endpoints
+- [Section Rankings](#section-rankings) — 2 endpoints
+- [support](#support) — 1 endpoints
+- [system-config](#system-config) — 3 endpoints
+- [units](#units) — 11 endpoints
+- [User Notification Preferences](#user-notification-preferences) — 4 endpoints
+- [user-classes](#user-classes) — 7 endpoints
+- [user-honors](#user-honors) — 15 endpoints
+- [user-master-honors](#user-master-honors) — 3 endpoints
+- [validation](#validation) — 5 endpoints
+- [year-end](#year-end) — 2 endpoints
 
 
 ## auth
@@ -69,19 +141,23 @@ generated: true
 - 🔓 `POST /api/v1/auth/login` — Iniciar sesión
 - 🔓 `POST /api/v1/auth/logout` — Cerrar sesión
 - 🔒 `GET /api/v1/auth/me` — Obtener perfil del usuario autenticado
+- 🔒 `DELETE /api/v1/auth/me` — Eliminar cuenta del usuario autenticado
 - 🔒 `PATCH /api/v1/auth/me/context` — Cambiar contexto activo de club/instancia del usuario
-- 🔒 `POST /api/v1/auth/mfa/enroll` — Iniciar enrolamiento de 2FA
-- 🔒 `GET /api/v1/auth/mfa/factors` — Listar factores MFA configurados
-- 🔒 `GET /api/v1/auth/mfa/status` — Verificar estado de 2FA
-- 🔒 `DELETE /api/v1/auth/mfa/unenroll` — Deshabilitar 2FA
-- 🔒 `POST /api/v1/auth/mfa/verify` — Verificar y activar 2FA
+- 🔒 `DELETE /api/v1/auth/mfa/disable` — Deshabilitar 2FA
+- 🔒 `POST /api/v1/auth/mfa/enroll` — Habilitar 2FA (TOTP)
+- 🔒 `GET /api/v1/auth/mfa/status` — Estado de 2FA
+- 🔒 `POST /api/v1/auth/mfa/verify` — Verificar código TOTP
+- 🔓 `POST /api/v1/auth/password/reset` — Confirmar recuperación de contraseña
 - 🔓 `POST /api/v1/auth/password/reset-request` — Solicitar recuperación de contraseña
 - 🔒 `GET /api/v1/auth/profile/completion-status` — Obtener estado del post-registro
 - 🔓 `POST /api/v1/auth/refresh` — Refrescar sesión con refresh token
 - 🔓 `POST /api/v1/auth/register` — Registrar nuevo usuario
-- 🔒 `GET /api/v1/auth/sessions` — Listar sesiones activas
-- 🔒 `DELETE /api/v1/auth/sessions` — Cerrar todas las sesiones
-- 🔒 `DELETE /api/v1/auth/sessions/{sessionId}` — Cerrar una sesión específica
+- 🔒 `GET /api/v1/auth/sessions` — List active sessions
+- 🔒 `DELETE /api/v1/auth/sessions` — Revoke all other sessions
+- 🔒 `DELETE /api/v1/auth/sessions/{sessionId}` — Revoke a specific session
+- 🔒 `POST /api/v1/auth/update-password` — Update authenticated user password
+- 🔓 `POST /api/v1/auth/verify-email/confirm` — Confirmar verificación de email con token
+- 🔒 `POST /api/v1/auth/verify-email/send` — Enviar email de verificación al usuario autenticado
 
 ---
 
@@ -90,13 +166,25 @@ generated: true
 - 🔒 `GET /api/v1/users/{userId}` — Obtener información de un usuario
 - 🔒 `PATCH /api/v1/users/{userId}` — Actualizar información personal del usuario
 - 🔒 `GET /api/v1/users/{userId}/age` — Calcular edad del usuario
+- 🔒 `GET /api/v1/users/{userId}/allergies` — Obtener alergias activas del usuario
 - 🔒 `PUT /api/v1/users/{userId}/allergies` — Guardar alergias del usuario
 - 🔒 `DELETE /api/v1/users/{userId}/allergies/{allergyId}` — Eliminar alergia del usuario (borrado lógico)
+- 🔒 `GET /api/v1/users/{userId}/diseases` — Obtener enfermedades activas del usuario
 - 🔒 `PUT /api/v1/users/{userId}/diseases` — Guardar enfermedades del usuario
 - 🔒 `DELETE /api/v1/users/{userId}/diseases/{diseaseId}` — Eliminar enfermedad del usuario (borrado lógico)
+- 🔒 `GET /api/v1/users/{userId}/medicines` — Obtener medicamentos activos del usuario
+- 🔒 `PUT /api/v1/users/{userId}/medicines` — Guardar medicamentos del usuario
+- 🔒 `DELETE /api/v1/users/{userId}/medicines/{medicineId}` — Eliminar medicamento del usuario (borrado lógico)
 - 🔒 `POST /api/v1/users/{userId}/profile-picture` — Subir foto de perfil
 - 🔒 `DELETE /api/v1/users/{userId}/profile-picture` — Eliminar foto de perfil
 - 🔒 `GET /api/v1/users/{userId}/requires-legal-representative` — Verificar si el usuario requiere representante legal
+
+---
+
+## admin
+
+- 🔒 `GET /api/v1/admin/cron-alerts` `?jobName?&since?&unresolved?&page?&limit?` — Paginated cron alert history
+- 🔒 `POST /api/v1/admin/cron-alerts/{id}/resolve` — Manually resolve a cron alert (super-admin only)
 
 ---
 
@@ -105,14 +193,28 @@ generated: true
 - 🔒 `GET /api/v1/clubs` `?localFieldId?&districtId?&churchId?&active?&page?&limit?` — Listar clubs
 - 🔒 `POST /api/v1/clubs` — Crear nuevo club
 - 🔒 `GET /api/v1/clubs/{clubId}` — Obtener club por ID
-- 🔒 `PATCH /api/v1/clubs/{clubId}` — Actualizar club (requiere rol director o deputy director)
+- 🔒 `PATCH /api/v1/clubs/{clubId}` — Actualizar club (dirección o secretaría de la sección activa)
 - 🔒 `DELETE /api/v1/clubs/{clubId}` — Desactivar club (requiere rol director)
-- 🔒 `GET /api/v1/clubs/{clubId}/instances` — Obtener instancias del club
-- 🔒 `POST /api/v1/clubs/{clubId}/instances` — Crear instancia de club (requiere director o deputy director)
-- 🔒 `GET /api/v1/clubs/{clubId}/instances/{type}` — Obtener instancia por tipo
-- 🔒 `PATCH /api/v1/clubs/{clubId}/instances/{type}/{instanceId}` — Actualizar instancia (requiere director, deputy director o secretary)
-- 🔒 `GET /api/v1/clubs/{clubId}/instances/{type}/{instanceId}/members` — Listar miembros de la instancia
-- 🔒 `POST /api/v1/clubs/{clubId}/instances/{type}/{instanceId}/roles` — Asignar rol a un miembro (requiere director, deputy director o secretary)
+- 🔒 `GET /api/v1/clubs/{clubId}/history` `?limit?&cursor?` — Historial de auditoría del club
+- 🔒 `GET /api/v1/clubs/{clubId}/leadership` — Liderazgo del club
+- 🔒 `GET /api/v1/clubs/{clubId}/overview` — Resumen agregado del club
+- 🔒 `GET /api/v1/clubs/{clubId}/sections` `?includeInactive?` — Obtener secciones del club
+- 🔒 `POST /api/v1/clubs/{clubId}/sections` — Crear sección de club (requiere director o deputy director)
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}` — Obtener sección por ID
+- 🔒 `PATCH /api/v1/clubs/{clubId}/sections/{sectionId}` — Actualizar sección (dirección o secretaría de la sección activa)
+- 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/director-assignment` — Asignación inicial de director de sección
+- 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/director-succession` — Sucesión anual de director de sección
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/members` — Listar miembros de la sección
+- 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/roles` — Asignar rol a un miembro (requiere director, deputy director o secretary)
+
+---
+
+## Achievements
+
+- 🔒 `GET /api/v1/achievements` `?categoryId?&page?&limit?` — List all active achievements grouped by category
+- 🔒 `GET /api/v1/achievements/{achievementId}` — Get achievement detail with user progress
+- 🔒 `GET /api/v1/achievements/categories` — List active achievement categories
+- 🔒 `GET /api/v1/achievements/me` — Get current user's achievements with progress
 
 ---
 
@@ -123,8 +225,145 @@ generated: true
 - 🔒 `DELETE /api/v1/activities/{activityId}` — Desactivar actividad
 - 🔒 `GET /api/v1/activities/{activityId}/attendance` — Obtener asistencia
 - 🔒 `POST /api/v1/activities/{activityId}/attendance` — Registrar asistencia
+- 🔒 `POST /api/v1/activities/{activityId}/image` — Subir imagen de actividad
 - 🔒 `GET /api/v1/clubs/{clubId}/activities` `?clubTypeId?&active?&activityTypeId?&page?&limit?` — Listar actividades del club
 - 🔒 `POST /api/v1/clubs/{clubId}/activities` — Crear actividad
+
+---
+
+## Admin - Achievements
+
+- 🔒 `GET /api/v1/admin/achievements` `?categoryId?&active?&page?&limit?&type?` — List all achievements (admin view, paginated)
+- 🔒 `POST /api/v1/admin/achievements` — Create a new achievement
+- 🔒 `GET /api/v1/admin/achievements/{achievementId}` — Get a single achievement by ID (admin view)
+- 🔒 `PATCH /api/v1/admin/achievements/{achievementId}` — Update an achievement
+- 🔒 `DELETE /api/v1/admin/achievements/{achievementId}` — Soft-delete an achievement
+- 🔒 `POST /api/v1/admin/achievements/{achievementId}/image` — Upload badge image for an achievement
+- 🔒 `GET /api/v1/admin/achievements/categories` — List all achievement categories (admin view)
+- 🔒 `POST /api/v1/admin/achievements/categories` — Create a new achievement category
+- 🔒 `PATCH /api/v1/admin/achievements/categories/{categoryId}` — Update an achievement category
+- 🔒 `DELETE /api/v1/admin/achievements/categories/{categoryId}` — Soft-delete a category
+- 🔒 `POST /api/v1/admin/achievements/retroactive/{achievementId}` — Trigger retroactive achievement evaluation
+- 🔒 `GET /api/v1/admin/achievements/stats` — Get achievement dashboard stats
+
+---
+
+## Admin - Certifications
+
+- 🔒 `GET /api/v1/admin/certifications` — Listar certificaciones con el resumen de sus versiones
+- 🔒 `POST /api/v1/admin/certifications` — Crear una nueva certificación con versión inicial en DRAFT
+- 🔒 `POST /api/v1/admin/certifications/{certificationId}/versions` — Crear una nueva versión DRAFT de la certificación
+- 🔒 `GET /api/v1/admin/certifications/{certificationId}/versions/{versionId}` — Obtener el árbol completo de una versión (metadatos, reglas, módulos, secciones y componentes)
+- 🔒 `PATCH /api/v1/admin/certifications/{certificationId}/versions/{versionId}` — Actualizar metadatos de una versión DRAFT
+- 🔒 `POST /api/v1/admin/certifications/{certificationId}/versions/{versionId}/clone` — Clonar una versión PUBLISHED/RETIRED en una nueva versión DRAFT
+- 🔒 `PATCH /api/v1/admin/certifications/{certificationId}/versions/{versionId}/eligibility-rules` — Reemplazar las reglas de elegibilidad de una versión DRAFT
+- 🔒 `POST /api/v1/admin/certifications/{certificationId}/versions/{versionId}/publish` — Publicar una versión DRAFT (retira la versión PUBLISHED anterior, si existe)
+- 🔒 `DELETE /api/v1/admin/certifications/{certificationId}/versions/{versionId}/publish` — Retirar una versión PUBLISHED
+- 🔒 `PATCH /api/v1/admin/certifications/{certificationId}/versions/{versionId}/tree` — Reemplazar el árbol de módulos/secciones/componentes de una versión DRAFT
+
+---
+
+## Admin - Honors Requirements
+
+- 🔒 `GET /api/v1/admin/honors/{honorId}/requirements` — List requirements tree for an honor (admin view)
+- 🔒 `POST /api/v1/admin/honors/{honorId}/requirements` — Create a requirement for an honor
+- 🔒 `PATCH /api/v1/admin/honors/{honorId}/requirements/reorder` — Reorder requirements for an honor
+- 🔒 `PATCH /api/v1/admin/honors/requirements/{requirementId}` — Update a requirement
+- 🔒 `DELETE /api/v1/admin/honors/requirements/{requirementId}` — Soft-delete a requirement (and its children)
+- 🔒 `PATCH /api/v1/admin/honors/requirements/batch-review` — Batch-review flagged requirements
+- 🔒 `GET /api/v1/admin/honors/requirements/pending-review` `?limit?&page?` — List requirements pending admin review (paginated)
+
+---
+
+## Admin - Phase E Catalogs (i18n)
+
+- 🔒 `GET /api/v1/admin/class-modules` `?classId?` — List all class modules with their full translations (admin editor)
+- 🔒 `POST /api/v1/admin/class-modules` — Create a class module with optional translations
+- 🔒 `PATCH /api/v1/admin/class-modules/{id}` — Update a class module and upsert/delete translations
+- 🔒 `DELETE /api/v1/admin/class-modules/{id}` — Soft-delete a class module (active = false)
+- 🔒 `GET /api/v1/admin/class-sections` `?moduleId?` — List all class sections with their full translations (admin editor)
+- 🔒 `POST /api/v1/admin/class-sections` — Create a class section with optional translations
+- 🔒 `PATCH /api/v1/admin/class-sections/{id}` — Update a class section and upsert/delete translations
+- 🔒 `DELETE /api/v1/admin/class-sections/{id}` — Soft-delete a class section (active = false)
+- 🔒 `GET /api/v1/admin/classes` — List all classes with their full translations (admin editor)
+- 🔒 `POST /api/v1/admin/classes` — Create a class with optional translations
+- 🔒 `GET /api/v1/admin/classes/{classId}/honors` `?active?` — List class-honor relations for a class (includes inactive)
+- 🔒 `POST /api/v1/admin/classes/{classId}/honors` — Create a class-honor relation
+- 🔒 `DELETE /api/v1/admin/classes/{classId}/honors/{classHonorId}` — Soft-delete a class-honor relation
+- 🔒 `GET /api/v1/admin/classes/{classId}/prerequisites` `?active?` — List class prerequisites (includes inactive)
+- 🔒 `POST /api/v1/admin/classes/{classId}/prerequisites` — Create a class prerequisite with cycle validation
+- 🔒 `DELETE /api/v1/admin/classes/{classId}/prerequisites/{prerequisiteId}` — Soft-delete a class prerequisite
+- 🔒 `PATCH /api/v1/admin/classes/{id}` — Update a class and upsert/delete translations
+- 🔒 `DELETE /api/v1/admin/classes/{id}` — Soft-delete a class (active = false)
+- 🔒 `GET /api/v1/admin/finance-categories` — List all finance categories with their full translations (admin editor)
+- 🔒 `POST /api/v1/admin/finance-categories` — Create a finance category with optional translations
+- 🔒 `PATCH /api/v1/admin/finance-categories/{id}` — Update a finance category and upsert/delete translations
+- 🔒 `DELETE /api/v1/admin/finance-categories/{id}` — Soft-delete a finance category (active = false)
+- 🔒 `GET /api/v1/admin/honors-catalog` — List all honors with their full translations (admin editor)
+- 🔒 `POST /api/v1/admin/honors-catalog` — Create an honor with optional translations
+- 🔒 `PATCH /api/v1/admin/honors-catalog/{id}` — Update an honor and upsert/delete translations
+- 🔒 `DELETE /api/v1/admin/honors-catalog/{id}` — Soft-delete an honor (active = false)
+- 🔒 `GET /api/v1/admin/inventory-categories` — List all inventory categories with their full translations (admin editor)
+- 🔒 `POST /api/v1/admin/inventory-categories` — Create an inventory category with optional translations
+- 🔒 `PATCH /api/v1/admin/inventory-categories/{id}` — Update an inventory category and upsert/delete translations
+- 🔒 `DELETE /api/v1/admin/inventory-categories/{id}` — Soft-delete an inventory category (active = false)
+- 🔒 `GET /api/v1/admin/master-honors` — List all master honors with their full translations (admin editor)
+- 🔒 `POST /api/v1/admin/master-honors` — Create a master honor with optional translations
+- 🔒 `PATCH /api/v1/admin/master-honors/{id}` — Update a master honor and upsert/delete translations
+- 🔒 `DELETE /api/v1/admin/master-honors/{id}` — Soft-delete a master honor (active = false)
+- 🔒 `POST /api/v1/admin/master-honors/{id}/recalculate` — Queue recalculation of affected users for one master honor
+
+---
+
+## admin-audit-logs
+
+- 🔒 `GET /api/v1/admin/audit-logs` `?entity_type?&actor_user_id?&action?&result?&source?&from?&to?&club_id?&correlation_id?&limit?&cursor?` — List global audit logs
+- 🔒 `GET /api/v1/admin/audit-logs/{id}` — Get one audit log
+
+---
+
+## admin-auth
+
+- 🔒 `DELETE /api/v1/admin/users/{userId}/mfa` — Reset (disable) MFA for a user
+- 🔒 `GET /api/v1/admin/users/{userId}/mfa/status` — Get MFA enrollment status for a user
+- 🔒 `POST /api/v1/admin/users/{userId}/password` — Set a new password for a user
+- 🔒 `GET /api/v1/admin/users/{userId}/sessions` — List all active sessions for a user
+- 🔒 `DELETE /api/v1/admin/users/{userId}/sessions` — Revoke all sessions for a user
+- 🔒 `DELETE /api/v1/admin/users/{userId}/sessions/{sessionId}` — Revoke a specific session for a user
+
+---
+
+## admin-camporee-event-types
+
+- 🔒 `GET /api/v1/admin/camporee-event-types` — List camporee event types
+- 🔒 `POST /api/v1/admin/camporee-event-types` — Create camporee event type
+- 🔒 `PATCH /api/v1/admin/camporee-event-types/{eventTypeId}` — Update camporee event type
+- 🔒 `DELETE /api/v1/admin/camporee-event-types/{eventTypeId}` — Soft delete camporee event type
+
+---
+
+## admin-certificate-bulk-imports
+
+- 🔒 `GET /api/v1/admin/certificate-bulk-imports/{batchId}` — Obtener detalle de carga por certificado
+- 🔒 `POST /api/v1/admin/certificate-bulk-imports/{batchId}/approve` — Aprobar todas las filas pendientes de un lote
+- 🔒 `POST /api/v1/admin/certificate-bulk-imports/{batchId}/items/{itemId}/approve` — Aprobar una fila del lote
+- 🔒 `POST /api/v1/admin/certificate-bulk-imports/{batchId}/items/{itemId}/reject` — Rechazar una fila del lote con motivo
+- 🔒 `POST /api/v1/admin/certificate-bulk-imports/{batchId}/reject` — Rechazar un lote completo y solicitar corrección
+- 🔒 `GET /api/v1/admin/certificate-bulk-imports/pending` `?limit?&page?` — Listar cargas por certificado pendientes
+
+---
+
+## admin-coordination
+
+- 🔒 `PATCH /api/v1/admin/coordination/assignments/{assignmentId}` — Actualizar asignación de coordinador
+- 🔒 `GET /api/v1/admin/coordination/local-fields/{localFieldId}/assignments` `?active?` — Listar asignaciones de coordinadores
+- 🔒 `POST /api/v1/admin/coordination/local-fields/{localFieldId}/assignments` — Crear asignación de coordinador
+- 🔒 `POST /api/v1/admin/coordination/local-fields/{localFieldId}/backfill` — Migrar coordinadores legacy (rol + local_field_id) a asignación GENERAL
+- 🔒 `GET /api/v1/admin/coordination/local-fields/{localFieldId}/zones` — Listar zonas de coordinación de un campo local
+- 🔒 `POST /api/v1/admin/coordination/local-fields/{localFieldId}/zones` — Crear zona de coordinación en un campo local
+- 🔒 `PATCH /api/v1/admin/coordination/zones/{zoneId}` — Actualizar zona de coordinación
+- 🔒 `POST /api/v1/admin/coordination/zones/{zoneId}/districts/{districtId}` — Asignar un distrito a una zona de coordinación
+- 🔒 `DELETE /api/v1/admin/coordination/zones/{zoneId}/districts/{districtId}` — Quitar un distrito de una zona de coordinación
 
 ---
 
@@ -142,23 +381,48 @@ generated: true
 - 🔒 `POST /api/v1/admin/districts` — Create district
 - 🔒 `PATCH /api/v1/admin/districts/{districtId}` — Update district
 - 🔒 `DELETE /api/v1/admin/districts/{districtId}` — Soft delete district
+- 🔒 `GET /api/v1/admin/divisions` — List institutional divisions for admin management
+- 🔒 `POST /api/v1/admin/divisions` — Create institutional division
+- 🔒 `PATCH /api/v1/admin/divisions/{divisionId}` — Update institutional division
+- 🔒 `DELETE /api/v1/admin/divisions/{divisionId}` — Soft delete institutional division
 - 🔒 `GET /api/v1/admin/local-fields` `?unionId?` — List local fields for admin management
 - 🔒 `POST /api/v1/admin/local-fields` — Create local field
 - 🔒 `PATCH /api/v1/admin/local-fields/{localFieldId}` — Update local field
 - 🔒 `DELETE /api/v1/admin/local-fields/{localFieldId}` — Soft delete local field
-- 🔒 `GET /api/v1/admin/unions` `?countryId?` — List unions for admin management
+- 🔒 `GET /api/v1/admin/unions` `?countryId?&divisionId?` — List unions for admin management
 - 🔒 `POST /api/v1/admin/unions` — Create union
 - 🔒 `PATCH /api/v1/admin/unions/{unionId}` — Update union
 - 🔒 `DELETE /api/v1/admin/unions/{unionId}` — Soft delete union
 
 ---
 
+## admin-notifications
+
+- 🔒 `GET /api/v1/admin/notifications/categories` — List global notification category delivery settings
+- 🔒 `PATCH /api/v1/admin/notifications/categories` — Update a notification category delivery setting
+- 🔒 `GET /api/v1/admin/notifications/stats` `?days?` — FCM notification delivery metrics for administrators
+
+---
+
 ## admin-reference
 
+- 🔒 `GET /api/v1/admin/activity-types` — List activity types for admin management
+- 🔒 `POST /api/v1/admin/activity-types` — Create activity type
+- 🔒 `PATCH /api/v1/admin/activity-types/{activityTypeId}` — Update activity type
+- 🔒 `DELETE /api/v1/admin/activity-types/{activityTypeId}` — Soft delete activity type
 - 🔒 `GET /api/v1/admin/allergies` — List allergies for admin management
 - 🔒 `POST /api/v1/admin/allergies` — Create allergy
 - 🔒 `PATCH /api/v1/admin/allergies/{allergyId}` — Update allergy
 - 🔒 `DELETE /api/v1/admin/allergies/{allergyId}` — Soft delete allergy
+- 🔒 `POST /api/v1/admin/catalogs/cache/invalidate` — Invalidate all catalog caches
+- 🔒 `GET /api/v1/admin/club-ideals` — List club ideals for admin
+- 🔒 `POST /api/v1/admin/club-ideals` — Create club ideal (super-admin only)
+- 🔒 `PATCH /api/v1/admin/club-ideals/{clubIdealId}` — Update club ideal (admin: edit only; super-admin: full edit)
+- 🔒 `DELETE /api/v1/admin/club-ideals/{clubIdealId}` — Soft delete club ideal (super-admin only)
+- 🔒 `GET /api/v1/admin/club-types` — List all club types for admin management
+- 🔒 `POST /api/v1/admin/club-types` — Create club type (super-admin only)
+- 🔒 `PATCH /api/v1/admin/club-types/{clubTypeId}` — Update club type (admin: edit only; super-admin: full edit)
+- 🔒 `DELETE /api/v1/admin/club-types/{clubTypeId}` — Soft delete club type (super-admin only)
 - 🔒 `GET /api/v1/admin/diseases` — List diseases for admin management
 - 🔒 `POST /api/v1/admin/diseases` — Create disease
 - 🔒 `PATCH /api/v1/admin/diseases/{diseaseId}` — Update disease
@@ -167,6 +431,15 @@ generated: true
 - 🔒 `POST /api/v1/admin/ecclesiastical-years` — Create ecclesiastical year
 - 🔒 `PATCH /api/v1/admin/ecclesiastical-years/{yearId}` — Update ecclesiastical year
 - 🔒 `DELETE /api/v1/admin/ecclesiastical-years/{yearId}` — Soft delete ecclesiastical year
+- 🔒 `GET /api/v1/admin/honor-categories` `?page?&limit?&search?` — List honor categories for admin management
+- 🔒 `POST /api/v1/admin/honor-categories` — Create honor category
+- 🔒 `GET /api/v1/admin/honor-categories/{id}` — Get honor category by ID
+- 🔒 `PATCH /api/v1/admin/honor-categories/{id}` — Update honor category
+- 🔒 `DELETE /api/v1/admin/honor-categories/{id}` — Soft delete honor category
+- 🔒 `GET /api/v1/admin/medicines` — List medicines for admin management
+- 🔒 `POST /api/v1/admin/medicines` — Create medicine
+- 🔒 `PATCH /api/v1/admin/medicines/{medicineId}` — Update medicine
+- 🔒 `DELETE /api/v1/admin/medicines/{medicineId}` — Soft delete medicine
 - 🔒 `GET /api/v1/admin/relationship-types` — List relationship types for admin management
 - 🔒 `POST /api/v1/admin/relationship-types` — Create relationship type
 - 🔒 `PATCH /api/v1/admin/relationship-types/{relationshipTypeId}` — Update relationship type
@@ -174,16 +447,229 @@ generated: true
 
 ---
 
+## admin-support
+
+- 🔒 `GET /api/v1/admin/support/reports` `?status?&category?&userId?&search?&page?&limit?` — Listar reportes de soporte
+- 🔒 `GET /api/v1/admin/support/reports/{reportId}` — Obtener detalle de un reporte de soporte
+- 🔒 `PATCH /api/v1/admin/support/reports/{reportId}/status` — Actualizar estado de un reporte de soporte
+
+---
+
 ## admin-users
 
 - 🔒 `GET /api/v1/admin/users` `?page?&limit?&search?&role?&active?&unionId?&localFieldId?` — Listar usuarios administrativos con alcance por rol (ALL/UNION/LOCAL_FIELD)
+- 🔒 `POST /api/v1/admin/users` — Crear usuario manualmente (admin-iniciado, con invite por email)
 - 🔒 `GET /api/v1/admin/users/{userId}` — Obtener detalle de usuario validando alcance por rol del actor
+- 🔒 `PATCH /api/v1/admin/users/{userId}` — Update user administrative fields
+- 🔒 `PATCH /api/v1/admin/users/{userId}/approval` — Approve or reject a user
+- 🔒 `POST /api/v1/admin/users/bulk` — Carga masiva de usuarios desde archivo .xlsx o .csv
+- 🔒 `GET /api/v1/admin/users/bulk-template` — Descarga plantilla .xlsx para carga masiva de usuarios
+
+---
+
+## analytics
+
+- 🔒 `GET /api/v1/admin/analytics/cron-runs` — Resumen de ejecuciones de cron jobs (admin only)
+- 🔒 `GET /api/v1/admin/analytics/cron-runs/history` `?job_name?&status?&since?&until?&page?&limit?` — Historial paginado de cron runs con filtros
+- 🔒 `GET /api/v1/admin/analytics/jobs-overview` — Overview de jobs y colas BullMQ (admin only)
+- 🔒 `POST /api/v1/admin/analytics/jobs/{queue}/{jobId}/retry` — Retry failed BullMQ job (super-admin only)
+- 🔒 `GET /api/v1/admin/analytics/local-field-dashboard` `?local_field_id?` — Dashboard operativo del campo local
+- 🔒 `GET /api/v1/admin/analytics/operations-dashboard` `?ecclesiastical_year_id?&division_id?&union_id?&local_field_id?&report_year?&report_month?` — Dashboard operativo jerárquico
+- 🔒 `GET /api/v1/admin/analytics/queues/{queueName}/health` — Queue health snapshot (admin only)
+- 🔒 `GET /api/v1/admin/analytics/sla-dashboard` — SLA Dashboard
+
+---
+
+## Annual Evidence Folders
+
+- 🔒 `GET /api/v1/annual-folders/{folderId}` — Get annual evidence folder with sections and evidences
+- 🔒 `POST /api/v1/annual-folders/{folderId}/close` — Close folder (field-level action)
+- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{sectionId}/evidences` — Upload evidence to a folder section
+- 🔒 `GET /api/v1/annual-folders/{folderId}/sections/{sectionId}/status` — Get the current status of a single section within an annual evidence folder
+- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{sectionId}/submit` — Submit a single section of an annual evidence folder
+- 🔒 `POST /api/v1/annual-folders/{folderId}/submit` — Submit entire folder for review (director/secretariat only)
+- 🔒 `GET /api/v1/annual-folders/by-enrollment/{enrollmentId}` — Get annual evidence folder by enrollment ID
+- 🔒 `POST /api/v1/annual-folders/enrollments/{enrollmentId}` — Create annual evidence folder for a club enrollment
+- 🔒 `GET /api/v1/annual-folders/evaluation/queue` `?search?&status?&folder_status?&union_id?&local_field_id?&club_type_id?&year_id?&created_from?&created_to?&submitted_from?&submitted_to?&progress_min?&progress_max?&page?&limit?` — List annual evidence folders available for evaluation
+- 🔒 `PATCH /api/v1/annual-folders/evidences/{evidenceId}` — Update evidence metadata
+- 🔒 `DELETE /api/v1/annual-folders/evidences/{evidenceId}` — Delete evidence
+- 🔒 `GET /api/v1/club-sections/{sectionId}/annual-folder` — Get annual evidence folder for a club section (current year)
+- 🔒 `POST /api/v1/club-sections/{sectionId}/annual-folder` — Create annual evidence folder for a club section
+
+---
+
+## Annual Evidence Folders - Evaluation
+
+- 🔒 `GET /api/v1/annual-folders/{folderId}/evaluations` — Get all section evaluations for a folder
+- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{sectionId}/confirm-union` — Union actor confirms or overrides a pre-approved section
+- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{sectionId}/evaluate` — Evaluate a section of an annual evidence folder
+- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{sectionId}/reopen` — Reopen a section for re-evaluation (removes existing evaluation)
+- 🔒 `PATCH /api/v1/annual-folders/evidences/{evidenceId}/reviewer-note` — Set or clear a reviewer note on a specific evidence file
+
+---
+
+## Annual Evidence Folders - Rankings
+
+- 🔒 `GET /api/v1/annual-folders/rankings` `?club_type_id&year_id&category_id?&local_field_id?` — Get club rankings for a given year and club type
+- 🔒 `GET /api/v1/annual-folders/rankings/{enrollmentId}/breakdown` `?year_id` — Per-component score breakdown for a club enrollment
+- 🔒 `GET /api/v1/annual-folders/rankings/club/{enrollmentId}` `?year_id` — Get all rankings for a specific club enrollment
+- 🔒 `POST /api/v1/annual-folders/rankings/recalculate` `?year_id?` — Manually trigger a rankings recalculation
+
+---
+
+## Annual Evidence Folders - Templates
+
+- 🔒 `GET /api/v1/annual-folders/templates` `?club_type_id?&year_id?&active?` — List templates or get template by club type and year
+- 🔒 `POST /api/v1/annual-folders/templates` — Create folder template for a club type and year
+- 🔒 `GET /api/v1/annual-folders/templates/{templateId}` — Get template by ID with all sections
+- 🔒 `PATCH /api/v1/annual-folders/templates/{templateId}` — Update annual folder template metadata
+- 🔒 `DELETE /api/v1/annual-folders/templates/{templateId}` — Delete a draft annual folder template
+- 🔒 `POST /api/v1/annual-folders/templates/{templateId}/copy` — Copy an annual folder template as a draft
+- 🔒 `POST /api/v1/annual-folders/templates/{templateId}/sections` — Add section to template
+- 🔒 `PATCH /api/v1/annual-folders/templates/sections/{sectionId}` — Update template section
+- 🔒 `DELETE /api/v1/annual-folders/templates/sections/{sectionId}` — Remove template section
+
+---
+
+## Annual Ranking Configs
+
+- 🔒 `GET /api/v1/annual-ranking-configs` `?club_type_id?&year_id?&local_field_id?&union_id?` — List annual ranking point budgets
+- 🔒 `POST /api/v1/annual-ranking-configs` — Create an annual ranking point budget
+- 🔒 `PATCH /api/v1/annual-ranking-configs/{id}` — Update an annual ranking point budget
+- 🔒 `DELETE /api/v1/annual-ranking-configs/{id}` — Deactivate an annual ranking point budget
+
+---
+
+## Annual Ranking Progress
+
+- 🔒 `GET /api/v1/club-sections/{sectionId}/annual-ranking-progress` `?year_id` — Get annual ranking progress for one club section
+
+---
+
+## Annual Rankings
+
+- 🔒 `GET /api/v1/annual-rankings` `?local_field_id&club_type_id&year_id` — List annual club rankings for administration
+
+---
+
+## annual-reports
+
+- 🔒 `GET /api/v1/admin/annual-reports` `?divisionId?&unionId?&localFieldId?&clubId?&ecclesiasticalYearId?&status?&page?&limit?` — Listar informes anuales (admin)
+- 🔒 `GET /api/v1/admin/annual-reports/{id}` — Obtener informe anual por ID (admin)
+- 🔒 `PATCH /api/v1/admin/annual-reports/{id}` — Actualizar datos manuales del informe anual (admin)
+- 🔒 `POST /api/v1/admin/annual-reports/{id}/finalize` — Finalizar informe anual (admin)
+- 🔒 `GET /api/v1/admin/annual-reports/{id}/pdf` — Descargar PDF del informe anual (admin)
+- 🔒 `POST /api/v1/admin/annual-reports/{id}/regenerate` — Regenerar datos calculados del informe anual (admin)
+- 🔒 `GET /api/v1/clubs/{clubId}/annual-reports` — Listar informes anuales de un club (usuario)
+- 🔒 `GET /api/v1/clubs/{clubId}/annual-reports/{id}` — Obtener informe anual por ID (usuario)
+- 🔒 `GET /api/v1/clubs/{clubId}/annual-reports/{id}/pdf` — Descargar PDF del informe anual (usuario)
 
 ---
 
 ## App
 
 - 🔓 `GET /api/v1` — AppController_getHello_v1
+
+---
+
+## Award Categories
+
+- 🔒 `GET /api/v1/award-categories` `?club_type_id?&active?&scope?&include_legacy?` — List award categories with optional filters
+- 🔒 `POST /api/v1/award-categories` — Create an award category
+- 🔒 `GET /api/v1/award-categories/{categoryId}` — Get a single award category by ID
+- 🔒 `PATCH /api/v1/award-categories/{categoryId}` — Update an award category
+- 🔒 `DELETE /api/v1/award-categories/{categoryId}` — Deactivate an award category (soft delete)
+
+---
+
+## camporee-club-registration
+
+- 🔒 `POST /api/v1/camporees/{camporeeId}/club-registration/close` — Close local camporee club registration
+- 🔒 `POST /api/v1/camporees/{camporeeId}/club-registration/reopen` — Reopen local camporee club registration
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/club-registration/close` — Close union camporee club registration
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/club-registration/reopen` — Reopen union camporee club registration
+
+---
+
+## camporee-event-templates
+
+- 🔒 `GET /api/v1/camporee-event-templates` `?scope?&union_id?&local_field_id?&event_type_id?&active?` — List camporee event templates (filtered by role scope)
+- 🔒 `POST /api/v1/camporee-event-templates` — Create camporee event template
+- 🔒 `GET /api/v1/camporee-event-templates/{templateId}` — Get camporee event template by ID
+- 🔒 `PATCH /api/v1/camporee-event-templates/{templateId}` — Update camporee event template
+- 🔒 `DELETE /api/v1/camporee-event-templates/{templateId}` — Soft delete camporee event template
+
+---
+
+## camporee-events
+
+- 🔒 `GET /api/v1/camporee-event-types` — List active camporee event types for event forms
+- 🔒 `GET /api/v1/camporee-events/{eventId}` — Get a camporee event instance by ID
+- 🔒 `PATCH /api/v1/camporee-events/{eventId}` — Update a camporee event instance (overrides)
+- 🔒 `DELETE /api/v1/camporee-events/{eventId}` — Soft delete a camporee event instance
+- 🔒 `PATCH /api/v1/camporee-events/{eventId}/reorder` — Update display_order of a camporee event instance
+- 🔒 `PUT /api/v1/camporee-events/{eventId}/schedule-blocks` — Replace optional schedule blocks and club-section assignments for a camporee event
+- 🔒 `GET /api/v1/camporee-events/{eventId}/staff-assignments` — List staff assignments for a camporee event
+- 🔒 `PUT /api/v1/camporee-events/{eventId}/staff-assignments` — Replace staff assignments for a camporee event
+- 🔒 `GET /api/v1/local-camporees/{camporeeId}/events` `?day_number?&display_category?&section?&status?&venue_id?&leader_user_id?&q?&limit?&offset?` — List events for a local camporee
+- 🔒 `POST /api/v1/local-camporees/{camporeeId}/events` — Create custom event for a local camporee
+- 🔒 `POST /api/v1/local-camporees/{camporeeId}/events/from-template/{templateId}` — Clone a template as an event for a local camporee
+- 🔒 `GET /api/v1/local-camporees/{camporeeId}/events/preview` `?day_number?&display_category?&section?&status?&venue_id?&leader_user_id?&q?&limit?&offset?` — List app-safe event preview for a local camporee, hiding agenda until configured release
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/events` `?day_number?&display_category?&section?&status?&venue_id?&leader_user_id?&q?&limit?&offset?` — List events for a union camporee
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/events` — Create custom event for a union camporee
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/events/from-template/{templateId}` — Clone a template as an event for a union camporee
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/events/preview` `?day_number?&display_category?&section?&status?&venue_id?&leader_user_id?&q?&limit?&offset?` — List app-safe event preview for a union camporee, hiding agenda until configured release
+
+---
+
+## camporee-scoring
+
+- 🔒 `PATCH /api/v1/camporee-event-judge-assignments/{assignmentId}` — CamporeeScoringController_updateJudgeAssignment_v1
+- 🔒 `DELETE /api/v1/camporee-event-judge-assignments/{assignmentId}` — CamporeeScoringController_deactivateJudgeAssignment_v1
+- 🔒 `GET /api/v1/camporee-events/{eventId}/judge-assignments` — CamporeeScoringController_listEventJudgeAssignments_v1
+- 🔒 `POST /api/v1/camporee-events/{eventId}/judge-assignments` — CamporeeScoringController_assignJudgeToSection_v1
+- 🔒 `GET /api/v1/camporee-events/{eventId}/rubrics` — List active rubrics for a camporee event
+- 🔒 `PUT /api/v1/camporee-events/{eventId}/rubrics` — Replace rubrics for a camporee event
+- 🔒 `GET /api/v1/camporee-events/{eventId}/scoring-targets` — List enrolled sections that can receive scores
+- 🔒 `POST /api/v1/camporee-events/{eventId}/sections/{clubSectionId}/scores` — Submit official camporee score by rubric
+- 🔒 `PATCH /api/v1/camporee-judges/{judgeId}` — Update a camporee judge roster member
+- 🔒 `DELETE /api/v1/camporee-judges/{judgeId}` — Deactivate a camporee judge roster member
+- 🔒 `GET /api/v1/camporee-judges/me/assignments` — List current user camporee judge assignments
+- 🔒 `GET /api/v1/local-camporees/{camporeeId}/judge-candidates` — CamporeeScoringController_listLocalJudgeCandidates_v1
+- 🔒 `GET /api/v1/local-camporees/{camporeeId}/judges` — CamporeeScoringController_listLocalJudges_v1
+- 🔒 `POST /api/v1/local-camporees/{camporeeId}/judges` — CamporeeScoringController_addLocalJudge_v1
+- 🔒 `GET /api/v1/local-camporees/{camporeeId}/leaderboard` — CamporeeScoringController_getLocalLeaderboard_v1
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/judge-candidates` — CamporeeScoringController_listUnionJudgeCandidates_v1
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/judges` — CamporeeScoringController_listUnionJudges_v1
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/judges` — CamporeeScoringController_addUnionJudge_v1
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/leaderboard` — CamporeeScoringController_getUnionLeaderboard_v1
+
+---
+
+## camporee-staff
+
+- 🔒 `PATCH /api/v1/camporee-staff/{staffMemberId}` — Update a camporee staff roster member
+- 🔒 `DELETE /api/v1/camporee-staff/{staffMemberId}` — Deactivate a camporee staff roster member
+- 🔒 `GET /api/v1/local-camporees/{camporeeId}/staff` — List staff roster for a local camporee
+- 🔒 `POST /api/v1/local-camporees/{camporeeId}/staff` — Add a staff member to a local camporee roster
+- 🔒 `GET /api/v1/local-camporees/{camporeeId}/staff-candidates` — List active users eligible for a local camporee roster
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/staff` — List staff roster for a union camporee
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/staff` — Add a staff member to a union camporee roster
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/staff-candidates` — List active users eligible for a union camporee roster
+
+---
+
+## camporee-venues
+
+- 🔒 `GET /api/v1/camporee-venues` `?scope?&union_id?&local_field_id?&active?&q?&limit?&offset?` — List all venues with optional filters
+- 🔒 `POST /api/v1/camporee-venues` — Create a venue (explicit scope + union/local_field)
+- 🔒 `GET /api/v1/camporee-venues/{venueId}` — Get a single venue by ID
+- 🔒 `PATCH /api/v1/camporee-venues/{venueId}` — Update a venue
+- 🔒 `DELETE /api/v1/camporee-venues/{venueId}` — Soft-delete a venue (sets active = false)
+- 🔒 `GET /api/v1/local-camporees/{camporeeId}/venues` — List venues accessible to a local camporee
+- 🔒 `POST /api/v1/local-camporees/{camporeeId}/venues` — Create a venue scoped to the local camporee's local_field
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/venues` — List venues accessible to a union camporee
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/venues` — Create a venue scoped to the union camporee's union
 
 ---
 
@@ -194,9 +680,47 @@ generated: true
 - 🔒 `GET /api/v1/camporees/{camporeeId}` — Obtener camporee por ID
 - 🔒 `PATCH /api/v1/camporees/{camporeeId}` — Actualizar camporee
 - 🔒 `DELETE /api/v1/camporees/{camporeeId}` — Desactivar camporee
-- 🔒 `GET /api/v1/camporees/{camporeeId}/members` — Listar miembros del camporee
+- 🔒 `GET /api/v1/camporees/{camporeeId}/clubs` `?status?` — Listar clubes inscritos en camporee
+- 🔒 `POST /api/v1/camporees/{camporeeId}/clubs` — Inscribir club en camporee
+- 🔒 `DELETE /api/v1/camporees/{camporeeId}/clubs/{camporeeClubId}` — Cancelar inscripción de club
+- 🔒 `PATCH /api/v1/camporees/{camporeeId}/clubs/{camporeeClubId}/approve` — Aprobar inscripción tardía de club
+- 🔒 `PATCH /api/v1/camporees/{camporeeId}/clubs/{camporeeClubId}/reject` — Rechazar inscripción tardía de club
+- 🔒 `GET /api/v1/camporees/{camporeeId}/members` `?page?&limit?&status?` — Listar miembros del camporee
+- 🔒 `PATCH /api/v1/camporees/{camporeeId}/members/{camporeeMemberId}/approve` — Aprobar inscripción tardía de miembro
+- 🔒 `PATCH /api/v1/camporees/{camporeeId}/members/{camporeeMemberId}/reject` — Rechazar inscripción tardía de miembro
+- 🔒 `GET /api/v1/camporees/{camporeeId}/members/{memberId}/payments` `?status?` — Listar pagos de un miembro
+- 🔒 `POST /api/v1/camporees/{camporeeId}/members/{memberId}/payments` — Registrar pago de miembro
 - 🔒 `DELETE /api/v1/camporees/{camporeeId}/members/{userId}` — Remover miembro del camporee
+- 🔒 `POST /api/v1/camporees/{camporeeId}/participants` — Registrar participante en camporee
+- 🔒 `GET /api/v1/camporees/{camporeeId}/payments` `?status?` — Listar todos los pagos del camporee
+- 🔒 `POST /api/v1/camporees/{camporeeId}/payments/{paymentId}/voucher` — Adjuntar comprobante a un pago
+- 🔒 `DELETE /api/v1/camporees/{camporeeId}/payments/{paymentId}/voucher` — Remover comprobante de un pago
+- 🔒 `GET /api/v1/camporees/{camporeeId}/pending` — Listar inscripciones pendientes de aprobación
 - 🔒 `POST /api/v1/camporees/{camporeeId}/register` — Registrar miembro en camporee
+- 🔒 `GET /api/v1/camporees/{camporeeId}/section-registration` — Consultar inscripción de la sección activa
+- 🔒 `POST /api/v1/camporees/{camporeeId}/section-registration` — Inscribir la sección activa
+- 🔒 `PATCH /api/v1/camporees/payments/{camporeePaymentId}/approve` — Aprobar pago tardío de camporee
+- 🔒 `PATCH /api/v1/camporees/payments/{camporeePaymentId}/reject` — Rechazar pago tardío de camporee
+- 🔒 `PATCH /api/v1/camporees/payments/{paymentId}` — Actualizar pago
+- 🔒 `GET /api/v1/camporees/union` `?union_id?&active?&year?&page?&limit?` — Listar camporees de unión
+- 🔒 `POST /api/v1/camporees/union` — Crear camporee de unión
+- 🔒 `GET /api/v1/camporees/union/{camporeeId}` — Obtener camporee de unión por ID
+- 🔒 `PATCH /api/v1/camporees/union/{camporeeId}` — Actualizar camporee de unión
+- 🔒 `DELETE /api/v1/camporees/union/{camporeeId}` — Desactivar camporee de unión
+- 🔒 `GET /api/v1/camporees/union/{camporeeId}/clubs` `?status?` — Listar clubes inscritos en camporee de unión
+- 🔒 `POST /api/v1/camporees/union/{camporeeId}/clubs` — Inscribir club en camporee de unión
+- 🔒 `DELETE /api/v1/camporees/union/{camporeeId}/clubs/{camporeeClubId}` — Cancelar inscripción de club en camporee de unión
+- 🔒 `PATCH /api/v1/camporees/union/{camporeeId}/clubs/{camporeeClubId}/approve` — Aprobar inscripción tardía de club en camporee de unión
+- 🔒 `PATCH /api/v1/camporees/union/{camporeeId}/clubs/{camporeeClubId}/reject` — Rechazar inscripción tardía de club en camporee de unión
+- 🔒 `GET /api/v1/camporees/union/{camporeeId}/members` `?page?&limit?&status?` — Listar miembros del camporee de unión
+- 🔒 `PATCH /api/v1/camporees/union/{camporeeId}/members/{camporeeMemberId}/approve` — Aprobar inscripción tardía de miembro en camporee de unión
+- 🔒 `PATCH /api/v1/camporees/union/{camporeeId}/members/{camporeeMemberId}/reject` — Rechazar inscripción tardía de miembro en camporee de unión
+- 🔒 `GET /api/v1/camporees/union/{camporeeId}/members/{memberId}/payments` `?status?` — Listar pagos de un miembro en camporee de unión
+- 🔒 `POST /api/v1/camporees/union/{camporeeId}/members/{memberId}/payments` — Registrar pago de miembro en camporee de unión
+- 🔒 `DELETE /api/v1/camporees/union/{camporeeId}/members/{userId}` — Remover miembro del camporee de unión
+- 🔒 `GET /api/v1/camporees/union/{camporeeId}/payments` `?status?` — Listar todos los pagos del camporee de unión
+- 🔒 `GET /api/v1/camporees/union/{camporeeId}/pending` — Listar inscripciones pendientes de aprobación en camporee de unión
+- 🔒 `POST /api/v1/camporees/union/{camporeeId}/register` — Registrar miembro en camporee de unión
 
 ---
 
@@ -210,24 +734,83 @@ generated: true
 - 🔓 `GET /api/v1/catalogs/countries` — Obtener países
 - 🔓 `GET /api/v1/catalogs/diseases` — Obtener catálogo de enfermedades
 - 🔓 `GET /api/v1/catalogs/districts` `?localFieldId?` — Obtener distritos
+- 🔓 `GET /api/v1/catalogs/divisions` — Obtener divisiones
 - 🔓 `GET /api/v1/catalogs/ecclesiastical-years` — Obtener años eclesiásticos
 - 🔓 `GET /api/v1/catalogs/ecclesiastical-years/current` — Obtener año eclesiástico actual
 - 🔓 `GET /api/v1/catalogs/local-fields` `?unionId?` — Obtener campos locales
+- 🔓 `GET /api/v1/catalogs/medicines` — Obtener catálogo de medicamentos
 - 🔓 `GET /api/v1/catalogs/relationship-types` — Obtener tipos de relación
 - 🔓 `GET /api/v1/catalogs/roles` `?category?` — Obtener roles disponibles
-- 🔓 `GET /api/v1/catalogs/unions` `?countryId?` — Obtener uniones
+- 🔓 `GET /api/v1/catalogs/unions` `?countryId?&divisionId?` — Obtener uniones
+
+---
+
+## certificate-bulk-imports
+
+- 🔒 `POST /api/v1/certificate-bulk-imports` — Crear un borrador de carga por certificado
+- 🔒 `GET /api/v1/certificate-bulk-imports/{batchId}` — Obtener detalle de una carga por certificado
+- 🔒 `PATCH /api/v1/certificate-bulk-imports/{batchId}/items/{itemId}` — Corregir o completar una fila detectada por OCR
+- 🔒 `POST /api/v1/certificate-bulk-imports/{batchId}/items/{itemId}/resubmit` — Corregir y reenviar una fila rechazada
+- 🔒 `POST /api/v1/certificate-bulk-imports/{batchId}/process-ocr` — Procesar OCR de un borrador del miembro
+- 🔒 `POST /api/v1/certificate-bulk-imports/{batchId}/submit` — Enviar carga por certificado a validación de Campo Local
 
 ---
 
 ## certifications
 
-- 🔒 `GET /api/v1/certifications/certifications` `?page?&limit?` — Listar todas las certificaciones disponibles
-- 🔒 `GET /api/v1/certifications/certifications/{id}` — Obtener detalles de una certificación
+- 🔓 `GET /api/v1/certifications/certifications` `?page?&limit?` — Listar todas las certificaciones disponibles
+- 🔓 `GET /api/v1/certifications/certifications/{id}` — Obtener detalles de una certificación
+- 🔒 `DELETE /api/v1/certifications/users/{userId}/certification-enrollments/{enrollmentId}/evidences/{evidenceId}` — Eliminar una evidencia
+- 🔒 `GET /api/v1/certifications/users/{userId}/certification-enrollments/{enrollmentId}/requirements/{requirementId}` — Ver el estado de un requisito de la inscripción
+- 🔒 `PATCH /api/v1/certifications/users/{userId}/certification-enrollments/{enrollmentId}/requirements/{requirementId}/draft` — Guardar borrador de un requisito
+- 🔒 `POST /api/v1/certifications/users/{userId}/certification-enrollments/{enrollmentId}/requirements/{requirementId}/evidences/confirm` — Confirmar que la evidencia fue subida a R2
+- 🔒 `POST /api/v1/certifications/users/{userId}/certification-enrollments/{enrollmentId}/requirements/{requirementId}/evidences/presign` — Solicitar URL firmada para subir evidencia de un requisito
+- 🔒 `POST /api/v1/certifications/users/{userId}/certification-enrollments/{enrollmentId}/requirements/{requirementId}/submit` — Enviar un requisito a revisión
 - 🔒 `GET /api/v1/certifications/users/{userId}/certifications` — Listar certificaciones del usuario
 - 🔒 `DELETE /api/v1/certifications/users/{userId}/certifications/{certificationId}` — Abandonar una certificación
+- 🔒 `GET /api/v1/certifications/users/{userId}/certifications/{certificationId}/eligibility` — Consultar elegibilidad configurable de un usuario
 - 🔒 `GET /api/v1/certifications/users/{userId}/certifications/{certificationId}/progress` — Ver progreso detallado de una certificación
 - 🔒 `PATCH /api/v1/certifications/users/{userId}/certifications/{certificationId}/progress` — Actualizar progreso de una sección
 - 🔒 `POST /api/v1/certifications/users/{userId}/certifications/enroll` — Inscribirse en una certificación
+
+---
+
+## certifications - closeout
+
+- 🔒 `GET /api/v1/certifications/reviews/final` — Bandeja de cierres pendientes de revisión final
+- 🔒 `POST /api/v1/certifications/reviews/final/{enrollmentId}/approve-closeout-evidence` — Aprobar el comprobante de junta y avanzar la inscripción
+- 🔒 `POST /api/v1/certifications/reviews/final/{enrollmentId}/certify` — Certificar una inscripción válida
+- 🔒 `GET /api/v1/certifications/reviews/final/{enrollmentId}/closeout-evidence/download` — Obtener URL firmada del comprobante de junta (revisor)
+- 🔒 `POST /api/v1/certifications/reviews/final/{enrollmentId}/request-changes` — Devolver el cierre con comentario obligatorio
+- 🔒 `POST /api/v1/certifications/users/{userId}/certification-enrollments/{enrollmentId}/closeout-evidence/confirm` — Confirmar que el comprobante de junta fue subido a R2
+- 🔒 `POST /api/v1/certifications/users/{userId}/certification-enrollments/{enrollmentId}/closeout-evidence/presign` — Solicitar URL firmada para subir el comprobante de junta
+- 🔒 `POST /api/v1/certifications/users/{userId}/certification-enrollments/{enrollmentId}/submit-final` — Enviar la inscripción a revisión final
+
+---
+
+## certifications - review
+
+- 🔒 `GET /api/v1/certifications/reviews/requirements` `?status?` — Bandeja de requisitos pendientes de revisión
+- 🔒 `GET /api/v1/certifications/reviews/requirements/{progressId}` — Detalle de un requisito en revisión
+- 🔒 `POST /api/v1/certifications/reviews/requirements/{progressId}/approve` — Aprobar un requisito enviado a revisión
+- 🔒 `GET /api/v1/certifications/reviews/requirements/{progressId}/evidences/{evidenceId}/download` — Obtener URL firmada de descarga de evidencia (revisor)
+- 🔒 `POST /api/v1/certifications/reviews/requirements/{progressId}/request-changes` — Devolver un requisito con comentario obligatorio
+
+---
+
+## class-counselor-assignments
+
+- 🔒 `PATCH /api/v1/class-counselor-assignments/{assignmentId}` — Actualizar una asignación pedagógica de clase
+- 🔒 `DELETE /api/v1/class-counselor-assignments/{assignmentId}` — Revocar una asignación pedagógica de clase
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/class-counselor-assignments` `?yearId?&classId?&active?` — Listar asignaciones pedagógicas de clases por sección
+- 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/class-counselor-assignments` — Asignar un consejero o secretario a una clase progresiva
+
+---
+
+## class-progress-scope
+
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/classes/{classId}/members-progress` `?yearId?` — Listar avance de miembros por clase en una sección
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/classes/progress-scope` `?yearId?` — Listar clases visibles para seguimiento de progreso
 
 ---
 
@@ -235,7 +818,20 @@ generated: true
 
 - 🔓 `GET /api/v1/classes` `?clubTypeId?&page?&limit?` — Listar clases
 - 🔓 `GET /api/v1/classes/{classId}` — Obtener clase por ID
+- 🔓 `GET /api/v1/classes/{classId}/honors` — Obtener especialidades relacionadas a una clase
 - 🔓 `GET /api/v1/classes/{classId}/modules` — Obtener módulos de una clase
+
+---
+
+## club-enrollments
+
+- 🔒 `POST /api/v1/club-enrollments/{enrollmentId}/approve` — Aprobar inscripción anual del club
+- 🔒 `POST /api/v1/club-enrollments/{enrollmentId}/reject` — Rechazar inscripción anual del club
+- 🔒 `GET /api/v1/club-enrollments/validation/queue` `?search?&ecclesiastical_year_id?&local_field_id?&club_type_id?&page?&limit?&status?` — Listar inscripciones anuales pendientes de Campo Local
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/enrollments` `?year?` — Listar inscripciones de la sección
+- 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/enrollments` — Crear inscripción anual
+- 🔒 `PATCH /api/v1/clubs/{clubId}/sections/{sectionId}/enrollments/{enrollmentId}` — Actualizar inscripción
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/enrollments/current` — Obtener inscripción vigente
 
 ---
 
@@ -243,6 +839,26 @@ generated: true
 
 - 🔒 `PATCH /api/v1/club-roles/{assignmentId}` — Actualizar asignación de rol
 - 🔒 `DELETE /api/v1/club-roles/{assignmentId}` — Remover rol de miembro
+
+---
+
+## coordination
+
+- 🔒 `GET /api/v1/coordination/me/scope` — Resolver el alcance efectivo de coordinación del usuario actual
+
+---
+
+## dashboard
+
+- 🔒 `GET /api/v1/dashboard/summary` — Resumen del dashboard del usuario autenticado
+
+---
+
+## data-export
+
+- 🔒 `POST /api/v1/users/me/data-export` — Request a GDPR data export
+- 🔒 `GET /api/v1/users/me/data-exports` — List all data export requests for the current user
+- 🔒 `GET /api/v1/users/me/data-exports/{exportId}/download` — Get presigned download URL for a ready export
 
 ---
 
@@ -256,12 +872,45 @@ generated: true
 
 ---
 
+## evidence-review
+
+- 🔒 `GET /api/v1/evidence-review/{type}/{id}` — Obtener detalle de una evidencia con archivos adjuntos
+- 🔒 `POST /api/v1/evidence-review/{type}/{id}/approve` — Aprobar una evidencia
+- 🔒 `GET /api/v1/evidence-review/{type}/{id}/history` — Historial de validación de una evidencia
+- 🔒 `POST /api/v1/evidence-review/{type}/{id}/reject` — Rechazar una evidencia con motivo
+- 🔒 `POST /api/v1/evidence-review/bulk-approve` — Aprobar múltiples evidencias en bloque
+- 🔒 `POST /api/v1/evidence-review/bulk-reject` — Rechazar múltiples evidencias en bloque
+- 🔒 `GET /api/v1/evidence-review/pending` `?page?&limit?&type?` — Listar evidencias pendientes de revisión
+
+---
+
 ## FCM Tokens
 
 - 🔒 `GET /api/v1/fcm-tokens` — Get current user FCM tokens
 - 🔒 `POST /api/v1/fcm-tokens` — Register FCM token
-- 🔒 `DELETE /api/v1/fcm-tokens/{token}` — Unregister FCM token
-- 🔒 `GET /api/v1/fcm-tokens/user/{userId}` — Get FCM tokens by user ID (owner/admin only)
+- 🔒 `DELETE /api/v1/fcm-tokens/{id}` — Unregister FCM token by record ID
+- 🔒 `DELETE /api/v1/fcm-tokens/by-token` — Unregister FCM token by token string
+- 🔒 `GET /api/v1/fcm-tokens/user/{userId}` — Get FCM tokens by user ID (owner or admin/assistant-admin/super-admin)
+
+---
+
+## field payment orders
+
+- 🔒 `POST /api/v1/camporees/{camporeeId}/payment-orders` — Emitir orden de pago grupal de camporee
+- 🔒 `POST /api/v1/insurance/payment-orders` — Emitir orden de pago grupal de seguro
+- 🔒 `GET /api/v1/payment-orders` — Listar órdenes de pago del alcance del actor
+- 🔒 `GET /api/v1/payment-orders/{orderId}` — Detalle de una orden de pago
+- 🔒 `POST /api/v1/payment-orders/{orderId}/approve` — Aprobar comprobante y ejecutar fulfillment atómico
+- 🔒 `POST /api/v1/payment-orders/{orderId}/cancel` — Cancelar una orden emitida o rechazada
+- 🔒 `GET /api/v1/payment-orders/{orderId}/document` — Descargar PDF imprimible de la orden
+- 🔒 `GET /api/v1/payment-orders/{orderId}/proof` — URL firmada del comprobante vigente
+- 🔒 `POST /api/v1/payment-orders/{orderId}/proof` — Subir comprobante de pago (multipart, campo file)
+- 🔒 `POST /api/v1/payment-orders/{orderId}/reject` — Rechazar comprobante (permite re-subida)
+- 🔒 `GET /api/v1/payment-orders/config` — Instrucciones de pago del Campo Local (banco/caja)
+- 🔒 `POST /api/v1/payment-orders/config` — Crear o actualizar instrucciones de pago del Campo Local
+- 🔒 `GET /api/v1/payment-orders/context` — Disponibilidad del flujo de órdenes y ciclos de seguro aplicables a la sección activa
+- 🔒 `GET /api/v1/payment-orders/review-queue` — Bandeja de revisión de órdenes con comprobante (Campo Local)
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/payment-orders` — Emitir orden de pago grupal de camporee de unión (cobra el Campo Local)
 
 ---
 
@@ -270,28 +919,19 @@ generated: true
 - 🔒 `GET /api/v1/clubs/{clubId}/finances` `?year?&month?&clubTypeId?&categoryId?&page?&limit?` — Listar movimientos financieros del club
 - 🔒 `POST /api/v1/clubs/{clubId}/finances` — Crear movimiento financiero
 - 🔒 `GET /api/v1/clubs/{clubId}/finances/summary` `?year?&month?` — Resumen financiero del club
+- 🔒 `GET /api/v1/clubs/{clubId}/finances/transactions` `?page?&limit?&type?&search?&startDate?&endDate?&sortBy?&sortOrder?` — Listar todas las transacciones del club (paginadas)
 - 🔒 `GET /api/v1/finances/{financeId}` — Obtener movimiento por ID
 - 🔒 `PATCH /api/v1/finances/{financeId}` — Actualizar movimiento
-- 🔒 `DELETE /api/v1/finances/{financeId}` — Desactivar movimiento
+- 🔒 `DELETE /api/v1/finances/{financeId}` `?reason?` — Desactivar movimiento
+- 🔒 `POST /api/v1/finances/{financeId}/evidences` — Subir foto de evidencia de un movimiento financiero
 - 🔒 `GET /api/v1/finances/categories` `?type?` — Listar categorías financieras
-
----
-
-## folders
-
-- 🔒 `GET /api/v1/folders/folders` `?club_type?&page?&limit?` — Listar templates de carpetas disponibles
-- 🔒 `GET /api/v1/folders/folders/{id}` — Obtener detalles de un template de carpeta
-- 🔒 `GET /api/v1/folders/users/{userId}/folders` — Listar carpetas asignadas del usuario
-- 🔒 `DELETE /api/v1/folders/users/{userId}/folders/{folderId}` — Abandonar una carpeta
-- 🔒 `POST /api/v1/folders/users/{userId}/folders/{folderId}/enroll` — Inscribirse en una carpeta
-- 🔒 `PATCH /api/v1/folders/users/{userId}/folders/{folderId}/modules/{moduleId}/sections/{sectionId}` — Actualizar progreso de una sección
-- 🔒 `GET /api/v1/folders/users/{userId}/folders/{folderId}/progress` — Ver progreso detallado de una carpeta
 
 ---
 
 ## health
 
-- 🔓 `GET /api/v1/health` — Check API status
+- 🔓 `GET /api/v1/health` — Public ping — returns ok if API is reachable
+- 🔒 `GET /api/v1/health/details` — Detailed health status (admin only)
 
 ---
 
@@ -299,19 +939,84 @@ generated: true
 
 - 🔓 `GET /api/v1/honors` `?categoryId?&clubTypeId?&skillLevel?&page?&limit?` — Listar honores
 - 🔓 `GET /api/v1/honors/{honorId}` — Obtener honor por ID
+- 🔓 `GET /api/v1/honors/{honorId}/requirements` — Obtener requisitos de un honor
 - 🔓 `GET /api/v1/honors/categories` — Listar categorías de honores
 - 🔓 `GET /api/v1/honors/grouped-by-category` `?categoryId?&clubTypeId?&skillLevel?` — Listar honores agrupados por categoría
+
+---
+
+## insurance
+
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/members/insurance` — Listar seguros de miembros por sección
+- 🔒 `PATCH /api/v1/insurance/{insuranceId}` — Actualizar seguro
+- 🔒 `GET /api/v1/insurance/cycles` — Listar ciclos de seguro del Campo Local activo
+- 🔒 `POST /api/v1/insurance/cycles` — Crear ciclo de seguro para el Campo Local activo
+- 🔒 `PATCH /api/v1/insurance/cycles/{cycleConfigId}` — Actualizar ciclo de seguro del Campo Local activo
+- 🔒 `GET /api/v1/insurance/expiring` `?days_ahead?&local_field_id?` — Listar seguros próximos a vencer
+- 🔒 `GET /api/v1/insurance/products` — Listar productos de seguro del Campo Local activo
+- 🔒 `POST /api/v1/insurance/products` — Crear producto de seguro para el Campo Local activo
+- 🔒 `PATCH /api/v1/insurance/products/{productId}` — Actualizar producto de seguro del Campo Local activo
+- 🔒 `GET /api/v1/users/{memberId}/insurance` — Obtener seguro activo del miembro
+- 🔒 `POST /api/v1/users/{memberId}/insurance` — Crear seguro para un miembro
+
+---
+
+## insurance purchases
+
+- 🔒 `GET /api/v1/club-sections/{sectionId}/insurance/purchases` — InsurancePurchasesController_list_v1
+- 🔒 `POST /api/v1/club-sections/{sectionId}/insurance/purchases` — Submit a section insurance purchase with private proof
+- 🔒 `GET /api/v1/insurance/purchases/{purchaseId}` — InsurancePurchasesController_get_v1
+- 🔒 `POST /api/v1/insurance/purchases/{purchaseId}/confirm` — Confirm a purchase and atomically materialize its slots
+- 🔒 `GET /api/v1/insurance/purchases/{purchaseId}/proof` — Mint a short-lived URL for authorized private purchase proof access
+- 🔒 `POST /api/v1/insurance/purchases/{purchaseId}/reject` — InsurancePurchasesController_reject_v1
+- 🔒 `POST /api/v1/insurance/purchases/{purchaseId}/reverse` — InsurancePurchasesController_reverse_v1
+
+---
+
+## insurance reassignments
+
+- 🔒 `GET /api/v1/insurance/reassignments` — Listar solicitudes de reasignación del alcance
+- 🔒 `POST /api/v1/insurance/reassignments` — Solicitar reasignación de cobertura activa
+- 🔒 `POST /api/v1/insurance/reassignments/{requestId}/approve` — Aprobar reasignación (cierra y abre assignment)
+- 🔒 `POST /api/v1/insurance/reassignments/{requestId}/reject` — Rechazar reasignación con comentario
 
 ---
 
 ## inventory
 
 - 🔒 `GET /api/v1/inventory/catalogs/inventory-categories` — Listar categorías de inventario
-- 🔒 `GET /api/v1/inventory/clubs/{clubId}/inventory` `?instanceType&category?` — Listar items del inventario de un club
+- 🔒 `GET /api/v1/inventory/clubs/{clubId}/inventory` `?instanceType&category?` — Listar items del inventario de una instancia de club
 - 🔒 `POST /api/v1/inventory/clubs/{clubId}/inventory` — Agregar nuevo item al inventario
 - 🔒 `GET /api/v1/inventory/inventory/{id}` — Obtener detalles de un item del inventario
 - 🔒 `PATCH /api/v1/inventory/inventory/{id}` — Actualizar un item del inventario
 - 🔒 `DELETE /api/v1/inventory/inventory/{id}` — Eliminar un item del inventario
+- 🔒 `POST /api/v1/inventory/inventory/{id}/evidences` — Subir foto de evidencia de un item de inventario
+- 🔒 `GET /api/v1/inventory/inventory/{inventoryId}/history` — Obtener historial de cambios de un item del inventario
+
+---
+
+## investiture
+
+- 🔒 `POST /api/v1/admin/classes/enrollments/expire-overdue` — Vencer manualmente enrollments atrasados por duración de clase
+- 🔒 `GET /api/v1/admin/investiture/config` `?local_field_id?` — Listar configuraciones de investidura
+- 🔒 `POST /api/v1/admin/investiture/config` — Crear configuración de investidura
+- 🔒 `GET /api/v1/admin/investiture/config/{configId}` — Obtener configuración de investidura por ID
+- 🔒 `PATCH /api/v1/admin/investiture/config/{configId}` — Actualizar configuración de investidura
+- 🔒 `DELETE /api/v1/admin/investiture/config/{configId}` — Soft-delete de configuración de investidura (active = false)
+- 🔒 `POST /api/v1/enrollments/{enrollmentId}/investiture` — [LEGACY] Registrar investidura formal de un enrollment
+- 🔒 `GET /api/v1/enrollments/{enrollmentId}/investiture-history` — [LEGACY] Historial de validación de investidura de un enrollment
+- 🔒 `POST /api/v1/enrollments/{enrollmentId}/submit-for-validation` — [LEGACY] Enviar enrollment a validación de investidura
+- 🔒 `POST /api/v1/enrollments/{enrollmentId}/validate` — [LEGACY] Aprobar o rechazar enrollment para investidura
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/club-approve` — Director de sección aprueba enrollment para investidura
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/coordinator-approve` — Coordinador aprueba enrollment para investidura
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/field-approve` — Campo local aprueba enrollment para investidura
+- 🔒 `GET /api/v1/investiture/enrollments/{enrollmentId}/history` — Historial de validación de investidura de un enrollment
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/invest` — Registrar investidura formal de un enrollment (después de FIELD_APPROVED)
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/reject` — Rechazar enrollment en cualquier nivel del flujo de aprobación
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/submit` — Enviar enrollment a validación de investidura (consejero/director)
+- 🔒 `POST /api/v1/investiture/enrollments/bulk-approve` — Aprobar múltiples enrollments en bloque
+- 🔒 `POST /api/v1/investiture/enrollments/bulk-reject` — Rechazar múltiples enrollments en bloque
+- 🔒 `GET /api/v1/investiture/pending` `?local_field_id?&ecclesiastical_year_id?&page?&limit?&status?` — Listar enrollments pendientes de aprobación (filtrable por nivel)
 
 ---
 
@@ -324,30 +1029,191 @@ generated: true
 
 ---
 
+## Materials — Catalog
+
+- 🔒 `GET /api/v1/materials/catalog` `?cat?&programa?&q?&page?&pageSize?&local_field_id?` — List products (paginated, filtered, scoped to LF)
+- 🔒 `GET /api/v1/materials/catalog/{id}` — Get product detail by ID
+- 🔒 `GET /api/v1/materials/catalog/categories` `?local_field_id?` — List all categories with active product count
+- 🔒 `GET /api/v1/materials/catalog/programs` — List all programs (club types)
+
+---
+
+## Materials — Categories (admin)
+
+- 🔒 `GET /api/v1/materials/categories` — List all material categories (admin view; includes inactive)
+- 🔒 `POST /api/v1/materials/categories` — Create a new material category
+- 🔒 `PATCH /api/v1/materials/categories/{id}` — Update an existing category
+- 🔒 `DELETE /api/v1/materials/categories/{id}` — Soft-delete a category (active=false). Blocked when products reference it.
+
+---
+
+## Materials — Config
+
+- 🔒 `GET /api/v1/materials/config` `?local_field_id?` — Get the caller's local_field payment + delivery configuration
+- 🔒 `PATCH /api/v1/materials/config` `?local_field_id?` — Upsert the materials configuration for a local_field (matches caller scope)
+- 🔒 `PATCH /api/v1/materials/config/{localFieldId}` — Upsert config for a specific local_field (admin direct)
+- 🔒 `GET /api/v1/materials/config/all` — List materials configuration in the caller territory (all local fields for unscoped admins)
+
+---
+
+## Materials — Inventory
+
+- 🔒 `GET /api/v1/materials/inventory` `?cat?&q?&page?&pageSize?&local_field_id?` — List products for the caller's local_field (admins can pass ?local_field_id=N)
+- 🔒 `POST /api/v1/materials/inventory` `?local_field_id?` — Create a product for the caller's local_field (admins can pass ?local_field_id=N)
+- 🔒 `PATCH /api/v1/materials/inventory/{id}` — Partially update a product
+- 🔒 `DELETE /api/v1/materials/inventory/{id}` — Soft-delete a product (sets active=false)
+- 🔒 `PATCH /api/v1/materials/inventory/{id}/variants/{variantId}` — Update stock for a specific variant option; recomputes product total stock
+
+---
+
+## Materials — Orders
+
+- 🔒 `GET /api/v1/materials/orders` `?estado?&club_section_id?&q?&page?&pageSize?&local_field_id` — List orders (visibility + LF aware)
+- 🔒 `POST /api/v1/materials/orders` — Create a new order
+- 🔒 `GET /api/v1/materials/orders/{folio}` — Get full order detail by folio
+- 🔒 `POST /api/v1/materials/orders/{folio}/approve` — Approve order — allocate folio, decrement stock, snapshot config
+- 🔒 `POST /api/v1/materials/orders/{folio}/cancel` — Cancel order — allowed from en_revision (own or campo), aprobada, pagada (campo only)
+- 🔒 `POST /api/v1/materials/orders/{folio}/deliver` — Mark order as delivered — terminal transition (pagada → entregada)
+- 🔒 `PATCH /api/v1/materials/orders/{folio}/lines/{lineId}` — Update line availability (campo local only, en_revision orders only)
+- 🔒 `GET /api/v1/materials/orders/history` `?estado?&club_section_id?&q?&page?&pageSize?&local_field_id` — Caller's own order history (always scoped to own orders)
+
+---
+
+## Materials — Receipts
+
+- 🔒 `GET /api/v1/materials/receipts/{folio}` — List all receipts for an order (with signed read URLs)
+- 🔒 `POST /api/v1/materials/receipts/{folio}` — Upload payment receipt for an approved order
+- 🔒 `POST /api/v1/materials/receipts/{folio}/approve` — Approve a pending receipt — transitions order to pagada
+- 🔒 `POST /api/v1/materials/receipts/{folio}/reject` — Reject a pending receipt — order remains in aprobada
+
+---
+
+## Member Ranking Weights
+
+- 🔒 `GET /api/v1/member-ranking-weights` `?page?&limit?` — List all ranking weight configurations (admin)
+- 🔒 `POST /api/v1/member-ranking-weights` — Create a ranking weight configuration (admin)
+- 🔒 `GET /api/v1/member-ranking-weights/{id}` — Get a ranking weight configuration by ID (admin)
+- 🔒 `PATCH /api/v1/member-ranking-weights/{id}` — Update a ranking weight configuration (admin)
+- 🔒 `DELETE /api/v1/member-ranking-weights/{id}` — Delete a ranking weight configuration (admin)
+
+---
+
+## Member Rankings
+
+- 🔒 `GET /api/v1/member-rankings` `?year_id&club_id?&section_id?&page?&limit?` — List member rankings (paginated, RBAC scope-filtered)
+- 🔒 `GET /api/v1/member-rankings/{enrollmentId}/breakdown` `?year_id` — Get score breakdown for a specific enrollment
+- 🔒 `GET /api/v1/member-rankings/me` `?year_id` — Get the calling member own ranking
+- 🔒 `POST /api/v1/member-rankings/recalculate` `?year_id&club_id?&mode?` — Manually trigger member + section ranking recalculation
+
+---
+
+## member-of-month
+
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/member-of-month` — Obtener miembro del mes actual de la sección
+- 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/member-of-month/evaluate` — Disparar evaluación manual de miembro del mes
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/member-of-month/history` `?page?&limit?` — Obtener historial paginado de miembro del mes
+- 🔒 `GET /api/v1/member-of-month/admin/list` `?club_type_id?&local_field_id?&club_id?&section_id?&year?&month?&notified?&page?&limit?` — Listar miembro del mes multi-sección (admin/coordinator por asignaciones)
+
+---
+
+## membership-requests
+
+- 🔒 `GET /api/v1/club-sections/{clubSectionId}/membership-requests` — Listar solicitudes pendientes de membresía
+- 🔒 `POST /api/v1/club-sections/{clubSectionId}/membership-requests/{assignmentId}/approve` — Aprobar solicitud de membresía
+- 🔒 `POST /api/v1/club-sections/{clubSectionId}/membership-requests/{assignmentId}/reject` — Rechazar solicitud de membresía
+
+---
+
+## monthly-reports
+
+- 🔒 `POST /api/v1/monthly-reports/{enrollmentId}` `?month&year` — Obtener o crear borrador de informe mensual
+- 🔒 `GET /api/v1/monthly-reports/{reportId}` — Obtener informe mensual
+- 🔒 `POST /api/v1/monthly-reports/{reportId}/generate` — Generar informe (congelar datos)
+- 🔒 `PATCH /api/v1/monthly-reports/{reportId}/manual-data` — Actualizar datos manuales del informe
+- 🔒 `GET /api/v1/monthly-reports/{reportId}/pdf` — Descargar informe mensual en PDF
+- 🔒 `POST /api/v1/monthly-reports/{reportId}/regenerate` — Regenerar el PDF almacenado del informe mensual
+- 🔒 `POST /api/v1/monthly-reports/{reportId}/submit` — Enviar informe al campo
+- 🔒 `GET /api/v1/monthly-reports/admin/list` `?club_type_id?&division_id?&union_id?&local_field_id?&year?&month?&status?&page?&limit?` — Listar reportes multi-club (admin/coordinator)
+- 🔒 `GET /api/v1/monthly-reports/enrollment/{enrollmentId}` `?status?` — Listar informes de una matrícula
+- 🔒 `GET /api/v1/monthly-reports/preview/{enrollmentId}` `?month&year` — Vista previa del informe mensual
+
+---
+
 ## Notifications
 
+- 🔒 `PATCH /api/v1/notifications/{deliveryId}/read` — Mark a single notification delivery as read
 - 🔒 `POST /api/v1/notifications/broadcast` — Send notification to all users
 - 🔒 `POST /api/v1/notifications/club/{instanceType}/{instanceId}` — Send notification to club members
+- 🔒 `GET /api/v1/notifications/history` `?page&limit` — Get paginated notification history
+- 🔒 `GET /api/v1/notifications/preferences` — Get current user notification preferences
+- 🔒 `PUT /api/v1/notifications/preferences/{category}` — Update notification preference for a category
+- 🔒 `PATCH /api/v1/notifications/read-all` — Mark all unread notifications as read
 - 🔒 `POST /api/v1/notifications/send` — Send notification to specific user
+- 🔒 `GET /api/v1/notifications/targets/club` — Get authorized club notification targets for current actor
+- 🔒 `GET /api/v1/notifications/unread-count` — Get unread notification count for the current user
 
 ---
 
 ## OAuth
 
-- 🔒 `DELETE /api/v1/auth/oauth/{provider}` — Desconectar un provider
+- 🔒 `DELETE /api/v1/auth/oauth/{provider}` — Desconectar un provider OAuth
 - 🔓 `POST /api/v1/auth/oauth/apple` — Iniciar autenticación con Apple
 - 🔓 `POST /api/v1/auth/oauth/callback` — Finalizar callback de OAuth
 - 🔓 `POST /api/v1/auth/oauth/google` — Iniciar autenticación con Google
-- 🔒 `GET /api/v1/auth/oauth/providers` — Obtener providers conectados
+- 🔒 `GET /api/v1/auth/oauth/providers` — Obtener providers OAuth conectados
 
 ---
 
 ## post-registration
 
+- 🔒 `POST /api/v1/users/{userId}/post-registration/membership-request/cancel` — Cancelar solicitud pendiente de membresía
+- 🔒 `GET /api/v1/users/{userId}/post-registration/photo-status` — Verificar si el usuario tiene foto de perfil subida
 - 🔒 `GET /api/v1/users/{userId}/post-registration/status` — Obtener estado del post-registro
 - 🔒 `POST /api/v1/users/{userId}/post-registration/step-1/complete` — Completar Paso 1: Foto de perfil
 - 🔒 `POST /api/v1/users/{userId}/post-registration/step-2/complete` — Completar Paso 2: Información personal
 - 🔒 `POST /api/v1/users/{userId}/post-registration/step-3/complete` — Completar Paso 3: Selección de club
+
+---
+
+## qr
+
+- 🔒 `GET /api/v1/qr/me` — Get the authenticated user QR metadata
+- 🔒 `GET /api/v1/qr/me/card` — Get the QR card payload for the authenticated user
+- 🔒 `GET /api/v1/qr/me/card.pdf` — Generate a PDF version of the authenticated user QR card
+- 🔒 `GET /api/v1/qr/member/token` — Issue a short-lived QR token for the authenticated member
+- 🔒 `POST /api/v1/qr/scan` — Legacy alias for QR validation + attendance capture
+- 🔒 `POST /api/v1/qr/validate` — Validate a scanned QR token with the canonical QR contract
+
+---
+
+## quarterly-reports
+
+- 🔒 `GET /api/v1/admin/quarterly-reports` `?divisionId?&unionId?&localFieldId?&clubId?&year?&quarter?&status?&page?&limit?` — Listar informes trimestrales (admin)
+- 🔒 `GET /api/v1/admin/quarterly-reports/{id}` — Obtener informe trimestral por ID (admin)
+- 🔒 `PATCH /api/v1/admin/quarterly-reports/{id}` — Actualizar datos manuales del informe trimestral (admin)
+- 🔒 `POST /api/v1/admin/quarterly-reports/{id}/finalize` — Finalizar informe trimestral (admin)
+- 🔒 `GET /api/v1/admin/quarterly-reports/{id}/pdf` — Descargar PDF del informe trimestral (admin)
+- 🔒 `POST /api/v1/admin/quarterly-reports/{id}/regenerate` — Regenerar datos calculados del informe trimestral (admin)
+- 🔒 `GET /api/v1/clubs/{clubId}/quarterly-reports` `?year?` — Listar informes trimestrales de un club (usuario)
+- 🔒 `GET /api/v1/clubs/{clubId}/quarterly-reports/{id}` — Obtener informe trimestral por ID (usuario)
+- 🔒 `GET /api/v1/clubs/{clubId}/quarterly-reports/{id}/pdf` — Descargar PDF del informe trimestral (usuario)
+
+---
+
+## Ranking Tiers
+
+- 🔒 `GET /api/v1/ranking-tiers` — List active ranking recognition tiers
+- 🔒 `PATCH /api/v1/ranking-tiers/{id}` — Update a ranking recognition tier
+
+---
+
+## Ranking Weights
+
+- 🔒 `GET /api/v1/ranking-weights` — List all ranking weight configs
+- 🔒 `POST /api/v1/ranking-weights` — Create a club-type ranking weight override
+- 🔒 `GET /api/v1/ranking-weights/{id}` — Get a single ranking weight config by UUID
+- 🔒 `PATCH /api/v1/ranking-weights/{id}` — Partially update a ranking weight config
+- 🔒 `DELETE /api/v1/ranking-weights/{id}` — Delete a ranking weight override
 
 ---
 
@@ -358,19 +1224,144 @@ generated: true
 - 🔒 `GET /api/v1/admin/rbac/permissions/{id}` — Obtener un permiso por ID
 - 🔒 `PATCH /api/v1/admin/rbac/permissions/{id}` — Actualizar un permiso
 - 🔒 `DELETE /api/v1/admin/rbac/permissions/{id}` — Desactivar un permiso
-- 🔒 `GET /api/v1/admin/rbac/roles` — Listar roles con sus permisos
+- 🔒 `GET /api/v1/admin/rbac/roles` `?active?` — Listar roles con sus permisos
+- 🔒 `POST /api/v1/admin/rbac/roles` — Crear un nuevo rol
 - 🔒 `GET /api/v1/admin/rbac/roles/{id}` — Obtener rol con sus permisos
+- 🔒 `PATCH /api/v1/admin/rbac/roles/{id}` — Actualizar descripción y/o permisos de un rol
+- 🔒 `DELETE /api/v1/admin/rbac/roles/{id}` — Desactivar (soft delete) un rol
 - 🔒 `POST /api/v1/admin/rbac/roles/{id}/permissions` — Asignar permisos a un rol
 - 🔒 `PUT /api/v1/admin/rbac/roles/{id}/permissions` — Sincronizar permisos de un rol (reemplaza todos)
 - 🔒 `DELETE /api/v1/admin/rbac/roles/{id}/permissions/{permissionId}` — Remover un permiso de un rol
+- 🔒 `GET /api/v1/admin/rbac/users/{userId}/permissions` — Listar permisos directos de un usuario
+- 🔒 `POST /api/v1/admin/rbac/users/{userId}/permissions` — Asignar un permiso directo a un usuario
+- 🔒 `DELETE /api/v1/admin/rbac/users/{userId}/permissions/{permissionId}` — Remover un permiso directo de un usuario
+- 🔒 `GET /api/v1/admin/rbac/users/{userId}/roles` — Listar roles asignados a un usuario
+- 🔒 `POST /api/v1/admin/rbac/users/{userId}/roles` — Asignar un rol a un usuario
+- 🔒 `DELETE /api/v1/admin/rbac/users/{userId}/roles/{roleId}` — Remover un rol de un usuario
+
+---
+
+## rbac-bootstrap
+
+- 🔓 `POST /api/v1/admin/rbac/bootstrap-admin` — Crear el primer super-admin (solo funciona si no existe ninguno)
+
+---
+
+## requests
+
+- 🔒 `GET /api/v1/requests/assignments` `?status?&sectionId?` — Listar solicitudes de asignación de rol
+- 🔒 `POST /api/v1/requests/assignments` — Crear solicitud de asignación de rol
+- 🔒 `GET /api/v1/requests/assignments/{requestId}` — Obtener solicitud de asignación de rol
+- 🔒 `POST /api/v1/requests/assignments/{requestId}/review` — Revisar solicitud de asignación de rol
+- 🔒 `GET /api/v1/requests/transfers` `?status?&sectionId?` — Listar solicitudes de transferencia
+- 🔒 `POST /api/v1/requests/transfers` — Crear solicitud de transferencia
+- 🔒 `GET /api/v1/requests/transfers/{requestId}` — Obtener solicitud de transferencia
+- 🔒 `POST /api/v1/requests/transfers/{requestId}/review` — Revisar solicitud de transferencia
+
+---
+
+## resource-categories
+
+- 🔒 `GET /api/v1/resource-categories` — Listar categorías de recursos activas
+- 🔒 `POST /api/v1/resource-categories` — Crear categoría de recurso
+- 🔒 `GET /api/v1/resource-categories/{id}` — Obtener categoría de recurso por ID
+- 🔒 `PATCH /api/v1/resource-categories/{id}` — Actualizar categoría de recurso
+- 🔒 `DELETE /api/v1/resource-categories/{id}` — Desactivar categoría de recurso (soft delete)
+
+---
+
+## Resources
+
+- 🔒 `GET /api/v1/resources` `?resource_type?&resource_category_id?&club_type_id?&scope_level?&scope_id?&page?&limit?&search?` — Listar recursos
+- 🔒 `POST /api/v1/resources` — Crear recurso
+- 🔒 `GET /api/v1/resources/{id}` — Obtener recurso
+- 🔒 `PATCH /api/v1/resources/{id}` — Actualizar recurso
+- 🔒 `DELETE /api/v1/resources/{id}` — Eliminar recurso
+- 🔒 `GET /api/v1/resources/{id}/signed-url` — Obtener URL firmada
+- 🔒 `POST /api/v1/resources/from-uploaded` — Crear recurso desde archivo ya subido a R2 (presigned flow)
+- 🔒 `POST /api/v1/resources/upload-url` — Generar URL firmada para subir un recurso directo a R2
+
+---
+
+## Resources (App)
+
+- 🔒 `GET /api/v1/resources/me` `?resource_type?&resource_category_id?&club_type_id?&scope_level?&scope_id?&page?&limit?&search?` — Mis recursos
+- 🔒 `GET /api/v1/resources/me/{id}` — Obtener recurso visible
+- 🔒 `GET /api/v1/resources/me/{id}/signed-url` — Obtener URL firmada (app)
+
+---
+
+## scoring-categories
+
+- 🔒 `GET /api/v1/divisions/scoring-categories` — Listar categorías de puntuación a nivel división
+- 🔒 `POST /api/v1/divisions/scoring-categories` — Crear categoría de puntuación a nivel división
+- 🔒 `PATCH /api/v1/divisions/scoring-categories/{id}` — Actualizar categoría de puntuación a nivel división
+- 🔒 `DELETE /api/v1/divisions/scoring-categories/{id}` — Desactivar categoría de puntuación a nivel división (soft delete)
+- 🔒 `GET /api/v1/local-fields/{fieldId}/scoring-categories` — Listar categorías de puntuación para un campo local (división + unión + propias)
+- 🔒 `POST /api/v1/local-fields/{fieldId}/scoring-categories` — Crear categoría de puntuación para un campo local
+- 🔒 `PATCH /api/v1/local-fields/{fieldId}/scoring-categories/{id}` — Actualizar categoría de puntuación propia de un campo local
+- 🔒 `DELETE /api/v1/local-fields/{fieldId}/scoring-categories/{id}` — Desactivar categoría de puntuación propia de un campo local (soft delete)
+- 🔒 `GET /api/v1/unions/{unionId}/scoring-categories` — Listar categorías de puntuación para una unión (heredadas + propias)
+- 🔒 `POST /api/v1/unions/{unionId}/scoring-categories` — Crear categoría de puntuación para una unión
+- 🔒 `PATCH /api/v1/unions/{unionId}/scoring-categories/{id}` — Actualizar categoría de puntuación propia de una unión
+- 🔒 `DELETE /api/v1/unions/{unionId}/scoring-categories/{id}` — Desactivar categoría de puntuación propia de una unión (soft delete)
+
+---
+
+## Section Rankings
+
+- 🔒 `GET /api/v1/section-rankings` `?year_id&club_id?&page?&limit?` — List section rankings (paginated, RBAC scope-filtered)
+- 🔒 `GET /api/v1/section-rankings/{sectionId}/members` `?year_id` — Get members for a specific section ordered by rank_position ASC NULLS LAST
+
+---
+
+## support
+
+- 🔒 `POST /api/v1/support/reports` — Create a new support report
+
+---
+
+## system-config
+
+- 🔒 `GET /api/v1/system-config` — Listar todas las configuraciones del sistema
+- 🔒 `GET /api/v1/system-config/{key}` — Obtener una configuracion por clave
+- 🔒 `PATCH /api/v1/system-config/{key}` — Actualizar una configuracion del sistema
+
+---
+
+## units
+
+- 🔒 `GET /api/v1/clubs/{clubId}/units` — Listar unidades del club
+- 🔒 `POST /api/v1/clubs/{clubId}/units` — Crear unidad en el club
+- 🔒 `GET /api/v1/clubs/{clubId}/units/{unitId}` — Obtener detalle de una unidad con miembros
+- 🔒 `PATCH /api/v1/clubs/{clubId}/units/{unitId}` — Actualizar unidad
+- 🔒 `DELETE /api/v1/clubs/{clubId}/units/{unitId}` — Desactivar unidad (soft delete)
+- 🔒 `POST /api/v1/clubs/{clubId}/units/{unitId}/members` — Agregar miembro a la unidad
+- 🔒 `DELETE /api/v1/clubs/{clubId}/units/{unitId}/members/{memberId}` — Remover miembro de la unidad (soft delete)
+- 🔒 `GET /api/v1/clubs/{clubId}/units/{unitId}/weekly-records` — Listar registros semanales de la unidad
+- 🔒 `POST /api/v1/clubs/{clubId}/units/{unitId}/weekly-records` — Crear registro semanal
+- 🔒 `PATCH /api/v1/clubs/{clubId}/units/{unitId}/weekly-records/{recordId}` — Actualizar registro semanal
+- 🔒 `POST /api/v1/clubs/{clubId}/units/{unitId}/weekly-records/bulk` — Crear o actualizar registros semanales de forma atómica
+
+---
+
+## User Notification Preferences
+
+- 🔒 `POST /api/v1/users/me/fcm-tokens` — Register an FCM token for the authenticated user
+- 🔒 `DELETE /api/v1/users/me/fcm-tokens/{tokenId}` — Unregister an FCM token by record ID
+- 🔒 `GET /api/v1/users/me/notification-preferences` — Get notification preferences for the authenticated user
+- 🔒 `PATCH /api/v1/users/me/notification-preferences` — Update notification preferences
 
 ---
 
 ## user-classes
 
 - 🔒 `GET /api/v1/users/{userId}/classes` `?yearId?` — Obtener inscripciones del usuario
-- 🔒 `GET /api/v1/users/{userId}/classes/{classId}/progress` — Obtener progreso del usuario en una clase
+- 🔒 `GET /api/v1/users/{userId}/classes/{classId}/progress` `?enrollmentId?` — Obtener progreso del usuario en una clase
 - 🔒 `PATCH /api/v1/users/{userId}/classes/{classId}/progress` — Actualizar progreso de sección
+- 🔒 `POST /api/v1/users/{userId}/classes/{classId}/sections/{sectionId}/files` `?enrollmentId?` — Upload evidence file for a class section
+- 🔒 `DELETE /api/v1/users/{userId}/classes/{classId}/sections/{sectionId}/files/{fileId}` `?enrollmentId?` — Delete evidence file for a class section
+- 🔒 `POST /api/v1/users/{userId}/classes/{classId}/sections/{sectionId}/submit` `?enrollmentId?` — Submit a class section for validation
 - 🔒 `POST /api/v1/users/{userId}/classes/enroll` — Inscribir usuario en clase
 
 ---
@@ -383,6 +1374,38 @@ generated: true
 - 🔒 `PATCH /api/v1/users/{userId}/honors/{honorId}` — Actualizar progreso de honor
 - 🔒 `DELETE /api/v1/users/{userId}/honors/{honorId}` — Abandonar honor
 - 🔒 `POST /api/v1/users/{userId}/honors/{honorId}/files` — Subir evidencias del honor
+- 🔒 `GET /api/v1/users/{userId}/honors/{honorId}/requirements/{requirementId}/evidence` — Listar evidencias de un requisito
+- 🔒 `DELETE /api/v1/users/{userId}/honors/{honorId}/requirements/{requirementId}/evidence/{evidenceId}` — Eliminar una evidencia de un requisito
+- 🔒 `POST /api/v1/users/{userId}/honors/{honorId}/requirements/{requirementId}/evidence/link` — Agregar enlace como evidencia para un requisito
+- 🔒 `POST /api/v1/users/{userId}/honors/{honorId}/requirements/{requirementId}/evidence/upload` — Subir evidencia (imagen o archivo) para un requisito
+- 🔒 `PATCH /api/v1/users/{userId}/honors/{honorId}/requirements/{requirementId}/progress` — Actualizar progreso de un requisito individual
+- 🔒 `GET /api/v1/users/{userId}/honors/{honorId}/requirements/progress` — Obtener progreso de requisitos del usuario en un honor
+- 🔒 `PATCH /api/v1/users/{userId}/honors/{honorId}/requirements/progress/batch` — Actualizar progreso de múltiples requisitos
 - 🔒 `POST /api/v1/users/{userId}/honors/bulk` — Registrar honores de usuario de forma masiva
 - 🔒 `GET /api/v1/users/{userId}/honors/stats` — Obtener estadísticas de honores del usuario
+
+---
+
+## user-master-honors
+
+- 🔒 `GET /api/v1/users/{userId}/master-honors` — Obtener maestrías del usuario
+- 🔒 `GET /api/v1/users/{userId}/master-honors/{masterHonorId}` — Obtener detalle de una maestría del usuario
+- 🔒 `GET /api/v1/users/{userId}/master-honors/roadmap` — Obtener roadmap de maestrías del usuario
+
+---
+
+## validation
+
+- 🔒 `GET /api/v1/validation/{entityType}/{entityId}/history` — Historial de validacion
+- 🔒 `POST /api/v1/validation/{entityType}/{entityId}/review` — Aprobar o rechazar clase/honor
+- 🔒 `GET /api/v1/validation/eligibility/{userId}` — Verificar elegibilidad para investidura
+- 🔒 `GET /api/v1/validation/pending` `?section_id?&entity_type?` — Listar items pendientes de revision
+- 🔒 `POST /api/v1/validation/submit` — Enviar clase/honor a revision
+
+---
+
+## year-end
+
+- 🔒 `POST /api/v1/year-end/{yearId}/close` — Cerrar ano eclesiastico
+- 🔒 `GET /api/v1/year-end/{yearId}/preview` — Vista previa del impacto de cierre de ano
 

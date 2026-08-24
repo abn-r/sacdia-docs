@@ -1,0 +1,67 @@
+---
+title: Enviar una notificación
+description: Inicia un envío administrativo con la modalidad, permiso y alcance que el backend admite.
+surface: admin
+documentType: process
+module: notifications
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+Este proceso cubre el envío administrativo. La publicación de un recurso sigue un proceso distinto.
+
+## Resultado esperado
+
+La operación queda registrada para procesamiento con la modalidad autorizada y puede verificarse en el historial.
+
+## Cambio de responsable
+
+Cuando cambia la persona responsable, la nueva cuenta debe contar con el permiso requerido antes de operar. Para un envío por sección, también necesita una asignación activa `active_assignment`; la autorización no se transfiere solo porque cambie el cargo informado.
+
+## Antes de comenzar
+
+- Identifica si el caso corresponde a una persona, a todos los usuarios activos o a una sección exacta.
+- Confirma el permiso efectivo: `notifications:send`, `notifications:broadcast` o `notifications:club`.
+- Para una sección, confirma que la asignación activa autoriza el objetivo y que su tipo es `adventurers`, `pathfinders` o `master_guilds`.
+- Para un envío global en producción, confirma que la cola está disponible.
+
+## Flujo completo
+
+El proceso completo comprende la validación del acceso, el inicio de una única operación con la modalidad permitida y la consulta posterior de su registro. La confirmación `queued` solo acredita que el trabajo entró a procesamiento; no equivale a entregado. El historial permite verificar el registro, el destino o alcance y los contadores técnicos, pero no confirma la entrega individual, la recepción del push ni la lectura por cada destinatario.
+
+## Flujo principal
+
+1. Abre [Administración de notificaciones](/configuracion/notificaciones/).
+2. Usa **Directo** para una persona, **Global** para los usuarios activos o **Sección** para el objetivo exacto autorizado.
+3. Completa los datos requeridos por la modalidad elegida y confirma la operación una sola vez.
+4. Conserva la respuesta de la operación y abre el historial desde `/dashboard/configuration/notifications/history`.
+5. Si el resultado contiene `queued`, trátalo como aceptación para procesamiento, no como confirmación de entrega.
+
+## Cómo verificarlo
+
+- Localiza la operación en el historial.
+- Comprueba que la modalidad y, para sección, el objetivo registrado corresponden al caso iniciado.
+- Si aparece `queued`, espera el procesamiento y revisa el historial antes de repetir el envío. Sus contadores son técnicos y no prueban la entrega individual, la recepción del push ni la lectura.
+
+## Límites actuales
+
+- Directo no valida en backend que la persona pertenezca al club sugerido por la interfaz.
+- Global incluye a todos los usuarios activos; no admite segmentación territorial, por categoría ni por tipo de club.
+- Sección exige `notifications:club` y `active_assignment`; no permite sustituir el objetivo autorizado por otro.
+- `queued` no demuestra que cada destinatario haya recibido una notificación.
+
+## Si algo falla
+
+- **No ves la modalidad necesaria:** verifica el permiso y, para sección, la asignación activa.
+- **Global se rechaza en producción:** verifica la disponibilidad de la cola; no cambies de modalidad para evadir el control.
+- **No encuentras el registro:** actualiza el historial y conserva la respuesta antes de iniciar otra operación.
+
+## Procesos relacionados
+
+- [Publicar una comunicación o recurso](/procesos/comunicacion-recursos/)
+
+## Fuente de verificación
+
+Proceso contrastado el 2026-08-24 con las acciones administrativas y los controles de autorización del módulo `notifications`.

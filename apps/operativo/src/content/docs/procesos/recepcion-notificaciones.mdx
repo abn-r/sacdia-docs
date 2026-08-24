@@ -1,0 +1,79 @@
+---
+title: Recibir y revisar notificaciones
+description: Consultar los avisos persistentes y verificar la entrega push sin confundir ambos canales.
+surface: app
+documentType: process
+module: notification-reception
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+Este proceso ayuda a la persona destinataria a revisar un aviso, comprobar su estado y escalar problemas sin reenviar acciones ni depender de un único canal.
+
+## Resultado esperado
+
+La persona consulta el aviso correcto, conoce si se recibió por push o solo está disponible en la bandeja y conserva evidencia suficiente si algo falla.
+
+## Participantes
+
+- Persona destinataria con sesión iniciada.
+- Persona responsable de la acción de negocio, cuando el aviso requiere seguimiento.
+- Soporte, únicamente si la bandeja o la entrega push presenta un problema verificable.
+
+## Cambio de responsable
+
+La emisión de una notificación pertenece al proceso de quien la genera. Este proceso inicia cuando la responsabilidad pasa a la persona destinataria: esa persona revisa la bandeja, decide si debe actuar y usa el flujo específico del módulo relacionado. La notificación no sustituye permisos ni autoriza acciones fuera de su alcance.
+
+## Flujo principal
+
+1. Revisa la alerta push si aparece en el dispositivo.
+2. Entra a la bandeja desde la campana del tablero.
+3. Actualiza el historial si necesitas confirmar un aviso reciente.
+4. Abre el detalle de la tarjeta correspondiente.
+5. Lee el contenido y verifica el tipo, la fecha y el remitente cuando esté disponible.
+6. Continúa en el proceso del módulo solo si tienes el cargo, permiso y contexto requeridos.
+7. Marca el aviso como leído o utiliza la acción para todos después de revisarlos.
+
+La bandeja conserva el historial incluso cuando no hay permiso de push, no existe token FCM o el sistema operativo no entregó la alerta.
+
+## Flujo completo
+
+1. La persona que genera el aviso completa su proceso autorizado por separado.
+2. La persona destinataria recibe una alerta push cuando el dispositivo y sus preferencias lo permiten.
+3. La persona destinataria abre la bandeja desde la campana para comprobar el aviso persistente.
+4. La persona destinataria revisa el detalle y confirma si cuenta con cargo, permiso y contexto para continuar en el módulo relacionado.
+5. Si corresponde una acción, la completa dentro del proceso de ese módulo; la notificación no ejecuta acciones por sí misma.
+6. La persona destinataria comprueba el resultado y conserva los datos del aviso si necesita pedir soporte.
+
+## Cómo verificarlo
+
+1. Confirma que el aviso aparece en la bandeja de la cuenta destinataria.
+2. Comprueba que, al abrir la tarjeta, el estado de no leído cambia si correspondía.
+3. Vuelve a la bandeja y verifica que el contador refleja el resultado.
+4. Si hubo una alerta push, registra hora aproximada, título y dispositivo antes de reportar una diferencia.
+
+## Límites actuales
+
+- La tarjeta de bandeja muestra el detalle y no deriva a una pantalla de negocio.
+- La navegación desde push depende de una ruta permitida o de un tipo tratado explícitamente; una ruta desconocida se descarta.
+- Sin token, permiso o entrega FCM no hay garantía de alerta push, pero el historial persistente sigue siendo el canal de respaldo.
+- iOS Simulator no recibe APNS ni FCM para pruebas de push; usa un dispositivo físico.
+
+## Si algo falla
+
+| Situación | Qué hacer |
+|---|---|
+| No llegó el push | Consulta la bandeja antes de concluir que no existe el aviso. |
+| No aparece el aviso en la bandeja | Confirma que estás en la cuenta correcta, actualiza una vez y reporta título y hora si persiste. |
+| No puedes realizar la acción relacionada | Revisa cargo, permisos y contexto del módulo. No intentes resolverlo desde la notificación. |
+
+## Manuales relacionados
+
+- [Notificaciones](/pantallas/notificaciones/)
+- [Ajustes de notificaciones](/pantallas/ajustes-notificaciones/)
+
+## Fuente de verificación
+
+Proceso contrastado el 2026-08-24 con la bandeja persistente y el manejo de FCM de la aplicación.

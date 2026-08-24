@@ -18,8 +18,9 @@ Los tres comparten identidad visual, configuración tipada, schema editorial y n
 
 | Validación | Resultado |
 | --- | --- |
-| `pnpm test` | 16 archivos, 68 pruebas aprobadas |
+| `pnpm test` (2026-08-24) | 17 archivos y 81 pruebas aprobadas. |
 | `pnpm check` | 3 portales, 0 errores, 0 warnings y 0 hints |
+| Inventario de cobertura (2026-08-24) | 170 superficies: 133 administrativas y 37 de aplicación; 0 filas fuera de `covered`. `manual-coverage` aprobó dentro de `pnpm test`. |
 | `git diff --check development...HEAD` | Sin errores de whitespace |
 | Schema de contenido | Las 102 entradas actuales del portal técnico sincronizan correctamente |
 | Generadores técnicos | Endpoints, Prisma y versiones escriben en el portal técnico de forma atómica |
@@ -207,6 +208,50 @@ mostraron el título y la sección esperados, conservaron el ancho del documento
 igual al viewport (`1440/1440` y `390/390`) y no emitieron errores ni warnings de
 consola. Las capturas de miembros y de solicitudes administrativas cargaron
 completas, con anchos naturales de 1206 px y 1120 px respectivamente.
+
+### Refuerzo editorial de notificaciones
+
+La documentación de notificaciones separa la **bandeja persistente** de la
+entrega **push**: la primera conserva y permite revisar avisos aun cuando no
+exista token, permiso del sistema o entrega FCM; la segunda depende de esas
+condiciones y solo puede navegar con una ruta permitida. Las preferencias
+filtrables se evalúan para futuras entregas de bandeja y push por medio de un
+interruptor maestro y categorías, sin borrar el historial existente. Las fuentes
+`admin:*` omiten ese filtro y no admiten opt-out.
+
+En el panel, el manual y el proceso distinguen las tres modalidades reales de
+envío: directo, global y por sección. También conservan sus permisos y límites,
+incluido que `queued`, el historial y los contadores técnicos no confirman la
+entrega individual, la recepción push ni la lectura de la persona destinataria.
+La publicación de recursos se mantiene en un proceso separado: publicar un
+recurso no envía una notificación.
+
+La matriz remapea las rutas vigentes de configuración al manual
+`/configuracion/notificaciones/` y, cuando corresponde, al proceso
+`/procesos/envio-notificaciones/`. Las rutas
+`/dashboard/notifications` y `/dashboard/notifications/history` permanecen
+inventariadas como redirects heredados, con esos mismos destinos específicos.
+El esquema CSV no contiene un campo para marcar legacy; esa condición se
+documenta aquí y en el manual, sin añadir columnas ni superficies nuevas. La
+superficie móvil `notifications` ahora referencia
+`/procesos/recepcion-notificaciones/`; la pantalla existente
+`/pantallas/ajustes/` conserva su cobertura y el manual de ajustes de
+notificaciones es una profundización enlazada, no otra superficie.
+
+El contrato editorial `notifications-manuals.test.ts` protege la separación de
+canales, preferencias, modalidades, límites de `queued`, recursos y rutas. En
+la ejecución del 2026-08-24, `pnpm test` aprobó 81 pruebas en 17 archivos y
+`pnpm check` finalizó en los tres portales sin diagnósticos.
+
+Playwright revisó 10 páginas del lote a 1440 × 1000: todas respondieron HTTP
+200, conservaron ancho de documento `1440/1440` y no emitieron warnings ni
+errores de consola. También revisó 7 páginas representativas a 390 × 844,
+incluida la referencia de endpoints, con `390/390` y sin warnings ni errores.
+La revisión visual incluyó las capturas de los tres portales.
+
+En el mismo corte, `endpoints.mdx` se regeneró oficialmente desde el OpenAPI
+del runtime. El inventario pasó de 189 a 780 endpoints por drift general, no
+como una ampliación específica del lote de notificaciones.
 
 ### Capturas reales en manuales prioritarios
 

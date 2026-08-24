@@ -1,66 +1,88 @@
 ---
 title: Notificaciones
-description: Consultar avisos, abrir su destino y controlar el estado de lectura.
+description: Consulta avisos persistentes, su detalle y su estado de lectura.
 surface: app
 documentType: screen
 module: notifications
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 ---
 
-Consultar avisos, abrir su destino y controlar el estado de lectura.
+Consulta los avisos que quedan disponibles en la aplicación, aunque no hayas recibido una alerta push.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás consultar avisos, abrir su destino y controlar el estado de lectura.
+Podrás consultar el historial, distinguir los avisos no leídos y revisar su detalle sin cambiar de módulo por error.
 
 ## Quién puede utilizarlo
 
-Usuarios autenticados; las categorías visibles dependen del alcance del mensaje.
-
-## Pantallas incluidas
-
-- Bandeja de notificaciones
+Cualquier persona con sesión iniciada. La bandeja muestra únicamente las notificaciones entregadas a esa cuenta; no otorga permisos ni cambia el contexto activo.
 
 ## Antes de comenzar
 
-- Inicia sesión y confirma el club o sección activos.
-- Mantén conexión estable para acciones que guardan o envían información.
-- Si una acción no aparece, revisa primero el cargo y el contexto.
+- Inicia sesión en la aplicación.
+- Confirma que tienes conexión si vas a actualizar el historial o marcar lecturas.
+- Si esperabas un aviso específico, recuerda que la entrega push y el historial son canales separados.
 
-## Tareas principales
+## Bandeja e historial
 
-- Consultar mensajes nuevos e historial.
-- Marcar una notificación o todas como leídas.
-- Actualizar la bandeja y cargar más historial.
-- Abrir el destino relacionado.
+1. Desde el tablero, toca la campana para entrar a la bandeja.
+2. Espera la actualización inicial antes de interpretar el contador de no leídas.
+3. Desliza hacia abajo para actualizar el historial cuando necesites una comprobación nueva.
+4. Desplázate hasta el final para cargar más resultados cuando estén disponibles.
 
-## Flujo recomendado
+La aplicación actualiza la bandeja al abrirla y también cuando vuelve a primer plano mientras esta pantalla sigue visible. El historial carga **20 notificaciones por página**, ordenadas de la más reciente a la más antigua.
 
-1. Pulsa el icono de notificaciones.
-2. Abre un aviso para leerlo y continuar a su destino.
-3. Usa **Marcar todas como leídas** si ya revisaste la bandeja.
-4. Actualiza o carga más elementos para consultar el historial.
+### Marcar como leída
+
+1. Toca una tarjeta no leída para marcarla como leída.
+2. Usa **Marcar todas como leídas** cuando ya hayas revisado todos los avisos pendientes.
+3. Comprueba que el indicador de no leídas disminuyó antes de salir.
+
+El cambio de lectura aparece primero en la pantalla y se confirma con el servicio. Si la confirmación falla, la aplicación recupera el estado anterior; actualiza la bandeja antes de volver a intentarlo.
+
+## Abrir el detalle
+
+1. Toca la tarjeta del aviso que deseas consultar.
+2. Lee el título, el contenido, la fecha, el tipo y, cuando exista, el remitente.
+3. Cierra el detalle al terminar.
+
+La bandeja abre el detalle; no abre un destino.
+
+## Tocar una notificación push
+
+1. Toca la alerta push solo si deseas continuar desde la notificación del sistema.
+2. Si la aplicación se abre, confirma que la pantalla mostrada corresponde a la acción esperada.
+3. Si no hay navegación, entra a la bandeja y consulta el aviso persistente.
+
+Un push puede navegar únicamente cuando incluye `data.route` validada contra la **lista permitida de rutas**, o cuando su tipo tiene un manejo explícito en la aplicación. Una ruta desconocida se rechaza y no debe abrir pantallas arbitrarias.
+
+La bandeja persistente y las alertas push son canales separados: no contar con permiso o token push no impide consultar el historial de la bandeja.
 
 ## Cómo verificarlo
 
-El contador de no leídas disminuye y el aviso conserva su estado al volver a la bandeja.
+1. Entra desde la campana y confirma que el historial se actualiza.
+2. Abre una tarjeta no leída y verifica que el detalle conserva su contenido y el contador disminuye.
+3. Cierra el detalle, vuelve a la lista y comprueba que el estado leído se mantiene después de actualizar.
+4. Si pruebas una alerta push, registra si abrió una ruta permitida; si no hubo alerta, confirma que el aviso continúa disponible en la bandeja.
 
-## Errores frecuentes
+## Si algo falla
 
-| Problema | Qué hacer |
+| Situación | Qué hacer |
 |---|---|
-| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
-| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
-| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
-| Aparece otro club o sección | Vuelve al tablero y cambia o confirma el contexto activo antes de guardar información. |
+| La bandeja no carga | Revisa la conexión y usa **Reintentar** o actualiza una vez. |
+| No cambia el estado de lectura | Actualiza la bandeja; si vuelve a fallar, conserva el aviso y repórtalo desde Ayuda. |
+| No llegó una alerta push | Consulta la bandeja. Puede existir un aviso persistente aunque el dispositivo no haya recibido push. |
+| La alerta abrió una pantalla inesperada | No completes acciones sensibles; vuelve al tablero y reporta el comportamiento con la hora aproximada. |
 
-## Procesos relacionados
+## Manuales relacionados
 
-- [Abrir la guía del proceso](/procesos/comunicacion-recursos/)
+- [Ajustes de notificaciones](/pantallas/ajustes-notificaciones/)
+- [Ajustes y accesibilidad](/pantallas/ajustes/)
+- [Recepción de notificaciones](/procesos/recepcion-notificaciones/)
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las vistas, rutas y controles efectivos del módulo `notifications` de la aplicación.
+Manual contrastado el 2026-08-24 con la bandeja, su paginación, los controles de lectura y el manejo efectivo de FCM en la aplicación.

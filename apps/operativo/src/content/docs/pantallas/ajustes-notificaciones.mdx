@@ -1,0 +1,76 @@
+---
+title: Ajustes de notificaciones
+description: Configura qué alertas push puede recibir tu dispositivo sin perder el acceso a la bandeja.
+surface: app
+documentType: screen
+module: notification-preferences
+status: published
+owners:
+  - documentation
+lastReviewedAt: 2026-08-24
+---
+
+Configura las alertas push de tu dispositivo. Estas preferencias no eliminan los avisos que ya están disponibles en la bandeja.
+
+## Resultado esperado
+
+Podrás activar o desactivar las alertas generales y por categoría, con una respuesta visible si el servicio no puede guardar el cambio.
+
+## Quién puede utilizarlo
+
+Cualquier persona con sesión iniciada. La configuración se aplica a la cuenta actual y no concede permisos, cargos ni alcance adicional.
+
+## Antes de comenzar
+
+- Abre **Perfil > Ajustes**.
+- Mantén conexión para guardar un cambio.
+- Confirma que el sistema operativo permite notificaciones para la aplicación si deseas recibir alertas push.
+
+## Interruptor maestro
+
+1. Abre la sección **Notificaciones**.
+2. Activa o desactiva el interruptor principal de notificaciones push.
+3. Comprueba que las categorías quedan disponibles solo cuando el interruptor principal está activo.
+
+Al desactivar el interruptor maestro, las categorías quedan deshabilitadas. Esta opción controla alertas push; la **bandeja** sigue disponible para consultar el historial persistente.
+
+## Categorías disponibles
+
+Con el interruptor maestro activo, configura cada categoría por separado:
+
+- **actividades**
+- **logros**
+- **aprobaciones**
+- **invitaciones**
+- **recordatorios**
+
+1. Activa o desactiva una categoría.
+2. Espera a que el cambio termine de guardarse antes de modificar otra opción.
+3. Vuelve a abrir Ajustes para comprobar el estado guardado.
+
+La aplicación muestra el cambio de forma inmediata. Si la API no puede confirmarlo, restaura el estado anterior y muestra un mensaje de error.
+
+## Push y bandeja
+
+Las preferencias controlan la entrega push, no el historial. Si no hay permiso del sistema, token registrado o conectividad para FCM, consulta la bandeja desde la campana del tablero para revisar los avisos persistentes.
+
+En **iOS Simulator** no se obtiene un token APNS ni un token FCM. Para probar alertas push en iOS, usa un dispositivo físico; esta limitación no afecta la consulta de la bandeja.
+
+## Si algo falla
+
+| Situación | Qué hacer |
+|---|---|
+| El interruptor vuelve a su valor previo | El servicio no guardó el cambio. Revisa conexión y vuelve a intentarlo una vez. |
+| No recibes alertas push | Confirma permiso del sistema, token del dispositivo y preferencias; después revisa la bandeja. |
+| Las categorías no se pueden tocar | Activa primero el interruptor maestro. |
+| Estás en iOS Simulator | Usa un dispositivo físico para validar APNS y FCM. |
+
+## Manuales relacionados
+
+- [Ajustes y accesibilidad](/pantallas/ajustes/)
+- [Notificaciones](/pantallas/notificaciones/)
+- [Recepción de notificaciones](/procesos/recepcion-notificaciones/)
+
+## Fuente de verificación
+
+Manual contrastado el 2026-08-24 con las preferencias de notificaciones, su actualización optimista con reversión y el ciclo de registro FCM de la aplicación.

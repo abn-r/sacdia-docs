@@ -1,74 +1,82 @@
 ---
 title: Administración de notificaciones
-description: Enviar mensajes, consultar historial y configurar categorías visibles en la aplicación.
+description: Envía notificaciones por persona, a usuarios activos o a una sección autorizada; consulta historial y categorías.
 surface: admin
 documentType: screen
 module: notifications
 status: published
 owners:
   - documentation
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 ---
 
-Enviar mensajes, consultar historial y configurar categorías visibles en la aplicación.
+Usa este centro para iniciar envíos administrativos y consultar su historial. Las notificaciones se gestionan por separado de la publicación de recursos.
 
 ## Resultado esperado
 
-Al terminar este recorrido, podrás enviar mensajes, consultar historial y configurar categorías visibles en la aplicación.
+Podrás iniciar un envío con la modalidad autorizada, identificar su registro en el historial y distinguir entre una operación encolada y los límites de verificación disponibles.
 
 ## Acceso requerido
 
-- notifications:send, notifications:broadcast o notifications:club
-- notifications:read_history para historial cuando aplique
+- **Cargo o rol:** las estadísticas y la configuración de categorías requieren el rol global **admin** o **super-admin**.
+- **Permiso para envío directo:** `notifications:send`.
+- **Permiso para envío global:** `notifications:broadcast`.
+- **Permiso para envío a una sección:** `notifications:club` y una asignación activa `active_assignment` que autorice el destino.
+- **Historial:** `notifications:read_history` cuando aplique, además de los controles de acceso de la pantalla.
 
-El panel oculta opciones sin permiso efectivo. Ver una guía no concede acceso ni reemplaza la autorización del backend.
+El menú no reemplaza los controles del backend: ver una opción no concede permiso efectivo.
 
 ## Rutas incluidas
 
 | Ruta | Uso |
 |---|---|
-| `/dashboard/notifications` | Centro de notificaciones. |
-| `/dashboard/notifications/history` | Historial de operaciones. |
+| `/dashboard/configuration/notifications` | Centro de envío y estadísticas. |
+| `/dashboard/configuration/notifications/history` | Historial de operaciones. |
+| `/dashboard/configuration/notifications/categories` | Configuración de categorías para roles globales autorizados. |
 
-## Antes de comenzar
+Las rutas `/dashboard/notifications` y `/dashboard/notifications/history` son redirecciones heredadas. Usa las rutas de configuración.
 
-- Confirma la cuenta, el alcance territorial y el periodo que vas a operar.
-- Busca el registro antes de crearlo para evitar duplicados.
-- Si no ves una acción, no intentes saltar el control mediante una URL directa.
+## Modalidades de envío
 
-## Tareas principales
+- **Directo** — Requiere `notifications:send` y se dirige a una persona identificada. El selector de club, si aparece, es una ayuda visual: el backend no confirma que esa persona pertenezca al club indicado.
+- **Global** — Requiere `notifications:broadcast` y se dirige a todos los usuarios activos. En producción necesita una cola disponible para procesar el envío.
+- **Sección** — Requiere `notifications:club` y `active_assignment`. Solo permite un objetivo exacto de tipo `adventurers`, `pathfinders` o `master_guilds` dentro de la asignación activa autorizada.
 
-- Consultar estadísticas.
-- Redactar y segmentar un mensaje.
-- Enviar al club o alcance territorial autorizado.
-- Revisar historial.
-- Configurar categorías y preferencia móvil.
+No hay segmentación territorial ni por categoría.
 
 ## Flujo recomendado
 
-1. Abre **Configuración > Notificaciones**.
-2. Confirma el tipo de alcance que puedes utilizar.
-3. Redacta título, cuerpo y destino.
-4. Revisa destinatarios antes de enviar.
-5. Consulta **Historial** para verificar estado y alcance.
+1. Abre **Configuración > Notificaciones** en `/dashboard/configuration/notifications`.
+2. Confirma que tu cuenta tiene el permiso correspondiente a la modalidad necesaria.
+3. Elige una de las tres modalidades disponibles y completa únicamente los datos solicitados por esa modalidad.
+4. Revisa la confirmación de la operación antes de repetirla.
+5. Abre el [historial](/configuracion/notificaciones/) desde la ruta indicada para localizar el registro y su estado.
 
 ## Cómo verificarlo
 
-El envío aparece en historial y los destinatarios pueden recibirlo según su categoría y alcance.
+- Confirma que el historial muestra la operación creada.
+- El historial verifica el registro, el destino o alcance y los contadores técnicos. No confirma la entrega individual, la recepción del push ni la lectura del destinatario.
+- Si la respuesta indica `queued`, verifica que el trabajo fue aceptado para procesamiento. `queued` no equivale a entregado.
+- Para una sección, confirma que el tipo y la sección del registro coinciden con el objetivo autorizado.
 
-## Errores frecuentes
+## Límites actuales
 
-| Problema | Qué hacer |
-|---|---|
-| No aparece la acción | Tu cargo o contexto no incluye el permiso. Confirma la sección o solicita revisión de acceso; no intentes otra cuenta. |
-| La pantalla no carga | Comprueba la conexión y usa **Reintentar**. Si continúa, conserva el mensaje y repórtalo desde Ayuda. |
-| El estado no cambia | Actualiza la pantalla antes de repetir. No envíes una operación por segunda vez sin confirmar el resultado. |
-| El registro está fuera de alcance | Revisa el filtro territorial y la cuenta activa. El panel limita los datos al alcance autorizado. |
+- El envío directo no valida en backend la pertenencia de la persona al club sugerido por la interfaz.
+- El envío global no permite acotar usuarios por territorio, categoría o tipo de club.
+- El envío por sección depende de `active_assignment`; sin una asignación activa autorizada no se puede iniciar.
+- La ausencia de una cola en producción impide el envío global.
+
+## Si algo falla
+
+- **No aparece una modalidad:** confirma tu permiso efectivo y, para sección, la asignación activa; no intentes acceder mediante una URL directa.
+- **La operación no inicia:** conserva el mensaje mostrado y revisa los datos requeridos por la modalidad antes de volver a intentarlo.
+- **El estado permanece en espera:** consulta el historial antes de reenviar; una segunda operación puede duplicar el envío.
 
 ## Procesos relacionados
 
-- [Abrir la guía del proceso](/procesos/comunicacion-recursos/)
+- [Enviar una notificación](/procesos/envio-notificaciones/)
+- [Publicar una comunicación o recurso](/procesos/comunicacion-recursos/)
 
 ## Fuente de verificación
 
-Manual contrastado el 2026-08-20 con las rutas, componentes, permisos de navegación y documentación canónica del módulo `notifications`.
+Manual contrastado el 2026-08-24 con las rutas, acciones y permisos efectivos de `notifications` en el panel administrativo y el backend.

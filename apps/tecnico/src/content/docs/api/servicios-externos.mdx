@@ -1,74 +1,57 @@
 ---
 title: "Integración de Servicios Externos"
-description: "Estado y configuración de Redis, Firebase FCM, Sentry y el health check de dependencias externas en el backend de SACDIA."
+description: "Estado y límites de Redis/BullMQ, Firebase FCM, Sentry y health checks del backend SACDIA."
 surface: technical
 documentType: reference
 module: api
 status: published
 owners:
   - "Abner Reyes"
-lastReviewedAt: 2026-08-20
+lastReviewedAt: 2026-08-24
 generated: false
 ---
-Estado actual de servicios externos en backend SACDIA:
 
-1. **Redis**: integración con fallback a in-memory implementada.
-2. **Firebase FCM**: módulo y endpoints operativos con hardening de seguridad aplicado.
-3. **Sentry**: inicialización condicional por `SENTRY_DSN` + interceptor global condicional.
-4. **Health check**: `GET /api/v1/health` reporta estado de `database`, `cache`, `fcm`, `sentry`.
+El backend usa Redis para habilitar colas BullMQ y Firebase Cloud Messaging (FCM) para push. La disponibilidad de estos servicios no reemplaza los controles de autorización ni garantiza que una notificación sea recibida o leída.
 
----
+## 1) Redis y BullMQ
 
-## 1) Redis
+Con una `REDIS_URL` válida, `NotificationsModule` registra su cola BullMQ y procesa los envíos de notificaciones de forma asíncrona. Cada trabajo usa hasta 3 intentos con backoff exponencial de 2, 4 y 8 segundos. `queued: true` confirma el encolado, no la entrega a FCM ni la visualización por el destinatario.
 
-### Estado
-
-- Integración en `src/common/common.module.ts`.
-- Fallback controlado a cache in-memory si Redis no conecta.
-- Pendiente: configurar `REDIS_URL` productiva válida por entorno.
-
-### Variable de entorno
+Los envíos directo y por instancia pueden usar fallback síncrono cuando Redis o FCM no están disponibles. En producción, `POST /api/v1/notifications/broadcast` falla si la cola no está disponible: el broadcast no se degrada a ejecución síncrona.
 
 ```bash
 REDIS_URL=redis://default:password@host:port
 ```
 
-### Criterio operativo
-
-- Si Redis falla, la app **debe iniciar** en modo degradado sin romper requests.
-
----
-
 ## 2) Firebase Cloud Messaging (FCM)
 
-### Estado
+FCM es el canal push de SACDIA. La bandeja persistente se registra por separado en `notification_deliveries`: la falta de token o de configuración FCM puede omitir el push sin eliminar la entrega de bandeja. Las preferencias se aplican antes de crear ambos canales, excepto para fuentes `admin:*`, que no permiten opt-out.
 
-- Tabla `user_fcm_tokens` y migración `20260204_add_user_fcm_tokens` aplicable por `prisma migrate deploy`.
-- Endpoints protegidos con JWT.
-- Restricción por rol en envíos masivos.
-- Validación de ownership en operación de tokens.
-- Pendiente: credenciales FCM válidas por entorno para inicialización real.
+### Envíos y bandeja
 
-### Contrato API vigente (2026-02-13)
+Todos requieren JWT. Los permisos se aplican antes de encolar o ejecutar el envío:
 
-#### Gestión de Tokens
+- `POST /api/v1/notifications/send` requiere `notifications:send` y alcance global.
+- `POST /api/v1/notifications/broadcast` requiere `notifications:broadcast` y alcance global.
+- `POST /api/v1/notifications/club/:instanceType/:instanceId` requiere `notifications:club` y valida `active_assignment`.
+- `GET /api/v1/notifications/targets/club` requiere `notifications:club` y devuelve solo destinos de `active_assignment` autorizados.
+- `GET /api/v1/notifications/history` devuelve historial paginado: bandeja propia para usuarios regulares y auditoría con alcance para administración.
+- `GET /api/v1/notifications/unread-count` devuelve no leídas del usuario autenticado.
+- `PATCH /api/v1/notifications/:deliveryId/read` marca una entrega propia como leída; una entrega ajena no es accesible.
+- `PATCH /api/v1/notifications/read-all` marca como leídas todas las entregas propias pendientes.
 
-- `POST /api/v1/fcm-tokens` (JWT requerido)
-  - `userId` se obtiene del JWT autenticado.
-- `GET /api/v1/fcm-tokens` (JWT requerido)
-  - Lista tokens del usuario autenticado.
-- `DELETE /api/v1/fcm-tokens/:token` (JWT requerido)
-  - Solo permite desactivar tokens propios.
-- `GET /api/v1/fcm-tokens/user/:userId` (JWT requerido, owner/admin)
-  - Endpoint de compatibilidad para owner o admin.
+### Preferencias y tokens canónicos
 
-#### Envío de Notificaciones
+Las rutas de la app móvil son el contrato canónico autenticado:
 
-- `POST /api/v1/notifications/send` (JWT requerido)
-- `POST /api/v1/notifications/broadcast` (JWT + rol `admin|super_admin`)
-- `POST /api/v1/notifications/club/:sectionId` (JWT + rol `admin|super_admin`)
+- `GET /api/v1/users/me/notification-preferences`
+- `PATCH /api/v1/users/me/notification-preferences`
+- `POST /api/v1/users/me/fcm-tokens`
+- `DELETE /api/v1/users/me/fcm-tokens/:tokenId`
 
-### Variables de entorno
+El alta de token lo reactiva y reasocia al usuario actual cuando el valor ya existía. Se conservan como máximo cinco tokens activos por usuario. Los errores FCM permanentes dan de baja el token; los transitorios quedan disponibles para reintento. Un cron elimina tokens sin uso durante más de 90 días los domingos a las 03:00.
+
+También existen `GET` y `POST /api/v1/fcm-tokens`, `DELETE /api/v1/fcm-tokens/by-token`, `DELETE /api/v1/fcm-tokens/:id` y `GET /api/v1/fcm-tokens/user/:userId` como rutas de compatibilidad o administración. El último usa guard owner/admin. Estas rutas no reemplazan `/users/me` para el cliente móvil.
 
 ```bash
 FIREBASE_PROJECT_ID=...
@@ -76,72 +59,22 @@ FIREBASE_CLIENT_EMAIL=...
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 ```
 
----
-
 ## 3) Sentry
 
-### Estado
-
-- Inicialización condicional en `src/main.ts` cuando existe `SENTRY_DSN`.
-- `SentryInterceptor` solo se activa cuando Sentry está habilitado.
-- Pendiente: DSN real por entorno + alertas operativas.
-
-### Variable de entorno
+Sentry se inicializa condicionalmente en `src/main.ts` cuando existe `SENTRY_DSN`; el interceptor global solo se activa en ese caso.
 
 ```bash
 SENTRY_DSN=https://<key>@<org>.ingest.sentry.io/<project>
 ```
 
----
+## 4) Health check de dependencias
 
-## 4) Health Check de Dependencias
-
-Endpoint:
-
-- `GET /api/v1/health`
-
-Respuesta de referencia:
-
-```json
-{
-  "status": "ok",
-  "dependencies": {
-    "database": { "ok": true },
-    "cache": { "ok": true },
-    "fcm": { "configured": true, "initialized": false },
-    "sentry": { "configured": true }
-  }
-}
-```
-
----
-
-## Validación Ejecutada (Local)
-
-Checklist técnico ejecutado el 2026-02-13:
-
-1. `pnpm run build` — OK
-2. `pnpm run test -- src/notifications/fcm-tokens.service.spec.ts` — OK
-3. `pnpm run test:e2e -- test/notifications-security.e2e-spec.ts test/admin-catalogs.e2e-spec.ts` — OK
-4. `pnpm prisma migrate deploy` — OK
-5. `pnpm run verify:fcm-migration` — OK
-6. `GET /api/v1/health` en `start:prod` — OK
-
----
-
-## Pendiente para Cierre Productivo
-
-1. Configurar `REDIS_URL` válida en staging/prod.
-2. Configurar `FIREBASE_PRIVATE_KEY` válida (PEM correcto) en staging/prod.
-3. Configurar `SENTRY_DSN` y reglas de alerta en entorno productivo.
-4. Repetir checklist completo en staging/prod con evidencia.
-
----
+`GET /api/v1/health` reporta el estado de `database`, `cache`, `fcm` y `sentry`. Un estado de salud no prueba que un push específico haya llegado al dispositivo.
 
 ## Referencias
 
-- `sacdia-backend/src/common/common.module.ts`
-- `sacdia-backend/src/config/firebase-admin.module.ts`
 - `sacdia-backend/src/notifications/notifications.controller.ts`
+- `sacdia-backend/src/notifications/user-notification-preferences.controller.ts`
+- `sacdia-backend/src/notifications/notifications.service.ts`
 - `sacdia-backend/src/notifications/fcm-tokens.service.ts`
-- `sacdia-backend/src/health/health.controller.ts`
+- `sacdia-backend/src/notifications/notifications.processor.ts`

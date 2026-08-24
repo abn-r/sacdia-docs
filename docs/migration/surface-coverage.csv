@@ -78,10 +78,10 @@ admin,configuration,/dashboard/configuration/achievements/[categoryId]/new,/conf
 admin,configuration,/dashboard/configuration/local-field/delivery,/configuracion/sistema/,,covered,documentation
 admin,configuration,/dashboard/configuration/local-field/payment-methods,/configuracion/sistema/,,covered,documentation
 admin,configuration,/dashboard/configuration/matrix,/configuracion/sistema/,,covered,documentation
-admin,configuration,/dashboard/configuration/notifications,/configuracion/sistema/,,covered,documentation
-admin,configuration,/dashboard/configuration/notifications/categories,/configuracion/sistema/,,covered,documentation
-admin,configuration,/dashboard/configuration/notifications/history,/configuracion/sistema/,,covered,documentation
-admin,configuration,/dashboard/configuration/notifications/send,/configuracion/sistema/,,covered,documentation
+admin,configuration,/dashboard/configuration/notifications,/configuracion/notificaciones/,/procesos/envio-notificaciones/,covered,documentation
+admin,configuration,/dashboard/configuration/notifications/categories,/configuracion/notificaciones/,,covered,documentation
+admin,configuration,/dashboard/configuration/notifications/history,/configuracion/notificaciones/,/procesos/envio-notificaciones/,covered,documentation
+admin,configuration,/dashboard/configuration/notifications/send,/configuracion/notificaciones/,/procesos/envio-notificaciones/,covered,documentation
 admin,configuration,/dashboard/configuration/permissions,/configuracion/sistema/,,covered,documentation
 admin,configuration,/dashboard/configuration/roles,/configuracion/sistema/,,covered,documentation
 admin,configuration,/dashboard/configuration/roles/[roleId],/configuracion/sistema/,,covered,documentation
@@ -106,8 +106,8 @@ admin,materials,/dashboard/materials/receipts,/materiales/solicitudes-materiales
 admin,materials,/dashboard/materials/receipts/[folio],/materiales/solicitudes-materiales/,/procesos/solicitud-materiales/,covered,documentation
 admin,materials,/dashboard/materials/request/[folio],/materiales/solicitudes-materiales/,/procesos/solicitud-materiales/,covered,documentation
 admin,member-of-month,/dashboard/member-of-month,/investiduras/miembro-del-mes/,/procesos/evaluacion-y-clasificacion/,covered,documentation
-admin,notifications,/dashboard/notifications,/configuracion/notificaciones/,/procesos/comunicacion-recursos/,covered,documentation
-admin,notifications,/dashboard/notifications/history,/configuracion/notificaciones/,/procesos/comunicacion-recursos/,covered,documentation
+admin,notifications,/dashboard/notifications,/configuracion/notificaciones/,/procesos/envio-notificaciones/,covered,documentation
+admin,notifications,/dashboard/notifications/history,/configuracion/notificaciones/,/procesos/envio-notificaciones/,covered,documentation
 admin,payment-orders,/dashboard/payment-orders,/finanzas/ordenes-pago/,/procesos/seguro-y-orden-pago/|/procesos/participacion-camporee/,covered,documentation
 admin,ranking-weights,/dashboard/ranking-weights,/investiduras/pesos-clasificacion/,/procesos/carpeta-anual/|/procesos/evaluacion-y-clasificacion/,covered,documentation
 admin,rbac,/dashboard/rbac/user-permissions,/configuracion/roles-permisos/,,covered,documentation
@@ -155,7 +155,7 @@ app,master_honors,master_honors,/pantallas/maestrias/,,covered,documentation
 app,materials,materials,/pantallas/materiales/,/procesos/solicitud-materiales/,covered,documentation
 app,members,members,/pantallas/miembros/,/procesos/gestion-club-seccion/,covered,documentation
 app,monthly_reports,monthly_reports,/pantallas/informes-mensuales/,/procesos/informe-mensual/,covered,documentation
-app,notifications,notifications,/pantallas/notificaciones/,/procesos/comunicacion-recursos/,covered,documentation
+app,notifications,notifications,/pantallas/notificaciones/,/procesos/recepcion-notificaciones/,covered,documentation
 app,payment_orders,payment_orders,/pantallas/ordenes-pago/,/procesos/seguro-y-orden-pago/|/procesos/participacion-camporee/,covered,documentation
 app,post_registration,post_registration,/pantallas/completar-perfil/,/procesos/alta-y-membresia/,covered,documentation
 app,profile,profile,/pantallas/perfil/,/procesos/alta-y-membresia/,covered,documentation
