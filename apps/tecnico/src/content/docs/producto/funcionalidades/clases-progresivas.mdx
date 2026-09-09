@@ -16,6 +16,8 @@ Cada clase se compone de modulos tematicos, y cada modulo contiene secciones eva
 
 El sistema adopta una unica fuente de verdad: el **ciclo anual operativo** es gestionado enteramente por `enrollments` con sus proyecciones de progreso (`class_module_progress`, `class_section_progress`). La tabla legacy `users_classes` fue archivada como `users_classes_archive` y ya no participa en el modelo operativo. El historico consolidado se consulta directamente desde `enrollments` con filtros historicos por ano eclesiastico.
 
+Escrituras de progreso (PATCH, upload, submit) del año que ya no es operativo responden **403** `CLASS_PROGRESS_YEAR_NOT_OPERATIONAL`. Contrato: workspace `sacdia` `docs/features/clases-progresivas.md` y `docs/api/ENDPOINTS-LIVE-REFERENCE.md`.
+
 La culminacion exitosa de una clase lleva a la investidura, que es el acto institucional de reconocimiento formal. Este flujo de validacion e investidura esta implementado en el modulo [validacion-investiduras](/docs/funcionalidades/validacion-investiduras).
 
 ## Que existe (verificado contra codigo)

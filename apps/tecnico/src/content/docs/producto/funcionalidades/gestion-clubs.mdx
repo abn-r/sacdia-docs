@@ -73,7 +73,17 @@ Las unidades (`units`) son subdivisiones informales dentro de una seccion (tipic
 6. Debe ser posible listar miembros de una seccion con sus roles activos
 7. Las secciones deben registrar dias y horarios de reunion, cuota y meta de almas
 8. El director del club es el unico que puede eliminar secciones y desactivar el club
-9. Las asignaciones de rol deben estar vinculadas a un ano eclesiastico para mantener historico
+9. Las asignaciones de rol deben estar vinculadas a un ano eclesiastico para mantener historico.
+
+## Ciclo anual (2026-09)
+
+El contrato vigente de preelección, corte e inscripción anual vive en el workspace `sacdia`, no se duplica aquí:
+
+- API: `docs/api/ENDPOINTS-LIVE-REFERENCE.md` y `docs/api/FRONTEND-INTEGRATION-GUIDE.md`
+- Dominio: `docs/features/gestion-clubs.md`, `docs/features/membership-requests.md`
+- Spec: `docs/superpowers/specs/2026-09-08-inscripcion-anual-miembros-design.md`
+
+Reglas cortas: retorno AV/CQ a GM deja **no inscrito**; la **directiva** inscribe; preelección usa `director_succession_plans` (no CRA `designated`); el sucesor no recibe permisos hasta el corte.
 
 ## Decisiones de diseno
 
