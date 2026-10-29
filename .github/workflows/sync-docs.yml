@@ -51,9 +51,10 @@ jobs:
           token: ${{ secrets.SACDIA_REPO_TOKEN }}
           persist-credentials: false
 
+      # sacdia-backend declares engines.node ">=24 <25" (CI uses 24.13.1).
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
 
       - uses: pnpm/action-setup@v4
         with:
@@ -63,16 +64,42 @@ jobs:
         working-directory: sacdia-docs
         run: pnpm install --frozen-lockfile
 
+      # The generator boots the whole Nest AppModule, so ConfigModule validates
+      # the env: every variable that env.validation.ts marks as required needs a
+      # stub here (same set the backend e2e job uses). Add more if the backend
+      # starts requiring new ones. Nothing connects to these hosts.
+      #
+      # Run it with ts-node (transpile-only), NOT tsx: tsx's CJS tsconfig-paths
+      # resolver (backend tsconfig sets baseUrl) crashes with
+      # ERR_INVALID_URL_SCHEME on the ESM-only `p-limit@5` dependency, whose
+      # `#async_hooks` import map points at a `node:` builtin. Native Node
+      # require(esm) resolves it fine.
       - name: Generate OpenAPI spec from backend
         working-directory: sacdia-backend
         run: |
           pnpm install --frozen-lockfile --ignore-scripts
           pnpm exec prisma generate
-          pnpm tsx scripts/generate-openapi.ts
+          pnpm exec ts-node --transpile-only scripts/generate-openapi.ts
+          test -s sacdia-api-spec.json
         env:
           DATABASE_URL: postgres://stub:stub@localhost:5432/stub
           BETTER_AUTH_SECRET: stub-secret-for-spec-generation-only
           QR_JWT_SECRET: stub-qr-secret-for-spec-generation-ok
+          EMAIL_ENABLED: 'false'
+          RESEND_API_KEY: re_stub_key_for_spec_generation
+          RESEND_FROM_EMAIL: 'SACDIA <stub@example.invalid>'
+          R2_BUCKET_HONORS_PDF: stub
+          R2_PUBLIC_URL_HONORS_PDF: https://r2.invalid
+          R2_BUCKET_EVIDENCE_FILES: stub
+          R2_PUBLIC_URL_EVIDENCE_FILES: https://r2.invalid
+          R2_BUCKET_INSURANCE_EVIDENCE: stub
+          R2_PUBLIC_URL_INSURANCE_EVIDENCE: https://r2.invalid
+          R2_BUCKET_DATA_EXPORTS: stub
+          R2_PUBLIC_URL_DATA_EXPORTS: https://r2.invalid
+          R2_BUCKET_MONTHLY_REPORTS: stub
+          R2_PUBLIC_URL_MONTHLY_REPORTS: https://r2.invalid
+          R2_BUCKET_RESOURCES_FILES: stub
+          R2_PUBLIC_URL_RESOURCES_FILES: https://r2.invalid
 
       - name: Run sync scripts
         working-directory: sacdia-docs
