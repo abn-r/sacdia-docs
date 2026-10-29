@@ -21,7 +21,11 @@ jobs:
   drift-check:
     runs-on: ubuntu-latest
     steps:
+      # Full history: the step below diffs against origin/<base_ref>, which does
+      # not exist in the default depth-1 checkout.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Check for manual edits in auto-generated files
         run: |
