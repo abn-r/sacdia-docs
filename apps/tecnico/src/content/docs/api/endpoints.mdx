@@ -7,7 +7,7 @@ module: api
 status: published
 owners:
   - "Auto-generated"
-lastReviewedAt: 2026-08-24
+lastReviewedAt: 2026-10-30
 generated: true
 ---
 
@@ -25,65 +25,74 @@ generated: true
 | Metrica | Valor |
 | --- | --- |
 | API version | `2.2.0` |
-| Total endpoints | **780** |
-| Autenticados (Bearer) | 740 |
-| Tags / modulos | 99 |
-| Generado | 2026-08-24 |
+| Total endpoints | **938** |
+| Autenticados (Bearer) | 898 |
+| Tags / modulos | 116 |
+| Generado | 2026-10-30 |
 | Spec fuente | `sacdia-backend/sacdia-api-spec.json` |
 
 > Esta pagina se regenera desde el OpenAPI spec del backend. Si ves drift contra el codigo, regenera con `pnpm sync:endpoints`. La autoridad final es `SwaggerModule.createDocument` corriendo sobre el codigo NestJS.
 
 ## Indice de modulos
 
-- [auth](#auth) — 20 endpoints
+- [auth](#auth) — 21 endpoints
 - [users](#users) — 15 endpoints
-- [admin](#admin) — 2 endpoints
-- [clubs](#clubs) — 16 endpoints
+- [admin](#admin) — 4 endpoints
+- [clubs](#clubs) — 21 endpoints
 - [Achievements](#achievements) — 4 endpoints
-- [activities](#activities) — 8 endpoints
+- [activities](#activities) — 16 endpoints
 - [Admin - Achievements](#admin-achievements) — 12 endpoints
 - [Admin - Certifications](#admin-certifications) — 10 endpoints
 - [Admin - Honors Requirements](#admin-honors-requirements) — 7 endpoints
-- [Admin - Phase E Catalogs (i18n)](#admin-phase-e-catalogs-i18n-) — 35 endpoints
+- [Admin - Phase E Catalogs (i18n)](#admin-phase-e-catalogs-i18n-) — 36 endpoints
 - [admin-audit-logs](#admin-audit-logs) — 2 endpoints
 - [admin-auth](#admin-auth) — 6 endpoints
 - [admin-camporee-event-types](#admin-camporee-event-types) — 4 endpoints
 - [admin-certificate-bulk-imports](#admin-certificate-bulk-imports) — 6 endpoints
+- [admin-certificate-import-institutional-requests](#admin-certificate-import-institutional-requests) — 4 endpoints
 - [admin-coordination](#admin-coordination) — 9 endpoints
 - [admin-geography](#admin-geography) — 24 endpoints
+- [admin-honor-instructor-proposals](#admin-honor-instructor-proposals) — 3 endpoints
 - [admin-notifications](#admin-notifications) — 3 endpoints
 - [admin-reference](#admin-reference) — 38 endpoints
 - [admin-support](#admin-support) — 3 endpoints
-- [admin-users](#admin-users) — 7 endpoints
+- [admin-users](#admin-users) — 10 endpoints
 - [analytics](#analytics) — 8 endpoints
-- [Annual Evidence Folders](#annual-evidence-folders) — 13 endpoints
+- [Annual Evidence Folders](#annual-evidence-folders) — 14 endpoints
 - [Annual Evidence Folders - Evaluation](#annual-evidence-folders-evaluation) — 5 endpoints
 - [Annual Evidence Folders - Rankings](#annual-evidence-folders-rankings) — 4 endpoints
 - [Annual Evidence Folders - Templates](#annual-evidence-folders-templates) — 9 endpoints
 - [Annual Ranking Configs](#annual-ranking-configs) — 4 endpoints
 - [Annual Ranking Progress](#annual-ranking-progress) — 1 endpoints
 - [Annual Rankings](#annual-rankings) — 1 endpoints
-- [annual-reports](#annual-reports) — 9 endpoints
+- [annual-membership](#annual-membership) — 3 endpoints
+- [annual-reports](#annual-reports) — 10 endpoints
 - [App](#app) — 1 endpoints
 - [Award Categories](#award-categories) — 5 endpoints
+- [camporee order offerings](#camporee-order-offerings) — 6 endpoints
+- [camporee order products](#camporee-order-products) — 6 endpoints
+- [camporee orders](#camporee-orders) — 14 endpoints
+- [camporee supplies](#camporee-supplies) — 29 endpoints
 - [camporee-club-registration](#camporee-club-registration) — 4 endpoints
 - [camporee-event-templates](#camporee-event-templates) — 5 endpoints
 - [camporee-events](#camporee-events) — 16 endpoints
-- [camporee-scoring](#camporee-scoring) — 19 endpoints
+- [camporee-scoring](#camporee-scoring) — 20 endpoints
 - [camporee-staff](#camporee-staff) — 8 endpoints
 - [camporee-venues](#camporee-venues) — 9 endpoints
 - [camporees](#camporees) — 46 endpoints
 - [catalogs](#catalogs) — 16 endpoints
-- [certificate-bulk-imports](#certificate-bulk-imports) — 6 endpoints
+- [certificate-bulk-imports](#certificate-bulk-imports) — 15 endpoints
+- [certificate-import-institutional-requests](#certificate-import-institutional-requests) — 3 endpoints
 - [certifications](#certifications) — 14 endpoints
 - [certifications - closeout](#certifications-closeout) — 8 endpoints
 - [certifications - review](#certifications-review) — 5 endpoints
 - [class-counselor-assignments](#class-counselor-assignments) — 4 endpoints
 - [class-progress-scope](#class-progress-scope) — 2 endpoints
+- [class-thresholds](#class-thresholds) — 2 endpoints
 - [classes](#classes) — 4 endpoints
 - [club-enrollments](#club-enrollments) — 7 endpoints
 - [club-roles](#club-roles) — 2 endpoints
-- [coordination](#coordination) — 1 endpoints
+- [coordination](#coordination) — 2 endpoints
 - [dashboard](#dashboard) — 1 endpoints
 - [data-export](#data-export) — 3 endpoints
 - [emergency-contacts](#emergency-contacts) — 5 endpoints
@@ -91,14 +100,20 @@ generated: true
 - [FCM Tokens](#fcm-tokens) — 5 endpoints
 - [field payment orders](#field-payment-orders) — 15 endpoints
 - [finances](#finances) — 9 endpoints
+- [guardianships](#guardianships) — 24 endpoints
 - [health](#health) — 2 endpoints
 - [honors](#honors) — 5 endpoints
+- [instructors](#instructors) — 1 endpoints
 - [insurance](#insurance) — 11 endpoints
 - [insurance purchases](#insurance-purchases) — 7 endpoints
 - [insurance reassignments](#insurance-reassignments) — 4 endpoints
 - [inventory](#inventory) — 8 endpoints
-- [investiture](#investiture) — 20 endpoints
-- [legal-representatives](#legal-representatives) — 4 endpoints
+- [investiture](#investiture) — 21 endpoints
+- [investiture-pastors](#investiture-pastors) — 7 endpoints
+- [investiture-requests](#investiture-requests) — 12 endpoints
+- [investiture-windows](#investiture-windows) — 2 endpoints
+- [legal](#legal) — 3 endpoints
+- [legal-representatives](#legal-representatives) — 1 endpoints
 - [Materials — Catalog](#materials-catalog) — 4 endpoints
 - [Materials — Categories (admin)](#materials-categories-admin-) — 4 endpoints
 - [Materials — Config](#materials-config) — 4 endpoints
@@ -108,17 +123,19 @@ generated: true
 - [Member Ranking Weights](#member-ranking-weights) — 5 endpoints
 - [Member Rankings](#member-rankings) — 4 endpoints
 - [member-of-month](#member-of-month) — 4 endpoints
-- [membership-requests](#membership-requests) — 3 endpoints
+- [membership-requests](#membership-requests) — 6 endpoints
 - [monthly-reports](#monthly-reports) — 10 endpoints
 - [Notifications](#notifications) — 10 endpoints
-- [OAuth](#oauth) — 5 endpoints
-- [post-registration](#post-registration) — 6 endpoints
+- [OAuth](#oauth) — 3 endpoints
+- [payment obligations](#payment-obligations) — 1 endpoints
+- [post-registration](#post-registration) — 8 endpoints
 - [qr](#qr) — 6 endpoints
-- [quarterly-reports](#quarterly-reports) — 9 endpoints
+- [quarterly-reports](#quarterly-reports) — 10 endpoints
 - [Ranking Tiers](#ranking-tiers) — 2 endpoints
 - [Ranking Weights](#ranking-weights) — 5 endpoints
 - [rbac](#rbac) — 19 endpoints
 - [rbac-bootstrap](#rbac-bootstrap) — 1 endpoints
+- [reports](#reports) — 1 endpoints
 - [requests](#requests) — 8 endpoints
 - [resource-categories](#resource-categories) — 5 endpoints
 - [Resources](#resources) — 8 endpoints
@@ -130,7 +147,7 @@ generated: true
 - [units](#units) — 11 endpoints
 - [User Notification Preferences](#user-notification-preferences) — 4 endpoints
 - [user-classes](#user-classes) — 7 endpoints
-- [user-honors](#user-honors) — 15 endpoints
+- [user-honors](#user-honors) — 17 endpoints
 - [user-master-honors](#user-master-honors) — 3 endpoints
 - [validation](#validation) — 5 endpoints
 - [year-end](#year-end) — 2 endpoints
@@ -138,6 +155,7 @@ generated: true
 
 ## auth
 
+- 🔓 `POST /api/v1/auth/device/pair` — Link a child's phone with the QR token
 - 🔓 `POST /api/v1/auth/login` — Iniciar sesión
 - 🔓 `POST /api/v1/auth/logout` — Cerrar sesión
 - 🔒 `GET /api/v1/auth/me` — Obtener perfil del usuario autenticado
@@ -177,7 +195,7 @@ generated: true
 - 🔒 `DELETE /api/v1/users/{userId}/medicines/{medicineId}` — Eliminar medicamento del usuario (borrado lógico)
 - 🔒 `POST /api/v1/users/{userId}/profile-picture` — Subir foto de perfil
 - 🔒 `DELETE /api/v1/users/{userId}/profile-picture` — Eliminar foto de perfil
-- 🔒 `GET /api/v1/users/{userId}/requires-legal-representative` — Verificar si el usuario requiere representante legal
+- 🔒 `GET /api/v1/users/{userId}/requires-legal-representative` **(deprecated)** — Verificar si el usuario requiere representante legal
 
 ---
 
@@ -185,6 +203,8 @@ generated: true
 
 - 🔒 `GET /api/v1/admin/cron-alerts` `?jobName?&since?&unresolved?&page?&limit?` — Paginated cron alert history
 - 🔒 `POST /api/v1/admin/cron-alerts/{id}/resolve` — Manually resolve a cron alert (super-admin only)
+- 🔒 `GET /api/v1/admin/cron-jobs` — List the scheduled jobs that can be run on demand (super-admin)
+- 🔒 `POST /api/v1/admin/cron-jobs/{jobName}/run` — Run a scheduled job now (super-admin)
 
 ---
 
@@ -203,8 +223,13 @@ generated: true
 - 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}` — Obtener sección por ID
 - 🔒 `PATCH /api/v1/clubs/{clubId}/sections/{sectionId}` — Actualizar sección (dirección o secretaría de la sección activa)
 - 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/director-assignment` — Asignación inicial de director de sección
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/director-designation` `?yearId` — Obtener programación de director para un año futuro
+- 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/director-designation` — Preelegir director para un año eclesiástico futuro
+- 🔒 `PATCH /api/v1/clubs/{clubId}/sections/{sectionId}/director-designation` — Reemplazar sucesor en una programación de director no activada
+- 🔒 `DELETE /api/v1/clubs/{clubId}/sections/{sectionId}/director-designation` `?successionId&version` — Cancelar una programación de director no activada
 - 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/director-succession` — Sucesión anual de director de sección
 - 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/members` — Listar miembros de la sección
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/members/{userId}/assignable-roles` — Roles asignables a un usuario en la sección
 - 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/roles` — Asignar rol a un miembro (requiere director, deputy director o secretary)
 
 ---
@@ -225,9 +250,17 @@ generated: true
 - 🔒 `DELETE /api/v1/activities/{activityId}` — Desactivar actividad
 - 🔒 `GET /api/v1/activities/{activityId}/attendance` — Obtener asistencia
 - 🔒 `POST /api/v1/activities/{activityId}/attendance` — Registrar asistencia
+- 🔒 `GET /api/v1/activities/{activityId}/attendance-roster` — Miembros de la sección para confirmar asistencia virtual
 - 🔒 `POST /api/v1/activities/{activityId}/image` — Subir imagen de actividad
-- 🔒 `GET /api/v1/clubs/{clubId}/activities` `?clubTypeId?&active?&activityTypeId?&page?&limit?` — Listar actividades del club
+- 🔒 `GET /api/v1/activities/{activityId}/rsvp` — Intención de asistencia del usuario actual
+- 🔒 `PUT /api/v1/activities/{activityId}/rsvp` — Marcar si el usuario hará lo posible por asistir
+- 🔒 `GET /api/v1/activity-series/{seriesId}` — Obtener serie de actividades
+- 🔒 `POST /api/v1/activity-series/{seriesId}/cancel-future` — Cancelar sesiones futuras de una serie
+- 🔒 `POST /api/v1/activity-series/{seriesId}/extend` — Agregar más sesiones a una serie
+- 🔒 `GET /api/v1/clubs/{clubId}/activities` `?clubTypeId?&active?&activityTypeId?&seriesId?&page?&limit?` — Listar actividades del club
 - 🔒 `POST /api/v1/clubs/{clubId}/activities` — Crear actividad
+- 🔒 `POST /api/v1/clubs/{clubId}/activity-series` — Crear serie de actividades
+- 🔒 `POST /api/v1/clubs/{clubId}/activity-series/preview` — Vista previa de serie de actividades
 
 ---
 
@@ -289,6 +322,7 @@ generated: true
 - 🔒 `POST /api/v1/admin/classes` — Create a class with optional translations
 - 🔒 `GET /api/v1/admin/classes/{classId}/honors` `?active?` — List class-honor relations for a class (includes inactive)
 - 🔒 `POST /api/v1/admin/classes/{classId}/honors` — Create a class-honor relation
+- 🔒 `PATCH /api/v1/admin/classes/{classId}/honors/{classHonorId}` — Update class-honor module assignment (null clears the module)
 - 🔒 `DELETE /api/v1/admin/classes/{classId}/honors/{classHonorId}` — Soft-delete a class-honor relation
 - 🔒 `GET /api/v1/admin/classes/{classId}/prerequisites` `?active?` — List class prerequisites (includes inactive)
 - 🔒 `POST /api/v1/admin/classes/{classId}/prerequisites` — Create a class prerequisite with cycle validation
@@ -345,11 +379,20 @@ generated: true
 ## admin-certificate-bulk-imports
 
 - 🔒 `GET /api/v1/admin/certificate-bulk-imports/{batchId}` — Obtener detalle de carga por certificado
-- 🔒 `POST /api/v1/admin/certificate-bulk-imports/{batchId}/approve` — Aprobar todas las filas pendientes de un lote
+- 🔒 `POST /api/v1/admin/certificate-bulk-imports/{batchId}/approve` — Rechaza decidir el lote entero; cada fila se aprueba sola
 - 🔒 `POST /api/v1/admin/certificate-bulk-imports/{batchId}/items/{itemId}/approve` — Aprobar una fila del lote
 - 🔒 `POST /api/v1/admin/certificate-bulk-imports/{batchId}/items/{itemId}/reject` — Rechazar una fila del lote con motivo
-- 🔒 `POST /api/v1/admin/certificate-bulk-imports/{batchId}/reject` — Rechazar un lote completo y solicitar corrección
+- 🔒 `POST /api/v1/admin/certificate-bulk-imports/{batchId}/reject` — Rechaza decidir el lote entero; cada fila se rechaza sola
 - 🔒 `GET /api/v1/admin/certificate-bulk-imports/pending` `?limit?&page?` — Listar cargas por certificado pendientes
+
+---
+
+## admin-certificate-import-institutional-requests
+
+- 🔒 `GET /api/v1/admin/certificate-import-institutional-requests` `?page&limit&status&class_id&q` — Bandeja institucional de certificados
+- 🔒 `GET /api/v1/admin/certificate-import-institutional-requests/{requestId}` — Detalle institucional para el superadministrador
+- 🔒 `POST /api/v1/admin/certificate-import-institutional-requests/{requestId}/approve` — Validar solicitud institucional sin crear una inscripción
+- 🔒 `POST /api/v1/admin/certificate-import-institutional-requests/{requestId}/reject` — Rechazar solicitud institucional con motivo
 
 ---
 
@@ -393,6 +436,14 @@ generated: true
 - 🔒 `POST /api/v1/admin/unions` — Create union
 - 🔒 `PATCH /api/v1/admin/unions/{unionId}` — Update union
 - 🔒 `DELETE /api/v1/admin/unions/{unionId}` — Soft delete union
+
+---
+
+## admin-honor-instructor-proposals
+
+- 🔒 `GET /api/v1/admin/honor-instructor-proposals` `?page?&limit?&status?` — Cola de propuestas de instructor
+- 🔒 `POST /api/v1/admin/honor-instructor-proposals/{proposalId}/approve` — Aprobar una propuesta de instructor
+- 🔒 `POST /api/v1/admin/honor-instructor-proposals/{proposalId}/reject` — Rechazar una propuesta de instructor con motivo
 
 ---
 
@@ -457,11 +508,14 @@ generated: true
 
 ## admin-users
 
-- 🔒 `GET /api/v1/admin/users` `?page?&limit?&search?&role?&active?&unionId?&localFieldId?` — Listar usuarios administrativos con alcance por rol (ALL/UNION/LOCAL_FIELD)
+- 🔒 `GET /api/v1/admin/users` `?page?&limit?&search?&role?&active?&unionId?&localFieldId?&sortBy?&sortOrder?` — Listar usuarios administrativos con alcance por rol (ALL/UNION/LOCAL_FIELD)
 - 🔒 `POST /api/v1/admin/users` — Crear usuario manualmente (admin-iniciado, con invite por email)
 - 🔒 `GET /api/v1/admin/users/{userId}` — Obtener detalle de usuario validando alcance por rol del actor
 - 🔒 `PATCH /api/v1/admin/users/{userId}` — Update user administrative fields
 - 🔒 `PATCH /api/v1/admin/users/{userId}/approval` — Approve or reject a user
+- 🔒 `GET /api/v1/admin/users/{userId}/guardianships/{guardianshipId}/consent-evidence` — URL firmada (15 min) de la ficha de consentimiento firmada de un menor
+- 🔒 `POST /api/v1/admin/users/{userId}/linked-devices/{deviceId}/revoke` — Revocar un dispositivo vinculado de un menor
+- 🔒 `POST /api/v1/admin/users/{userId}/supervised-login/disable` — Desactivar el acceso propio (supervised login) de un menor
 - 🔒 `POST /api/v1/admin/users/bulk` — Carga masiva de usuarios desde archivo .xlsx o .csv
 - 🔒 `GET /api/v1/admin/users/bulk-template` — Descarga plantilla .xlsx para carga masiva de usuarios
 
@@ -495,6 +549,7 @@ generated: true
 - 🔒 `DELETE /api/v1/annual-folders/evidences/{evidenceId}` — Delete evidence
 - 🔒 `GET /api/v1/club-sections/{sectionId}/annual-folder` — Get annual evidence folder for a club section (current year)
 - 🔒 `POST /api/v1/club-sections/{sectionId}/annual-folder` — Create annual evidence folder for a club section
+- 🔒 `GET /api/v1/club-sections/{sectionId}/annual-folder/template-availability` — Check whether an annual evidence folder can be created for a club section
 
 ---
 
@@ -552,17 +607,26 @@ generated: true
 
 ---
 
+## annual-membership
+
+- 🔒 `GET /api/v1/club-sections/{sectionId}/annual-continuations` `?page?&limit?&search?` — Listar miembros no inscritos del año vigente
+- 🔒 `POST /api/v1/club-sections/{sectionId}/annual-continuations` — Inscribir miembros no inscritos del año vigente
+- 🔒 `POST /api/v1/users/{userId}/membership/annual-enroll` — Autoinscripción anual (bloqueada — D01 pendiente)
+
+---
+
 ## annual-reports
 
 - 🔒 `GET /api/v1/admin/annual-reports` `?divisionId?&unionId?&localFieldId?&clubId?&ecclesiasticalYearId?&status?&page?&limit?` — Listar informes anuales (admin)
 - 🔒 `GET /api/v1/admin/annual-reports/{id}` — Obtener informe anual por ID (admin)
 - 🔒 `PATCH /api/v1/admin/annual-reports/{id}` — Actualizar datos manuales del informe anual (admin)
 - 🔒 `POST /api/v1/admin/annual-reports/{id}/finalize` — Finalizar informe anual (admin)
-- 🔒 `GET /api/v1/admin/annual-reports/{id}/pdf` — Descargar PDF del informe anual (admin)
+- 🔒 `GET /api/v1/admin/annual-reports/{id}/pdf` — Descargar PDF del informe anual (admin). Nombre: informe-anual-{club}-{tipo}-{año}.pdf
 - 🔒 `POST /api/v1/admin/annual-reports/{id}/regenerate` — Regenerar datos calculados del informe anual (admin)
+- 🔒 `POST /api/v1/admin/annual-reports/generate` — Generar el informe anual de un club y año eclesiástico (admin). Crea el borrador si no existe y recalcula los datos si sigue en borrador; uno finalizado se devuelve sin cambios
 - 🔒 `GET /api/v1/clubs/{clubId}/annual-reports` — Listar informes anuales de un club (usuario)
 - 🔒 `GET /api/v1/clubs/{clubId}/annual-reports/{id}` — Obtener informe anual por ID (usuario)
-- 🔒 `GET /api/v1/clubs/{clubId}/annual-reports/{id}/pdf` — Descargar PDF del informe anual (usuario)
+- 🔒 `GET /api/v1/clubs/{clubId}/annual-reports/{id}/pdf` — Descargar PDF del informe anual (usuario). Nombre: informe-anual-{club}-{tipo}-{año}.pdf
 
 ---
 
@@ -579,6 +643,81 @@ generated: true
 - 🔒 `GET /api/v1/award-categories/{categoryId}` — Get a single award category by ID
 - 🔒 `PATCH /api/v1/award-categories/{categoryId}` — Update an award category
 - 🔒 `DELETE /api/v1/award-categories/{categoryId}` — Deactivate an award category (soft delete)
+
+---
+
+## camporee order offerings
+
+- 🔒 `GET /api/v1/camporees/{camporeeId}/order-offerings` — Listar ofertas y settings de pedidos del camporee local
+- 🔒 `PUT /api/v1/camporees/{camporeeId}/order-offerings` — Reemplazar de forma idempotente las ofertas del camporee local
+- 🔒 `PATCH /api/v1/camporees/{camporeeId}/orders-settings` — Actualizar ventana de pedidos del camporee local
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/order-offerings` — Listar ofertas y settings de pedidos del camporee de unión
+- 🔒 `PUT /api/v1/union-camporees/{camporeeId}/order-offerings` — Reemplazar de forma idempotente las ofertas del camporee de unión
+- 🔒 `PATCH /api/v1/union-camporees/{camporeeId}/orders-settings` — Actualizar ventana de pedidos del camporee de unión
+
+---
+
+## camporee order products
+
+- 🔒 `PATCH /api/v1/camporee-order-product-options/{optionId}` — Actualizar una opción. El label es inmutable si hay líneas de pedido.
+- 🔒 `GET /api/v1/camporee-order-products` `?active?` — Listar productos visibles en la cascada territorial del actor
+- 🔒 `POST /api/v1/camporee-order-products` — Crear producto de la biblioteca territorial
+- 🔒 `GET /api/v1/camporee-order-products/{productId}` — Obtener un producto de la biblioteca
+- 🔒 `PATCH /api/v1/camporee-order-products/{productId}` — Actualizar un producto (soft-delete con active=false)
+- 🔒 `POST /api/v1/camporee-order-products/{productId}/options` — Agregar una opción de talla al producto
+
+---
+
+## camporee orders
+
+- 🔒 `GET /api/v1/camporee-orders` `?status?&camporee_id?&union_camporee_id?` — Listar pedidos visibles. No colapsa pedidos suplementarios de la misma sección.
+- 🔒 `GET /api/v1/camporee-orders/{orderId}` — Detalle de pedido con líneas nominadas, summary y snapshot de pago
+- 🔒 `POST /api/v1/camporee-orders/{orderId}/approve` — Aprobar comprobante y marcar el pedido como pagado
+- 🔒 `POST /api/v1/camporee-orders/{orderId}/authorize-without-proof` — Marcar pagado sin comprobante (excepción de caja del Campo Local)
+- 🔒 `POST /api/v1/camporee-orders/{orderId}/cancel` — Cancelar un pedido emitido o con comprobante rechazado
+- 🔒 `POST /api/v1/camporee-orders/{orderId}/deliver` — Marcar el bulto entregado del Campo Local a la sección
+- 🔒 `GET /api/v1/camporee-orders/{orderId}/document` — Descargar PDF imprimible del pedido
+- 🔒 `POST /api/v1/camporee-orders/{orderId}/lines/{lineId}/deliver-to-member` — Marcar una línea nominada como entregada al miembro (solo director de la sección)
+- 🔒 `GET /api/v1/camporee-orders/{orderId}/proof` — URL firmada del comprobante vigente
+- 🔒 `POST /api/v1/camporee-orders/{orderId}/proof` — Subir comprobante de pago (multipart, campo file)
+- 🔒 `POST /api/v1/camporee-orders/{orderId}/reject` — Rechazar comprobante (permite re-subida)
+- 🔒 `GET /api/v1/camporee-orders/review-queue` — Bandeja de revisión de pedidos con comprobante (Campo Local)
+- 🔒 `POST /api/v1/camporees/{camporeeId}/orders` — Emitir un pedido de sección para un camporee local
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/orders` — Emitir un pedido de sección para un camporee de unión
+
+---
+
+## camporee supplies
+
+- 🔒 `POST /api/v1/camporee-supply-payments/{paymentId}/mark-paid` — Marcar folio de insumos (principal, cargo o devolución) como pagado
+- 🔒 `GET /api/v1/camporees/{camporeeId}/supply-catalog` — Catálogo de insumos del camporee local
+- 🔒 `POST /api/v1/camporees/{camporeeId}/supply-lines/{lineId}/deliveries` — CamporeeSupplyPlansController_deliverLocal_v1
+- 🔒 `GET /api/v1/camporees/{camporeeId}/supply-plan` — Plan de insumos de la sección activa (local)
+- 🔒 `PUT /api/v1/camporees/{camporeeId}/supply-plan` — Reemplazar líneas del plan en DRAFT (local)
+- 🔒 `PATCH /api/v1/camporees/{camporeeId}/supply-plan/lines` — Ajustar una línea de un plan SUBMITTED (local)
+- 🔒 `POST /api/v1/camporees/{camporeeId}/supply-plan/submit` — Enviar plan y emitir folio PRINCIPAL (local)
+- 🔒 `GET /api/v1/camporees/{camporeeId}/supply-plans` — Listar planes de insumos del camporee local
+- 🔒 `POST /api/v1/camporees/{camporeeId}/supply-products` — CamporeeSupplyConfigController_createProductLocal_v1
+- 🔒 `PATCH /api/v1/camporees/{camporeeId}/supply-products/{productId}` — CamporeeSupplyConfigController_updateProductLocal_v1
+- 🔒 `GET /api/v1/camporees/{camporeeId}/supply-reports/cash` — CamporeeSupplyPlansController_cashLocal_v1
+- 🔒 `GET /api/v1/camporees/{camporeeId}/supply-reports/kitchen` `?date?` — CamporeeSupplyPlansController_kitchenLocal_v1
+- 🔒 `PATCH /api/v1/camporees/{camporeeId}/supply-settings` — Actualizar corte de edición de insumos (local)
+- 🔒 `POST /api/v1/camporees/{camporeeId}/supply-slots` — Crear horario de entrega de insumos (local)
+- 🔒 `PATCH /api/v1/camporees/{camporeeId}/supply-slots/{slotId}` — CamporeeSupplyConfigController_updateSlotLocal_v1
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/supply-catalog` — Catálogo de insumos del camporee de unión
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/supply-lines/{lineId}/deliveries` — CamporeeSupplyPlansController_deliverUnion_v1
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/supply-plan` — Plan de insumos de la sección activa (unión)
+- 🔒 `PUT /api/v1/union-camporees/{camporeeId}/supply-plan` — Reemplazar líneas del plan en DRAFT (unión)
+- 🔒 `PATCH /api/v1/union-camporees/{camporeeId}/supply-plan/lines` — Ajustar una línea de un plan SUBMITTED (unión)
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/supply-plan/submit` — Enviar plan y emitir folio PRINCIPAL (unión)
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/supply-plans` — Listar planes de insumos del camporee de unión
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/supply-products` — CamporeeSupplyConfigController_createProductUnion_v1
+- 🔒 `PATCH /api/v1/union-camporees/{camporeeId}/supply-products/{productId}` — CamporeeSupplyConfigController_updateProductUnion_v1
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/supply-reports/cash` — CamporeeSupplyPlansController_cashUnion_v1
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/supply-reports/kitchen` `?date?` — CamporeeSupplyPlansController_kitchenUnion_v1
+- 🔒 `PATCH /api/v1/union-camporees/{camporeeId}/supply-settings` — Actualizar corte de edición de insumos (unión)
+- 🔒 `POST /api/v1/union-camporees/{camporeeId}/supply-slots` — Crear horario de entrega de insumos (unión)
+- 🔒 `PATCH /api/v1/union-camporees/{camporeeId}/supply-slots/{slotId}` — CamporeeSupplyConfigController_updateSlotUnion_v1
 
 ---
 
@@ -631,6 +770,7 @@ generated: true
 - 🔒 `GET /api/v1/camporee-events/{eventId}/rubrics` — List active rubrics for a camporee event
 - 🔒 `PUT /api/v1/camporee-events/{eventId}/rubrics` — Replace rubrics for a camporee event
 - 🔒 `GET /api/v1/camporee-events/{eventId}/scoring-targets` — List enrolled sections that can receive scores
+- 🔒 `GET /api/v1/camporee-events/{eventId}/sections/{clubSectionId}/score` — Read the active official score for an event section
 - 🔒 `POST /api/v1/camporee-events/{eventId}/sections/{clubSectionId}/scores` — Submit official camporee score by rubric
 - 🔒 `PATCH /api/v1/camporee-judges/{judgeId}` — Update a camporee judge roster member
 - 🔒 `DELETE /api/v1/camporee-judges/{judgeId}` — Deactivate a camporee judge roster member
@@ -747,12 +887,29 @@ generated: true
 
 ## certificate-bulk-imports
 
+- 🔒 `GET /api/v1/certificate-bulk-imports` `?page&limit` — Listar expedientes propios para retomarlos
 - 🔒 `POST /api/v1/certificate-bulk-imports` — Crear un borrador de carga por certificado
 - 🔒 `GET /api/v1/certificate-bulk-imports/{batchId}` — Obtener detalle de una carga por certificado
+- 🔒 `DELETE /api/v1/certificate-bulk-imports/{batchId}` — Descartar un borrador propio
+- 🔒 `DELETE /api/v1/certificate-bulk-imports/{batchId}/files/{fileId}` — Retirar un comprobante que todavía no fue enviado
+- 🔒 `POST /api/v1/certificate-bulk-imports/{batchId}/files/{fileId}/confirm` — Confirmar bytes reales del comprobante
+- 🔒 `GET /api/v1/certificate-bulk-imports/{batchId}/files/{fileId}/download` — Obtener URL efímera del comprobante sellado
+- 🔒 `POST /api/v1/certificate-bulk-imports/{batchId}/files/presign` — Preparar subida firmada de un comprobante
+- 🔒 `POST /api/v1/certificate-bulk-imports/{batchId}/items` — Agregar una fila manual al borrador
 - 🔒 `PATCH /api/v1/certificate-bulk-imports/{batchId}/items/{itemId}` — Corregir o completar una fila detectada por OCR
+- 🔒 `DELETE /api/v1/certificate-bulk-imports/{batchId}/items/{itemId}` — Quitar una fila del borrador
 - 🔒 `POST /api/v1/certificate-bulk-imports/{batchId}/items/{itemId}/resubmit` — Corregir y reenviar una fila rechazada
 - 🔒 `POST /api/v1/certificate-bulk-imports/{batchId}/process-ocr` — Procesar OCR de un borrador del miembro
 - 🔒 `POST /api/v1/certificate-bulk-imports/{batchId}/submit` — Enviar carga por certificado a validación de Campo Local
+- 🔒 `GET /api/v1/certificate-bulk-imports/catalog/classes` `?clubTypeId?` — Clases que se pueden elegir al cargar un certificado
+
+---
+
+## certificate-import-institutional-requests
+
+- 🔒 `GET /api/v1/certificate-import-institutional-requests` `?page&limit` — Consultar mis solicitudes institucionales
+- 🔒 `POST /api/v1/certificate-import-institutional-requests` — Enviar solicitud de Guía Mayor Avanzado o Instructor
+- 🔒 `GET /api/v1/certificate-import-institutional-requests/{requestId}` — Detalle de una solicitud institucional propia
 
 ---
 
@@ -814,6 +971,13 @@ generated: true
 
 ---
 
+## class-thresholds
+
+- 🔒 `GET /api/v1/local-fields/{localFieldId}/class-thresholds/{ecclesiasticalYearId}` — Leer el porcentaje de clase del Campo para un año eclesiástico. Sin fila, el valor efectivo es 80.
+- 🔒 `PATCH /api/v1/local-fields/{localFieldId}/class-thresholds/{ecclesiasticalYearId}` — Guardar el porcentaje de clase. Director y asistente del Campo hasta el 30 de junio 23:59 en la zona del Campo. Después, solo super-admin, y solo dentro del año eclesiástico vigente.
+
+---
+
 ## classes
 
 - 🔓 `GET /api/v1/classes` `?clubTypeId?&page?&limit?` — Listar clases
@@ -844,6 +1008,7 @@ generated: true
 
 ## coordination
 
+- 🔒 `GET /api/v1/coordination/me/consent-pending` `?limit?&offset?` — Fichas de consentimiento por verificar en todas las secciones del coordinador
 - 🔒 `GET /api/v1/coordination/me/scope` — Resolver el alcance efectivo de coordinación del usuario actual
 
 ---
@@ -928,6 +1093,35 @@ generated: true
 
 ---
 
+## guardianships
+
+- 🔒 `POST /api/v1/club-sections/{clubSectionId}/dependents` — Register a minor under club custody (director)
+- 🔒 `POST /api/v1/club-sections/{clubSectionId}/dependents/{userId}/claim-codes` — Issue a claim code for a custodial dependent (7 days)
+- 🔒 `POST /api/v1/guardianships/{guardianshipId}/revoke` — Leave a guardianship, or remove a secondary guardian (primary)
+- 🔒 `POST /api/v1/guardianships/link-codes/redeem` — Redeem a link code and become a guardian of the minor
+- 🔒 `GET /api/v1/guardianships/me/deletion-impact` — What happens to each dependent if this account is deleted
+- 🔒 `GET /api/v1/guardianships/me/dependents` — List the dependents of the current guardian
+- 🔒 `POST /api/v1/guardianships/me/dependents` — Register a minor without an account (step 0)
+- 🔒 `GET /api/v1/guardianships/me/dependents/{dependentId}` — Detail of one dependent with its guardians
+- 🔒 `GET /api/v1/guardianships/me/dependents/{dependentId}/consent-evidence` — Signed URL (15 min) of the current signed consent form
+- 🔒 `POST /api/v1/guardianships/me/dependents/{dependentId}/consent-evidence` — Upload the signed consent form of a dependent (photo or PDF)
+- 🔒 `GET /api/v1/guardianships/me/dependents/{dependentId}/devices` — Linked devices of a child (active, and revoked for 30 days)
+- 🔒 `POST /api/v1/guardianships/me/dependents/{dependentId}/devices/{deviceId}/revoke` — Unlink a device (immediate)
+- 🔒 `POST /api/v1/guardianships/me/dependents/{dependentId}/devices/pairing-tokens` — Create the QR token that links a child's phone
+- 🔒 `POST /api/v1/guardianships/me/dependents/{dependentId}/link-codes` — Issue a code to invite a second guardian (72h)
+- 🔒 `GET /api/v1/guardianships/me/dependents/{dependentId}/summary` — Progress and attendance of a minor (verified guardians only)
+- 🔒 `GET /api/v1/guardianships/me/dependents/{dependentId}/supervised-login` — Eligibility and state of the minor's own login
+- 🔒 `POST /api/v1/guardianships/me/dependents/{dependentId}/supervised-login` — Give a 13-17 year old their own login (handle or email)
+- 🔒 `POST /api/v1/guardianships/me/dependents/{dependentId}/supervised-login/disable` — Disable the minor's own login (reversible while a minor)
+- 🔒 `POST /api/v1/guardianships/me/dependents/{dependentId}/supervised-login/password` — Reset the minor's password
+- 🔒 `POST /api/v1/guardianships/me/dependents/{dependentId}/supervised-login/reactivate` — Re-enable a disabled login
+- 🔒 `GET /api/v1/guardianships/relationship-types` — Relationships a guardian may declare to a minor
+- 🔒 `POST /api/v1/users/me/guardian-link-codes` — A teen without a guardian issues a link code for an adult (72h)
+- 🔒 `POST /api/v1/users/me/guardian-links/{guardianshipId}/revoke` — The teen removes a link that is still pending
+- 🔒 `GET /api/v1/users/me/supervision` — What the teen sees about their own supervision
+
+---
+
 ## health
 
 - 🔓 `GET /api/v1/health` — Public ping — returns ok if API is reachable
@@ -937,11 +1131,17 @@ generated: true
 
 ## honors
 
-- 🔓 `GET /api/v1/honors` `?categoryId?&clubTypeId?&skillLevel?&page?&limit?` — Listar honores
+- 🔓 `GET /api/v1/honors` `?categoryId?&clubTypeId?&skillLevel?&search?&page?&limit?` — Listar honores
 - 🔓 `GET /api/v1/honors/{honorId}` — Obtener honor por ID
 - 🔓 `GET /api/v1/honors/{honorId}/requirements` — Obtener requisitos de un honor
 - 🔓 `GET /api/v1/honors/categories` — Listar categorías de honores
 - 🔓 `GET /api/v1/honors/grouped-by-category` `?categoryId?&clubTypeId?&skillLevel?` — Listar honores agrupados por categoría
+
+---
+
+## instructors
+
+- 🔒 `GET /api/v1/instructor-candidates` `?q?` — Buscar instructores de especialidad de tu Campo Local
 
 ---
 
@@ -998,40 +1198,82 @@ generated: true
 ## investiture
 
 - 🔒 `POST /api/v1/admin/classes/enrollments/expire-overdue` — Vencer manualmente enrollments atrasados por duración de clase
-- 🔒 `GET /api/v1/admin/investiture/config` `?local_field_id?` — Listar configuraciones de investidura
-- 🔒 `POST /api/v1/admin/investiture/config` — Crear configuración de investidura
-- 🔒 `GET /api/v1/admin/investiture/config/{configId}` — Obtener configuración de investidura por ID
-- 🔒 `PATCH /api/v1/admin/investiture/config/{configId}` — Actualizar configuración de investidura
-- 🔒 `DELETE /api/v1/admin/investiture/config/{configId}` — Soft-delete de configuración de investidura (active = false)
-- 🔒 `POST /api/v1/enrollments/{enrollmentId}/investiture` — [LEGACY] Registrar investidura formal de un enrollment
+- 🔒 `GET /api/v1/admin/investiture/config` **(deprecated)** — [RETIRADA] Configuraciones de la investidura anterior
+- 🔒 `POST /api/v1/admin/investiture/config` **(deprecated)** — [RETIRADA] Crear configuración anterior
+- 🔒 `GET /api/v1/admin/investiture/config/{configId}` **(deprecated)** — [RETIRADA] Configuración de la investidura anterior
+- 🔒 `PATCH /api/v1/admin/investiture/config/{configId}` **(deprecated)** — [RETIRADA] Editar configuración anterior
+- 🔒 `DELETE /api/v1/admin/investiture/config/{configId}` **(deprecated)** — [RETIRADA] Desactivar configuración anterior
+- 🔒 `POST /api/v1/admin/investiture/legacy-locks/release` — Soltar locked_for_validation de expedientes de la vía anterior (solo super-admin; dry_run por defecto)
+- 🔒 `POST /api/v1/enrollments/{enrollmentId}/investiture` **(deprecated)** — [RETIRADA] Alias de investir
 - 🔒 `GET /api/v1/enrollments/{enrollmentId}/investiture-history` — [LEGACY] Historial de validación de investidura de un enrollment
-- 🔒 `POST /api/v1/enrollments/{enrollmentId}/submit-for-validation` — [LEGACY] Enviar enrollment a validación de investidura
-- 🔒 `POST /api/v1/enrollments/{enrollmentId}/validate` — [LEGACY] Aprobar o rechazar enrollment para investidura
-- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/club-approve` — Director de sección aprueba enrollment para investidura
-- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/coordinator-approve` — Coordinador aprueba enrollment para investidura
-- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/field-approve` — Campo local aprueba enrollment para investidura
+- 🔒 `POST /api/v1/enrollments/{enrollmentId}/submit-for-validation` **(deprecated)** — [RETIRADA] Alias de envío a validación
+- 🔒 `POST /api/v1/enrollments/{enrollmentId}/validate` **(deprecated)** — [RETIRADA] Alias de validación
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/club-approve` **(deprecated)** — [RETIRADA] Aprobación del club
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/coordinator-approve` **(deprecated)** — [RETIRADA] Aprobación de coordinación
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/field-approve` **(deprecated)** — [RETIRADA] Aprobación del Campo
 - 🔒 `GET /api/v1/investiture/enrollments/{enrollmentId}/history` — Historial de validación de investidura de un enrollment
-- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/invest` — Registrar investidura formal de un enrollment (después de FIELD_APPROVED)
-- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/reject` — Rechazar enrollment en cualquier nivel del flujo de aprobación
-- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/submit` — Enviar enrollment a validación de investidura (consejero/director)
-- 🔒 `POST /api/v1/investiture/enrollments/bulk-approve` — Aprobar múltiples enrollments en bloque
-- 🔒 `POST /api/v1/investiture/enrollments/bulk-reject` — Rechazar múltiples enrollments en bloque
-- 🔒 `GET /api/v1/investiture/pending` `?local_field_id?&ecclesiastical_year_id?&page?&limit?&status?` — Listar enrollments pendientes de aprobación (filtrable por nivel)
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/invest` **(deprecated)** — [RETIRADA] Investir por la vía anterior
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/reject` **(deprecated)** — [RETIRADA] Rechazar en la vía anterior
+- 🔒 `POST /api/v1/investiture/enrollments/{enrollmentId}/submit` **(deprecated)** — [RETIRADA] Enviar a la validación anterior
+- 🔒 `POST /api/v1/investiture/enrollments/bulk-approve` **(deprecated)** — [RETIRADA] Aprobación en bloque
+- 🔒 `POST /api/v1/investiture/enrollments/bulk-reject` **(deprecated)** — [RETIRADA] Rechazo en bloque
+- 🔒 `GET /api/v1/investiture/pending` **(deprecated)** — [RETIRADA] Pendientes de la vía anterior
+
+---
+
+## investiture-pastors
+
+- 🔒 `GET /api/v1/clubs/{clubId}/investiture-authorizers` — Leer quién puede autorizar por el distrito de la iglesia del club. No usa el distrito guardado en el club ni un dato del usuario.
+- 🔒 `GET /api/v1/districts/{districtId}/investiture-pastors` — Listar los pastores asignados al distrito. Cada cupo activo puede autorizar.
+- 🔒 `POST /api/v1/districts/{districtId}/investiture-pastors` — Asignar un pastor al distrito. No autoriza investiduras por sí mismo ni usa el pipeline anterior.
+- 🔒 `DELETE /api/v1/districts/{districtId}/investiture-pastors/{userId}` — Quitar la asignación de un pastor. Libera el cupo. No inviste ni rechaza.
+- 🔒 `GET /api/v1/investiture-pastor-candidates` `?q&districtId?` — Buscar candidatos a pastor por nombre o correo (mínimo 3 caracteres y 2 por palabra, hasta 20). Solo quien puede asignar: director y asistente de Campo o de unión. Devuelve únicamente pastores de su Campo (o de los Campos de su unión). Con `districtId` solo devuelve pastores del Campo de ese distrito.
+- 🔒 `GET /api/v1/investiture-pastor-quota` — Leer el cupo global de pastores por distrito. Sin fila, el valor es 2 y no se inserta.
+- 🔒 `PATCH /api/v1/investiture-pastor-quota` — Cambiar el cupo global. Solo super-admin. El mismo tope vale para todos los distritos.
+
+---
+
+## investiture-requests
+
+- 🔒 `GET /api/v1/club-sections/{sectionId}/investiture-history` — Historial de investidura de la sección para su directiva. No incluye otras secciones.
+- 🔒 `GET /api/v1/club-sections/{sectionId}/investiture-requests` `?ecclesiastical_year_id` — Leer la solicitud con personas pendientes de la sección y el año. Sin pendientes no inserta.
+- 🔒 `POST /api/v1/club-sections/{sectionId}/investiture-requests` — Presentar personas de una sección para investidura por autorización. No usa el pipeline anterior.
+- 🔒 `GET /api/v1/club-sections/{sectionId}/investiture-requests/presentation-context` `?ecclesiastical_year_id` — Contexto para presentar personas a investidura: candidatos, motivos de bloqueo y ventana. Solo informativo; no escribe.
+- 🔒 `GET /api/v1/club-sections/{sectionId}/investiture-yearbook` — Anuario de inscripciones por clase y año de esa sección. No es un aviso.
+- 🔒 `GET /api/v1/investiture-history` — Historial de investidura de quien consulta. Un cierre de año no usa el texto de falta de requisitos.
+- 🔒 `GET /api/v1/investiture-requests` `?ecclesiastical_year_id` — Solicitudes con pendientes que este pastor o Campo puede autorizar.
+- 🔒 `GET /api/v1/investiture-requests/{requestId}` — Leer una solicitud para autorizarla. Incluye investidos y rechazados.
+- 🔒 `PATCH /api/v1/investiture-requests/{requestId}/dates` — Aplicar una fecha válida a los pendientes seleccionados. No toca al resto.
+- 🔒 `POST /api/v1/investiture-requests/{requestId}/people` — Agregar personas a una solicitud. La fecha nueva no reescribe a quienes ya estaban.
+- 🔒 `DELETE /api/v1/investiture-requests/{requestId}/people/{personId}` — Quitar a una persona pendiente. Libera solo el bloqueo de esa solicitud.
+- 🔒 `POST /api/v1/investiture-requests/{requestId}/resolutions` — Autorizar o rechazar personas pendientes. No usa el pipeline anterior.
+
+---
+
+## investiture-windows
+
+- 🔒 `GET /api/v1/local-fields/{localFieldId}/investiture-windows/{ecclesiasticalYearId}` — Leer la ventana de investidura del Campo. Sin fila, el valor es del 1 de octubre al 20 de diciembre recortado al año. Sin intersección y sin configuración válida, start_date y end_date son null y operational es false.
+- 🔒 `PATCH /api/v1/local-fields/{localFieldId}/investiture-windows/{ecclesiasticalYearId}` — Guardar la ventana de investidura. No otorga autorización ni permiso para editar el porcentaje de clase.
+
+---
+
+## legal
+
+- 🔓 `GET /api/v1/legal/current` — Current legal document versions
+- 🔒 `GET /api/v1/users/me/legal-acceptance` — Legal acceptance status of the current user
+- 🔒 `POST /api/v1/users/me/legal-acceptance` — Accept the current legal documents
 
 ---
 
 ## legal-representatives
 
 - 🔒 `GET /api/v1/users/{userId}/legal-representative` — Obtener representante legal del usuario
-- 🔒 `POST /api/v1/users/{userId}/legal-representative` — Registrar representante legal (solo para menores de 18)
-- 🔒 `PATCH /api/v1/users/{userId}/legal-representative` — Actualizar representante legal
-- 🔒 `DELETE /api/v1/users/{userId}/legal-representative` — Eliminar representante legal
 
 ---
 
 ## Materials — Catalog
 
-- 🔒 `GET /api/v1/materials/catalog` `?cat?&programa?&q?&page?&pageSize?&local_field_id?` — List products (paginated, filtered, scoped to LF)
+- 🔒 `GET /api/v1/materials/catalog` `?local_field_id?&cat?&programa?&q?&page?&pageSize?` — List products (paginated, filtered, scoped to LF)
 - 🔒 `GET /api/v1/materials/catalog/{id}` — Get product detail by ID
 - 🔒 `GET /api/v1/materials/catalog/categories` `?local_field_id?` — List all categories with active product count
 - 🔒 `GET /api/v1/materials/catalog/programs` — List all programs (club types)
@@ -1058,7 +1300,7 @@ generated: true
 
 ## Materials — Inventory
 
-- 🔒 `GET /api/v1/materials/inventory` `?cat?&q?&page?&pageSize?&local_field_id?` — List products for the caller's local_field (admins can pass ?local_field_id=N)
+- 🔒 `GET /api/v1/materials/inventory` `?local_field_id?&cat?&q?&page?&pageSize?` — List products for the caller's local_field (admins can pass ?local_field_id=N)
 - 🔒 `POST /api/v1/materials/inventory` `?local_field_id?` — Create a product for the caller's local_field (admins can pass ?local_field_id=N)
 - 🔒 `PATCH /api/v1/materials/inventory/{id}` — Partially update a product
 - 🔒 `DELETE /api/v1/materials/inventory/{id}` — Soft-delete a product (sets active=false)
@@ -1068,14 +1310,14 @@ generated: true
 
 ## Materials — Orders
 
-- 🔒 `GET /api/v1/materials/orders` `?estado?&club_section_id?&q?&page?&pageSize?&local_field_id` — List orders (visibility + LF aware)
+- 🔒 `GET /api/v1/materials/orders` `?local_field_id?&estado?&club_section_id?&q?&page?&pageSize?` — List orders (visibility + LF aware)
 - 🔒 `POST /api/v1/materials/orders` — Create a new order
 - 🔒 `GET /api/v1/materials/orders/{folio}` — Get full order detail by folio
 - 🔒 `POST /api/v1/materials/orders/{folio}/approve` — Approve order — allocate folio, decrement stock, snapshot config
 - 🔒 `POST /api/v1/materials/orders/{folio}/cancel` — Cancel order — allowed from en_revision (own or campo), aprobada, pagada (campo only)
 - 🔒 `POST /api/v1/materials/orders/{folio}/deliver` — Mark order as delivered — terminal transition (pagada → entregada)
 - 🔒 `PATCH /api/v1/materials/orders/{folio}/lines/{lineId}` — Update line availability (campo local only, en_revision orders only)
-- 🔒 `GET /api/v1/materials/orders/history` `?estado?&club_section_id?&q?&page?&pageSize?&local_field_id` — Caller's own order history (always scoped to own orders)
+- 🔒 `GET /api/v1/materials/orders/history` `?local_field_id?&estado?&club_section_id?&q?&page?&pageSize?` — Caller's own order history (always scoped to own orders)
 
 ---
 
@@ -1120,7 +1362,10 @@ generated: true
 
 - 🔒 `GET /api/v1/club-sections/{clubSectionId}/membership-requests` — Listar solicitudes pendientes de membresía
 - 🔒 `POST /api/v1/club-sections/{clubSectionId}/membership-requests/{assignmentId}/approve` — Aprobar solicitud de membresía
+- 🔒 `GET /api/v1/club-sections/{clubSectionId}/membership-requests/{assignmentId}/consent-evidence` — URL firmada (15 min) de la ficha de consentimiento vigente
+- 🔒 `POST /api/v1/club-sections/{clubSectionId}/membership-requests/{assignmentId}/consent-evidence` — Subir la ficha de consentimiento firmada de un menor
 - 🔒 `POST /api/v1/club-sections/{clubSectionId}/membership-requests/{assignmentId}/reject` — Rechazar solicitud de membresía
+- 🔒 `POST /api/v1/club-sections/{clubSectionId}/membership-requests/{assignmentId}/verify-consent` — Verificar el consentimiento del tutor de un menor
 
 ---
 
@@ -1157,10 +1402,14 @@ generated: true
 ## OAuth
 
 - 🔒 `DELETE /api/v1/auth/oauth/{provider}` — Desconectar un provider OAuth
-- 🔓 `POST /api/v1/auth/oauth/apple` — Iniciar autenticación con Apple
-- 🔓 `POST /api/v1/auth/oauth/callback` — Finalizar callback de OAuth
-- 🔓 `POST /api/v1/auth/oauth/google` — Iniciar autenticación con Google
+- 🔓 `POST /api/v1/auth/oauth/{provider}/token` — Iniciar sesión con un id token nativo de Google o Apple
 - 🔒 `GET /api/v1/auth/oauth/providers` — Obtener providers OAuth conectados
+
+---
+
+## payment obligations
+
+- 🔒 `GET /api/v1/payment-obligations/pending` `?camporee_id?&union_camporee_id?` — Listar obligaciones pendientes (inscripción, materiales, pedidos e insumos de camporee) sin fusionar folios
 
 ---
 
@@ -1172,6 +1421,8 @@ generated: true
 - 🔒 `POST /api/v1/users/{userId}/post-registration/step-1/complete` — Completar Paso 1: Foto de perfil
 - 🔒 `POST /api/v1/users/{userId}/post-registration/step-2/complete` — Completar Paso 2: Información personal
 - 🔒 `POST /api/v1/users/{userId}/post-registration/step-3/complete` — Completar Paso 3: Selección de club
+- 🔒 `POST /api/v1/users/{userId}/post-registration/step-3/consent-evidence` — Subir la ficha de consentimiento firmada actuando por el menor
+- 🔒 `POST /api/v1/users/{userId}/post-registration/step-3/guardian-only` — Paso 3 alterno: "Solo soy tutor de menores"
 
 ---
 
@@ -1192,11 +1443,12 @@ generated: true
 - 🔒 `GET /api/v1/admin/quarterly-reports/{id}` — Obtener informe trimestral por ID (admin)
 - 🔒 `PATCH /api/v1/admin/quarterly-reports/{id}` — Actualizar datos manuales del informe trimestral (admin)
 - 🔒 `POST /api/v1/admin/quarterly-reports/{id}/finalize` — Finalizar informe trimestral (admin)
-- 🔒 `GET /api/v1/admin/quarterly-reports/{id}/pdf` — Descargar PDF del informe trimestral (admin)
+- 🔒 `GET /api/v1/admin/quarterly-reports/{id}/pdf` — Descargar PDF del informe trimestral (admin). Nombre: informe-trimestral-{club}-{tipo}-{trimestre}-{año}.pdf
 - 🔒 `POST /api/v1/admin/quarterly-reports/{id}/regenerate` — Regenerar datos calculados del informe trimestral (admin)
+- 🔒 `POST /api/v1/admin/quarterly-reports/generate` — Generar el informe trimestral de un club y periodo (admin). Crea el borrador si no existe y recalcula los datos si sigue en borrador; uno finalizado se devuelve sin cambios
 - 🔒 `GET /api/v1/clubs/{clubId}/quarterly-reports` `?year?` — Listar informes trimestrales de un club (usuario)
 - 🔒 `GET /api/v1/clubs/{clubId}/quarterly-reports/{id}` — Obtener informe trimestral por ID (usuario)
-- 🔒 `GET /api/v1/clubs/{clubId}/quarterly-reports/{id}/pdf` — Descargar PDF del informe trimestral (usuario)
+- 🔒 `GET /api/v1/clubs/{clubId}/quarterly-reports/{id}/pdf` — Descargar PDF del informe trimestral (usuario). Nombre: informe-trimestral-{club}-{tipo}-{trimestre}-{año}.pdf
 
 ---
 
@@ -1247,6 +1499,12 @@ generated: true
 
 ---
 
+## reports
+
+- 🔒 `GET /api/v1/reports/compliance` `?ecclesiastical_year_id?&club_type_id?&division_id?&union_id?&local_field_id?&year?&month?&quarter?&page?&limit?` — Cumplimiento de informes por club y periodo (solo lectura)
+
+---
+
 ## requests
 
 - 🔒 `GET /api/v1/requests/assignments` `?status?&sectionId?` — Listar solicitudes de asignación de rol
@@ -1262,7 +1520,7 @@ generated: true
 
 ## resource-categories
 
-- 🔒 `GET /api/v1/resource-categories` — Listar categorías de recursos activas
+- 🔒 `GET /api/v1/resource-categories` `?includeInactive?` — Listar categorías de recursos. Por defecto solo activas; includeInactive=true las incluye todas para quien tiene resource_categories:update (se ignora para los demás).
 - 🔒 `POST /api/v1/resource-categories` — Crear categoría de recurso
 - 🔒 `GET /api/v1/resource-categories/{id}` — Obtener categoría de recurso por ID
 - 🔒 `PATCH /api/v1/resource-categories/{id}` — Actualizar categoría de recurso
@@ -1374,6 +1632,8 @@ generated: true
 - 🔒 `PATCH /api/v1/users/{userId}/honors/{honorId}` — Actualizar progreso de honor
 - 🔒 `DELETE /api/v1/users/{userId}/honors/{honorId}` — Abandonar honor
 - 🔒 `POST /api/v1/users/{userId}/honors/{honorId}/files` — Subir evidencias del honor
+- 🔒 `POST /api/v1/users/{userId}/honors/{honorId}/instructor-proposal` — Proponer el instructor de una especialidad aprobada
+- 🔒 `DELETE /api/v1/users/{userId}/honors/{honorId}/instructor-proposal` — Retirar la propuesta de instructor pendiente
 - 🔒 `GET /api/v1/users/{userId}/honors/{honorId}/requirements/{requirementId}/evidence` — Listar evidencias de un requisito
 - 🔒 `DELETE /api/v1/users/{userId}/honors/{honorId}/requirements/{requirementId}/evidence/{evidenceId}` — Eliminar una evidencia de un requisito
 - 🔒 `POST /api/v1/users/{userId}/honors/{honorId}/requirements/{requirementId}/evidence/link` — Agregar enlace como evidencia para un requisito
