@@ -7,7 +7,7 @@ module: api
 status: published
 owners:
   - "Auto-generated"
-lastReviewedAt: 2026-10-30
+lastReviewedAt: 2026-11-02
 generated: true
 ---
 
@@ -28,7 +28,7 @@ generated: true
 | Total endpoints | **938** |
 | Autenticados (Bearer) | 898 |
 | Tags / modulos | 116 |
-| Generado | 2026-10-30 |
+| Generado | 2026-11-02 |
 | Spec fuente | `sacdia-backend/sacdia-api-spec.json` |
 
 > Esta pagina se regenera desde el OpenAPI spec del backend. Si ves drift contra el codigo, regenera con `pnpm sync:endpoints`. La autoridad final es `SwaggerModule.createDocument` corriendo sobre el codigo NestJS.
@@ -1149,13 +1149,13 @@ generated: true
 
 - 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/members/insurance` — Listar seguros de miembros por sección
 - 🔒 `PATCH /api/v1/insurance/{insuranceId}` — Actualizar seguro
-- 🔒 `GET /api/v1/insurance/cycles` — Listar ciclos de seguro del Campo Local activo
-- 🔒 `POST /api/v1/insurance/cycles` — Crear ciclo de seguro para el Campo Local activo
-- 🔒 `PATCH /api/v1/insurance/cycles/{cycleConfigId}` — Actualizar ciclo de seguro del Campo Local activo
+- 🔒 `GET /api/v1/insurance/cycles` `?local_field_id?` — Listar ciclos de seguro del Campo Local activo
+- 🔒 `POST /api/v1/insurance/cycles` `?local_field_id?` — Crear ciclo de seguro para el Campo Local activo
+- 🔒 `PATCH /api/v1/insurance/cycles/{cycleConfigId}` `?local_field_id?` — Actualizar ciclo de seguro del Campo Local activo
 - 🔒 `GET /api/v1/insurance/expiring` `?days_ahead?&local_field_id?` — Listar seguros próximos a vencer
-- 🔒 `GET /api/v1/insurance/products` — Listar productos de seguro del Campo Local activo
-- 🔒 `POST /api/v1/insurance/products` — Crear producto de seguro para el Campo Local activo
-- 🔒 `PATCH /api/v1/insurance/products/{productId}` — Actualizar producto de seguro del Campo Local activo
+- 🔒 `GET /api/v1/insurance/products` `?local_field_id?` — Listar productos de seguro del Campo Local activo
+- 🔒 `POST /api/v1/insurance/products` `?local_field_id?` — Crear producto de seguro para el Campo Local activo
+- 🔒 `PATCH /api/v1/insurance/products/{productId}` `?local_field_id?` — Actualizar producto de seguro del Campo Local activo
 - 🔒 `GET /api/v1/users/{memberId}/insurance` — Obtener seguro activo del miembro
 - 🔒 `POST /api/v1/users/{memberId}/insurance` — Crear seguro para un miembro
 
