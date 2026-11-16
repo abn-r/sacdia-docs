@@ -7,7 +7,7 @@ module: api
 status: published
 owners:
   - "Auto-generated"
-lastReviewedAt: 2026-10-30
+lastReviewedAt: 2026-11-16
 generated: true
 ---
 
@@ -25,10 +25,10 @@ generated: true
 | Metrica | Valor |
 | --- | --- |
 | API version | `2.2.0` |
-| Total endpoints | **938** |
-| Autenticados (Bearer) | 898 |
+| Total endpoints | **957** |
+| Autenticados (Bearer) | 916 |
 | Tags / modulos | 116 |
-| Generado | 2026-10-30 |
+| Generado | 2026-11-16 |
 | Spec fuente | `sacdia-backend/sacdia-api-spec.json` |
 
 > Esta pagina se regenera desde el OpenAPI spec del backend. Si ves drift contra el codigo, regenera con `pnpm sync:endpoints`. La autoridad final es `SwaggerModule.createDocument` corriendo sobre el codigo NestJS.
@@ -36,9 +36,9 @@ generated: true
 ## Indice de modulos
 
 - [auth](#auth) — 21 endpoints
-- [users](#users) — 15 endpoints
+- [users](#users) — 14 endpoints
 - [admin](#admin) — 4 endpoints
-- [clubs](#clubs) — 21 endpoints
+- [clubs](#clubs) — 23 endpoints
 - [Achievements](#achievements) — 4 endpoints
 - [activities](#activities) — 16 endpoints
 - [Admin - Achievements](#admin-achievements) — 12 endpoints
@@ -55,18 +55,19 @@ generated: true
 - [admin-honor-instructor-proposals](#admin-honor-instructor-proposals) — 3 endpoints
 - [admin-notifications](#admin-notifications) — 3 endpoints
 - [admin-reference](#admin-reference) — 38 endpoints
+- [admin-role-requirements](#admin-role-requirements) — 2 endpoints
 - [admin-support](#admin-support) — 3 endpoints
 - [admin-users](#admin-users) — 10 endpoints
 - [analytics](#analytics) — 8 endpoints
-- [Annual Evidence Folders](#annual-evidence-folders) — 14 endpoints
-- [Annual Evidence Folders - Evaluation](#annual-evidence-folders-evaluation) — 5 endpoints
+- [Annual Evidence Folders](#annual-evidence-folders) — 13 endpoints
+- [Annual Evidence Folders - Evaluation](#annual-evidence-folders-evaluation) — 6 endpoints
 - [Annual Evidence Folders - Rankings](#annual-evidence-folders-rankings) — 4 endpoints
 - [Annual Evidence Folders - Templates](#annual-evidence-folders-templates) — 9 endpoints
 - [Annual Ranking Configs](#annual-ranking-configs) — 4 endpoints
 - [Annual Ranking Progress](#annual-ranking-progress) — 1 endpoints
 - [Annual Rankings](#annual-rankings) — 1 endpoints
 - [annual-membership](#annual-membership) — 3 endpoints
-- [annual-reports](#annual-reports) — 10 endpoints
+- [annual-reports](#annual-reports) — 8 endpoints
 - [App](#app) — 1 endpoints
 - [Award Categories](#award-categories) — 5 endpoints
 - [camporee order offerings](#camporee-order-offerings) — 6 endpoints
@@ -75,8 +76,8 @@ generated: true
 - [camporee supplies](#camporee-supplies) — 29 endpoints
 - [camporee-club-registration](#camporee-club-registration) — 4 endpoints
 - [camporee-event-templates](#camporee-event-templates) — 5 endpoints
-- [camporee-events](#camporee-events) — 16 endpoints
-- [camporee-scoring](#camporee-scoring) — 20 endpoints
+- [camporee-events](#camporee-events) — 19 endpoints
+- [camporee-scoring](#camporee-scoring) — 22 endpoints
 - [camporee-staff](#camporee-staff) — 8 endpoints
 - [camporee-venues](#camporee-venues) — 9 endpoints
 - [camporees](#camporees) — 46 endpoints
@@ -88,19 +89,18 @@ generated: true
 - [certifications - review](#certifications-review) — 5 endpoints
 - [class-counselor-assignments](#class-counselor-assignments) — 4 endpoints
 - [class-progress-scope](#class-progress-scope) — 2 endpoints
-- [class-thresholds](#class-thresholds) — 2 endpoints
 - [classes](#classes) — 4 endpoints
 - [club-enrollments](#club-enrollments) — 7 endpoints
 - [club-roles](#club-roles) — 2 endpoints
 - [coordination](#coordination) — 2 endpoints
-- [dashboard](#dashboard) — 1 endpoints
+- [dashboard](#dashboard) — 2 endpoints
 - [data-export](#data-export) — 3 endpoints
 - [emergency-contacts](#emergency-contacts) — 5 endpoints
 - [evidence-review](#evidence-review) — 7 endpoints
 - [FCM Tokens](#fcm-tokens) — 5 endpoints
 - [field payment orders](#field-payment-orders) — 15 endpoints
-- [finances](#finances) — 9 endpoints
-- [guardianships](#guardianships) — 24 endpoints
+- [finances](#finances) — 13 endpoints
+- [guardianships](#guardianships) — 29 endpoints
 - [health](#health) — 2 endpoints
 - [honors](#honors) — 5 endpoints
 - [instructors](#instructors) — 1 endpoints
@@ -113,7 +113,6 @@ generated: true
 - [investiture-requests](#investiture-requests) — 12 endpoints
 - [investiture-windows](#investiture-windows) — 2 endpoints
 - [legal](#legal) — 3 endpoints
-- [legal-representatives](#legal-representatives) — 1 endpoints
 - [Materials — Catalog](#materials-catalog) — 4 endpoints
 - [Materials — Categories (admin)](#materials-categories-admin-) — 4 endpoints
 - [Materials — Config](#materials-config) — 4 endpoints
@@ -130,7 +129,7 @@ generated: true
 - [payment obligations](#payment-obligations) — 1 endpoints
 - [post-registration](#post-registration) — 8 endpoints
 - [qr](#qr) — 6 endpoints
-- [quarterly-reports](#quarterly-reports) — 10 endpoints
+- [quarterly-reports](#quarterly-reports) — 8 endpoints
 - [Ranking Tiers](#ranking-tiers) — 2 endpoints
 - [Ranking Weights](#ranking-weights) — 5 endpoints
 - [rbac](#rbac) — 19 endpoints
@@ -142,6 +141,7 @@ generated: true
 - [Resources (App)](#resources-app-) — 3 endpoints
 - [scoring-categories](#scoring-categories) — 12 endpoints
 - [Section Rankings](#section-rankings) — 2 endpoints
+- [service-credentials](#service-credentials) — 8 endpoints
 - [support](#support) — 1 endpoints
 - [system-config](#system-config) — 3 endpoints
 - [units](#units) — 11 endpoints
@@ -195,7 +195,6 @@ generated: true
 - 🔒 `DELETE /api/v1/users/{userId}/medicines/{medicineId}` — Eliminar medicamento del usuario (borrado lógico)
 - 🔒 `POST /api/v1/users/{userId}/profile-picture` — Subir foto de perfil
 - 🔒 `DELETE /api/v1/users/{userId}/profile-picture` — Eliminar foto de perfil
-- 🔒 `GET /api/v1/users/{userId}/requires-legal-representative` **(deprecated)** — Verificar si el usuario requiere representante legal
 
 ---
 
@@ -210,7 +209,7 @@ generated: true
 
 ## clubs
 
-- 🔒 `GET /api/v1/clubs` `?localFieldId?&districtId?&churchId?&active?&page?&limit?` — Listar clubs
+- 🔒 `GET /api/v1/clubs` `?localFieldId?&districtId?&churchId?&active?&search?&page?&limit?` — Listar clubs
 - 🔒 `POST /api/v1/clubs` — Crear nuevo club
 - 🔒 `GET /api/v1/clubs/{clubId}` — Obtener club por ID
 - 🔒 `PATCH /api/v1/clubs/{clubId}` — Actualizar club (dirección o secretaría de la sección activa)
@@ -230,6 +229,8 @@ generated: true
 - 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/director-succession` — Sucesión anual de director de sección
 - 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/members` — Listar miembros de la sección
 - 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/members/{userId}/assignable-roles` — Roles asignables a un usuario en la sección
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/role-candidates` `?search?&filter?&page?&limit?` — Candidatos Guía Mayor para roles de servicio de la sección
+- 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/role-candidates/{userId}` — Detalle de un candidato Guía Mayor
 - 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/roles` — Asignar rol a un miembro (requiere director, deputy director o secretary)
 
 ---
@@ -426,16 +427,16 @@ generated: true
 - 🔒 `DELETE /api/v1/admin/districts/{districtId}` — Soft delete district
 - 🔒 `GET /api/v1/admin/divisions` — List institutional divisions for admin management
 - 🔒 `POST /api/v1/admin/divisions` — Create institutional division
-- 🔒 `PATCH /api/v1/admin/divisions/{divisionId}` — Update institutional division
-- 🔒 `DELETE /api/v1/admin/divisions/{divisionId}` — Soft delete institutional division
+- 🔒 `PATCH /api/v1/admin/divisions/{id}` — Update institutional division
+- 🔒 `DELETE /api/v1/admin/divisions/{id}` — Soft delete institutional division
 - 🔒 `GET /api/v1/admin/local-fields` `?unionId?` — List local fields for admin management
 - 🔒 `POST /api/v1/admin/local-fields` — Create local field
-- 🔒 `PATCH /api/v1/admin/local-fields/{localFieldId}` — Update local field
-- 🔒 `DELETE /api/v1/admin/local-fields/{localFieldId}` — Soft delete local field
+- 🔒 `PATCH /api/v1/admin/local-fields/{id}` — Update local field
+- 🔒 `DELETE /api/v1/admin/local-fields/{id}` — Soft delete local field
 - 🔒 `GET /api/v1/admin/unions` `?countryId?&divisionId?` — List unions for admin management
 - 🔒 `POST /api/v1/admin/unions` — Create union
-- 🔒 `PATCH /api/v1/admin/unions/{unionId}` — Update union
-- 🔒 `DELETE /api/v1/admin/unions/{unionId}` — Soft delete union
+- 🔒 `PATCH /api/v1/admin/unions/{id}` — Update union
+- 🔒 `DELETE /api/v1/admin/unions/{id}` — Soft delete union
 
 ---
 
@@ -498,6 +499,13 @@ generated: true
 
 ---
 
+## admin-role-requirements
+
+- 🔒 `GET /api/v1/admin/role-requirements` — Requisitos por cargo (modo, vigencia, equivalencia)
+- 🔒 `PATCH /api/v1/admin/role-requirements/{id}` — Cambiar modo, fecha de vigencia o certificación equivalente
+
+---
+
 ## admin-support
 
 - 🔒 `GET /api/v1/admin/support/reports` `?status?&category?&userId?&search?&page?&limit?` — Listar reportes de soporte
@@ -537,10 +545,9 @@ generated: true
 ## Annual Evidence Folders
 
 - 🔒 `GET /api/v1/annual-folders/{folderId}` — Get annual evidence folder with sections and evidences
-- 🔒 `POST /api/v1/annual-folders/{folderId}/close` — Close folder (field-level action)
-- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{sectionId}/evidences` — Upload evidence to a folder section
-- 🔒 `GET /api/v1/annual-folders/{folderId}/sections/{sectionId}/status` — Get the current status of a single section within an annual evidence folder
-- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{sectionId}/submit` — Submit a single section of an annual evidence folder
+- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{templateSectionId}/evidences` — Upload evidence to a folder section
+- 🔒 `GET /api/v1/annual-folders/{folderId}/sections/{templateSectionId}/status` — Get the current status of a single section within an annual evidence folder
+- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{templateSectionId}/submit` — Submit a single section of an annual evidence folder
 - 🔒 `POST /api/v1/annual-folders/{folderId}/submit` — Submit entire folder for review (director/secretariat only)
 - 🔒 `GET /api/v1/annual-folders/by-enrollment/{enrollmentId}` — Get annual evidence folder by enrollment ID
 - 🔒 `POST /api/v1/annual-folders/enrollments/{enrollmentId}` — Create annual evidence folder for a club enrollment
@@ -555,10 +562,11 @@ generated: true
 
 ## Annual Evidence Folders - Evaluation
 
+- 🔒 `POST /api/v1/annual-folders/{folderId}/close` — Close folder (field-level action)
 - 🔒 `GET /api/v1/annual-folders/{folderId}/evaluations` — Get all section evaluations for a folder
-- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{sectionId}/confirm-union` — Union actor confirms or overrides a pre-approved section
-- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{sectionId}/evaluate` — Evaluate a section of an annual evidence folder
-- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{sectionId}/reopen` — Reopen a section for re-evaluation (removes existing evaluation)
+- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{templateSectionId}/confirm-union` — Union actor confirms or overrides a pre-approved section
+- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{templateSectionId}/evaluate` — Evaluate a section of an annual evidence folder
+- 🔒 `POST /api/v1/annual-folders/{folderId}/sections/{templateSectionId}/reopen` — Reopen a section for re-evaluation (removes existing evaluation)
 - 🔒 `PATCH /api/v1/annual-folders/evidences/{evidenceId}/reviewer-note` — Set or clear a reviewer note on a specific evidence file
 
 ---
@@ -581,8 +589,8 @@ generated: true
 - 🔒 `DELETE /api/v1/annual-folders/templates/{templateId}` — Delete a draft annual folder template
 - 🔒 `POST /api/v1/annual-folders/templates/{templateId}/copy` — Copy an annual folder template as a draft
 - 🔒 `POST /api/v1/annual-folders/templates/{templateId}/sections` — Add section to template
-- 🔒 `PATCH /api/v1/annual-folders/templates/sections/{sectionId}` — Update template section
-- 🔒 `DELETE /api/v1/annual-folders/templates/sections/{sectionId}` — Remove template section
+- 🔒 `PATCH /api/v1/annual-folders/templates/sections/{templateSectionId}` — Update template section
+- 🔒 `DELETE /api/v1/annual-folders/templates/sections/{templateSectionId}` — Remove template section
 
 ---
 
@@ -619,11 +627,9 @@ generated: true
 
 - 🔒 `GET /api/v1/admin/annual-reports` `?divisionId?&unionId?&localFieldId?&clubId?&ecclesiasticalYearId?&status?&page?&limit?` — Listar informes anuales (admin)
 - 🔒 `GET /api/v1/admin/annual-reports/{id}` — Obtener informe anual por ID (admin)
-- 🔒 `PATCH /api/v1/admin/annual-reports/{id}` — Actualizar datos manuales del informe anual (admin)
-- 🔒 `POST /api/v1/admin/annual-reports/{id}/finalize` — Finalizar informe anual (admin)
 - 🔒 `GET /api/v1/admin/annual-reports/{id}/pdf` — Descargar PDF del informe anual (admin). Nombre: informe-anual-{club}-{tipo}-{año}.pdf
-- 🔒 `POST /api/v1/admin/annual-reports/{id}/regenerate` — Regenerar datos calculados del informe anual (admin)
-- 🔒 `POST /api/v1/admin/annual-reports/generate` — Generar el informe anual de un club y año eclesiástico (admin). Crea el borrador si no existe y recalcula los datos si sigue en borrador; uno finalizado se devuelve sin cambios
+- 🔒 `POST /api/v1/admin/annual-reports/{id}/regenerate` — Recalcular el informe (admin global: super-admin y admin). Funciona también sobre uno finalizado y conserva su estado
+- 🔒 `POST /api/v1/admin/annual-reports/generate` — Generar el informe anual de un club y año eclesiástico (admin). Crea el informe si no existe; en borrador se recalcula en vivo, y si el periodo ya pasó la gracia se crea congelado (finalizado). Uno finalizado se devuelve sin cambios
 - 🔒 `GET /api/v1/clubs/{clubId}/annual-reports` — Listar informes anuales de un club (usuario)
 - 🔒 `GET /api/v1/clubs/{clubId}/annual-reports/{id}` — Obtener informe anual por ID (usuario)
 - 🔒 `GET /api/v1/clubs/{clubId}/annual-reports/{id}/pdf` — Descargar PDF del informe anual (usuario). Nombre: informe-anual-{club}-{tipo}-{año}.pdf
@@ -746,6 +752,9 @@ generated: true
 - 🔒 `GET /api/v1/camporee-events/{eventId}` — Get a camporee event instance by ID
 - 🔒 `PATCH /api/v1/camporee-events/{eventId}` — Update a camporee event instance (overrides)
 - 🔒 `DELETE /api/v1/camporee-events/{eventId}` — Soft delete a camporee event instance
+- 🔒 `GET /api/v1/camporee-events/{eventId}/attachments` — List attachments (images/PDFs) of a camporee event
+- 🔒 `POST /api/v1/camporee-events/{eventId}/attachments` — Upload an attachment (JPG, PNG, WebP or PDF, max 10MB) to a camporee event
+- 🔒 `DELETE /api/v1/camporee-events/{eventId}/attachments/{attachmentId}` — Soft delete an attachment of a camporee event
 - 🔒 `PATCH /api/v1/camporee-events/{eventId}/reorder` — Update display_order of a camporee event instance
 - 🔒 `PUT /api/v1/camporee-events/{eventId}/schedule-blocks` — Replace optional schedule blocks and club-section assignments for a camporee event
 - 🔒 `GET /api/v1/camporee-events/{eventId}/staff-assignments` — List staff assignments for a camporee event
@@ -779,10 +788,12 @@ generated: true
 - 🔒 `GET /api/v1/local-camporees/{camporeeId}/judges` — CamporeeScoringController_listLocalJudges_v1
 - 🔒 `POST /api/v1/local-camporees/{camporeeId}/judges` — CamporeeScoringController_addLocalJudge_v1
 - 🔒 `GET /api/v1/local-camporees/{camporeeId}/leaderboard` — CamporeeScoringController_getLocalLeaderboard_v1
+- 🔒 `GET /api/v1/local-camporees/{camporeeId}/score-breakdown` — Points per section and event with judge comments, filtered by role
 - 🔒 `GET /api/v1/union-camporees/{camporeeId}/judge-candidates` — CamporeeScoringController_listUnionJudgeCandidates_v1
 - 🔒 `GET /api/v1/union-camporees/{camporeeId}/judges` — CamporeeScoringController_listUnionJudges_v1
 - 🔒 `POST /api/v1/union-camporees/{camporeeId}/judges` — CamporeeScoringController_addUnionJudge_v1
 - 🔒 `GET /api/v1/union-camporees/{camporeeId}/leaderboard` — CamporeeScoringController_getUnionLeaderboard_v1
+- 🔒 `GET /api/v1/union-camporees/{camporeeId}/score-breakdown` — Points per section and event with judge comments, filtered by role
 
 ---
 
@@ -971,13 +982,6 @@ generated: true
 
 ---
 
-## class-thresholds
-
-- 🔒 `GET /api/v1/local-fields/{localFieldId}/class-thresholds/{ecclesiasticalYearId}` — Leer el porcentaje de clase del Campo para un año eclesiástico. Sin fila, el valor efectivo es 80.
-- 🔒 `PATCH /api/v1/local-fields/{localFieldId}/class-thresholds/{ecclesiasticalYearId}` — Guardar el porcentaje de clase. Director y asistente del Campo hasta el 30 de junio 23:59 en la zona del Campo. Después, solo super-admin, y solo dentro del año eclesiástico vigente.
-
----
-
 ## classes
 
 - 🔓 `GET /api/v1/classes` `?clubTypeId?&page?&limit?` — Listar clases
@@ -989,9 +993,9 @@ generated: true
 
 ## club-enrollments
 
-- 🔒 `POST /api/v1/club-enrollments/{enrollmentId}/approve` — Aprobar inscripción anual del club
-- 🔒 `POST /api/v1/club-enrollments/{enrollmentId}/reject` — Rechazar inscripción anual del club
-- 🔒 `GET /api/v1/club-enrollments/validation/queue` `?search?&ecclesiastical_year_id?&local_field_id?&club_type_id?&page?&limit?&status?` — Listar inscripciones anuales pendientes de Campo Local
+- 🔒 `POST /api/v1/club-enrollments/{enrollmentId}/approve` — Aprobar inscripción anual de la sección
+- 🔒 `POST /api/v1/club-enrollments/{enrollmentId}/reject` — Rechazar inscripción anual de la sección
+- 🔒 `GET /api/v1/club-enrollments/validation/queue` `?status?&search?&ecclesiastical_year_id?&local_field_id?&club_type_id?&page?&limit?` — Cola de validación de inscripciones anuales en mi alcance
 - 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/enrollments` `?year?` — Listar inscripciones de la sección
 - 🔒 `POST /api/v1/clubs/{clubId}/sections/{sectionId}/enrollments` — Crear inscripción anual
 - 🔒 `PATCH /api/v1/clubs/{clubId}/sections/{sectionId}/enrollments/{enrollmentId}` — Actualizar inscripción
@@ -1015,6 +1019,7 @@ generated: true
 
 ## dashboard
 
+- 🔒 `GET /api/v1/dashboard/pending` — Pendientes accionables del usuario en su sección activa
 - 🔒 `GET /api/v1/dashboard/summary` — Resumen del dashboard del usuario autenticado
 
 ---
@@ -1081,21 +1086,27 @@ generated: true
 
 ## finances
 
-- 🔒 `GET /api/v1/clubs/{clubId}/finances` `?year?&month?&clubTypeId?&categoryId?&page?&limit?` — Listar movimientos financieros del club
+- 🔒 `GET /api/v1/clubs/{clubId}/finances` `?year?&month?&clubTypeId?&categoryId?&club_section_id?&page?&limit?` — Listar movimientos financieros del club
 - 🔒 `POST /api/v1/clubs/{clubId}/finances` — Crear movimiento financiero
-- 🔒 `GET /api/v1/clubs/{clubId}/finances/summary` `?year?&month?` — Resumen financiero del club
+- 🔒 `GET /api/v1/clubs/{clubId}/finances/by-category` `?year&month?&club_section_id?` — Totales por categoría
+- 🔒 `GET /api/v1/clubs/{clubId}/finances/export` `?year&month?&club_section_id?&format?` — Exportar movimientos a Excel o PDF
+- 🔒 `GET /api/v1/clubs/{clubId}/finances/monthly` `?from?&to?&club_section_id?` — Serie mensual de ingresos, egresos y saldo
+- 🔒 `GET /api/v1/clubs/{clubId}/finances/summary` `?year?&month?&club_section_id?` — Resumen financiero del club
 - 🔒 `GET /api/v1/clubs/{clubId}/finances/transactions` `?page?&limit?&type?&search?&startDate?&endDate?&sortBy?&sortOrder?` — Listar todas las transacciones del club (paginadas)
 - 🔒 `GET /api/v1/finances/{financeId}` — Obtener movimiento por ID
 - 🔒 `PATCH /api/v1/finances/{financeId}` — Actualizar movimiento
 - 🔒 `DELETE /api/v1/finances/{financeId}` `?reason?` — Desactivar movimiento
 - 🔒 `POST /api/v1/finances/{financeId}/evidences` — Subir foto de evidencia de un movimiento financiero
 - 🔒 `GET /api/v1/finances/categories` `?type?` — Listar categorías financieras
+- 🔒 `GET /api/v1/finances/overview` `?local_field_id?&year?&month?&page?&limit?` — Vista consolidada de finanzas por club (campo local / unión / división)
 
 ---
 
 ## guardianships
 
+- 🔓 `POST /api/v1/auth/adult-claim/redeem` — A released adult without an account claims it with an access code
 - 🔒 `POST /api/v1/club-sections/{clubSectionId}/dependents` — Register a minor under club custody (director)
+- 🔒 `POST /api/v1/club-sections/{clubSectionId}/dependents/{userId}/adult-claim-codes` — Issue an access code for a released adult without an account (14 days)
 - 🔒 `POST /api/v1/club-sections/{clubSectionId}/dependents/{userId}/claim-codes` — Issue a claim code for a custodial dependent (7 days)
 - 🔒 `POST /api/v1/guardianships/{guardianshipId}/revoke` — Leave a guardianship, or remove a secondary guardian (primary)
 - 🔒 `POST /api/v1/guardianships/link-codes/redeem` — Redeem a link code and become a guardian of the minor
@@ -1115,9 +1126,12 @@ generated: true
 - 🔒 `POST /api/v1/guardianships/me/dependents/{dependentId}/supervised-login/disable` — Disable the minor's own login (reversible while a minor)
 - 🔒 `POST /api/v1/guardianships/me/dependents/{dependentId}/supervised-login/password` — Reset the minor's password
 - 🔒 `POST /api/v1/guardianships/me/dependents/{dependentId}/supervised-login/reactivate` — Re-enable a disabled login
+- 🔒 `GET /api/v1/guardianships/me/history` — People released at majority (minimal history, Phase 4)
+- 🔒 `POST /api/v1/guardianships/me/released/{dependentId}/adult-claim-code` — A former guardian issues an access code for a released adult (14 days)
 - 🔒 `GET /api/v1/guardianships/relationship-types` — Relationships a guardian may declare to a minor
 - 🔒 `POST /api/v1/users/me/guardian-link-codes` — A teen without a guardian issues a link code for an adult (72h)
 - 🔒 `POST /api/v1/users/me/guardian-links/{guardianshipId}/revoke` — The teen removes a link that is still pending
+- 🔒 `POST /api/v1/users/me/release/email` — A released adult without an email adds one
 - 🔒 `GET /api/v1/users/me/supervision` — What the teen sees about their own supervision
 
 ---
@@ -1149,13 +1163,13 @@ generated: true
 
 - 🔒 `GET /api/v1/clubs/{clubId}/sections/{sectionId}/members/insurance` — Listar seguros de miembros por sección
 - 🔒 `PATCH /api/v1/insurance/{insuranceId}` — Actualizar seguro
-- 🔒 `GET /api/v1/insurance/cycles` — Listar ciclos de seguro del Campo Local activo
-- 🔒 `POST /api/v1/insurance/cycles` — Crear ciclo de seguro para el Campo Local activo
-- 🔒 `PATCH /api/v1/insurance/cycles/{cycleConfigId}` — Actualizar ciclo de seguro del Campo Local activo
+- 🔒 `GET /api/v1/insurance/cycles` `?local_field_id?` — Listar ciclos de seguro del Campo Local activo
+- 🔒 `POST /api/v1/insurance/cycles` `?local_field_id?` — Crear ciclo de seguro para el Campo Local activo
+- 🔒 `PATCH /api/v1/insurance/cycles/{cycleConfigId}` `?local_field_id?` — Actualizar ciclo de seguro del Campo Local activo
 - 🔒 `GET /api/v1/insurance/expiring` `?days_ahead?&local_field_id?` — Listar seguros próximos a vencer
-- 🔒 `GET /api/v1/insurance/products` — Listar productos de seguro del Campo Local activo
-- 🔒 `POST /api/v1/insurance/products` — Crear producto de seguro para el Campo Local activo
-- 🔒 `PATCH /api/v1/insurance/products/{productId}` — Actualizar producto de seguro del Campo Local activo
+- 🔒 `GET /api/v1/insurance/products` `?local_field_id?` — Listar productos de seguro del Campo Local activo
+- 🔒 `POST /api/v1/insurance/products` `?local_field_id?` — Crear producto de seguro para el Campo Local activo
+- 🔒 `PATCH /api/v1/insurance/products/{productId}` `?local_field_id?` — Actualizar producto de seguro del Campo Local activo
 - 🔒 `GET /api/v1/users/{memberId}/insurance` — Obtener seguro activo del miembro
 - 🔒 `POST /api/v1/users/{memberId}/insurance` — Crear seguro para un miembro
 
@@ -1227,7 +1241,7 @@ generated: true
 - 🔒 `GET /api/v1/districts/{districtId}/investiture-pastors` — Listar los pastores asignados al distrito. Cada cupo activo puede autorizar.
 - 🔒 `POST /api/v1/districts/{districtId}/investiture-pastors` — Asignar un pastor al distrito. No autoriza investiduras por sí mismo ni usa el pipeline anterior.
 - 🔒 `DELETE /api/v1/districts/{districtId}/investiture-pastors/{userId}` — Quitar la asignación de un pastor. Libera el cupo. No inviste ni rechaza.
-- 🔒 `GET /api/v1/investiture-pastor-candidates` `?q&districtId?` — Buscar candidatos a pastor por nombre o correo (mínimo 3 caracteres y 2 por palabra, hasta 20). Solo quien puede asignar: director y asistente de Campo o de unión. Devuelve únicamente pastores de su Campo (o de los Campos de su unión). Con `districtId` solo devuelve pastores del Campo de ese distrito.
+- 🔒 `GET /api/v1/investiture-pastor-candidates` `?q&districtId?` — Buscar candidatos a pastor por nombre o correo (mínimo 3 caracteres y 2 por palabra, hasta 20). Solo quien puede asignar: director y asistente de Campo. Devuelve únicamente pastores de su Campo. Con `districtId` solo devuelve pastores del Campo de ese distrito.
 - 🔒 `GET /api/v1/investiture-pastor-quota` — Leer el cupo global de pastores por distrito. Sin fila, el valor es 2 y no se inserta.
 - 🔒 `PATCH /api/v1/investiture-pastor-quota` — Cambiar el cupo global. Solo super-admin. El mismo tope vale para todos los distritos.
 
@@ -1262,12 +1276,6 @@ generated: true
 - 🔓 `GET /api/v1/legal/current` — Current legal document versions
 - 🔒 `GET /api/v1/users/me/legal-acceptance` — Legal acceptance status of the current user
 - 🔒 `POST /api/v1/users/me/legal-acceptance` — Accept the current legal documents
-
----
-
-## legal-representatives
-
-- 🔒 `GET /api/v1/users/{userId}/legal-representative` — Obtener representante legal del usuario
 
 ---
 
@@ -1441,12 +1449,10 @@ generated: true
 
 - 🔒 `GET /api/v1/admin/quarterly-reports` `?divisionId?&unionId?&localFieldId?&clubId?&year?&quarter?&status?&page?&limit?` — Listar informes trimestrales (admin)
 - 🔒 `GET /api/v1/admin/quarterly-reports/{id}` — Obtener informe trimestral por ID (admin)
-- 🔒 `PATCH /api/v1/admin/quarterly-reports/{id}` — Actualizar datos manuales del informe trimestral (admin)
-- 🔒 `POST /api/v1/admin/quarterly-reports/{id}/finalize` — Finalizar informe trimestral (admin)
 - 🔒 `GET /api/v1/admin/quarterly-reports/{id}/pdf` — Descargar PDF del informe trimestral (admin). Nombre: informe-trimestral-{club}-{tipo}-{trimestre}-{año}.pdf
-- 🔒 `POST /api/v1/admin/quarterly-reports/{id}/regenerate` — Regenerar datos calculados del informe trimestral (admin)
-- 🔒 `POST /api/v1/admin/quarterly-reports/generate` — Generar el informe trimestral de un club y periodo (admin). Crea el borrador si no existe y recalcula los datos si sigue en borrador; uno finalizado se devuelve sin cambios
-- 🔒 `GET /api/v1/clubs/{clubId}/quarterly-reports` `?year?` — Listar informes trimestrales de un club (usuario)
+- 🔒 `POST /api/v1/admin/quarterly-reports/{id}/regenerate` — Recalcular el informe (admin global: super-admin y admin). Funciona también sobre uno finalizado y conserva su estado
+- 🔒 `POST /api/v1/admin/quarterly-reports/generate` — Generar el informe trimestral de un club y periodo (admin). Crea el informe si no existe; en borrador se recalcula en vivo, y si el periodo ya pasó la gracia se crea congelado (finalizado). Uno finalizado se devuelve sin cambios
+- 🔒 `GET /api/v1/clubs/{clubId}/quarterly-reports` `?year` — Listar informes trimestrales de un club (usuario)
 - 🔒 `GET /api/v1/clubs/{clubId}/quarterly-reports/{id}` — Obtener informe trimestral por ID (usuario)
 - 🔒 `GET /api/v1/clubs/{clubId}/quarterly-reports/{id}/pdf` — Descargar PDF del informe trimestral (usuario). Nombre: informe-trimestral-{club}-{tipo}-{trimestre}-{año}.pdf
 
@@ -1488,8 +1494,8 @@ generated: true
 - 🔒 `POST /api/v1/admin/rbac/users/{userId}/permissions` — Asignar un permiso directo a un usuario
 - 🔒 `DELETE /api/v1/admin/rbac/users/{userId}/permissions/{permissionId}` — Remover un permiso directo de un usuario
 - 🔒 `GET /api/v1/admin/rbac/users/{userId}/roles` — Listar roles asignados a un usuario
-- 🔒 `POST /api/v1/admin/rbac/users/{userId}/roles` — Asignar un rol a un usuario
-- 🔒 `DELETE /api/v1/admin/rbac/users/{userId}/roles/{roleId}` — Remover un rol de un usuario
+- 🔒 `POST /api/v1/admin/rbac/users/{userId}/roles` — Asignar un rol global a un usuario
+- 🔒 `DELETE /api/v1/admin/rbac/users/{userId}/roles/{roleId}` — Revocar un rol global de un usuario
 
 ---
 
@@ -1573,6 +1579,19 @@ generated: true
 
 ---
 
+## service-credentials
+
+- 🔒 `GET /api/v1/service-credentials/review` `?status?&search?&page?&limit?` — Bandeja de constancias de consejería en mi alcance
+- 🔒 `GET /api/v1/service-credentials/review/{id}` — Detalle de una constancia con URL firmada del archivo (900 s)
+- 🔒 `POST /api/v1/service-credentials/review/{id}/approve` — Aprobar una constancia (una aprobación basta)
+- 🔒 `POST /api/v1/service-credentials/review/{id}/reject` — Rechazar una constancia con motivo
+- 🔒 `GET /api/v1/users/me/service-credentials` — Mis constancias de consejería activas, nuevas primero
+- 🔒 `POST /api/v1/users/me/service-credentials` — Registrar una constancia y obtener la URL firmada de subida
+- 🔒 `DELETE /api/v1/users/me/service-credentials/{id}` — Retirar una constancia que no está aprobada
+- 🔒 `POST /api/v1/users/me/service-credentials/{id}/confirm` — Confirmar que el archivo ya se subió
+
+---
+
 ## support
 
 - 🔒 `POST /api/v1/support/reports` — Create a new support report
@@ -1617,9 +1636,9 @@ generated: true
 - 🔒 `GET /api/v1/users/{userId}/classes` `?yearId?` — Obtener inscripciones del usuario
 - 🔒 `GET /api/v1/users/{userId}/classes/{classId}/progress` `?enrollmentId?` — Obtener progreso del usuario en una clase
 - 🔒 `PATCH /api/v1/users/{userId}/classes/{classId}/progress` — Actualizar progreso de sección
-- 🔒 `POST /api/v1/users/{userId}/classes/{classId}/sections/{sectionId}/files` `?enrollmentId?` — Upload evidence file for a class section
-- 🔒 `DELETE /api/v1/users/{userId}/classes/{classId}/sections/{sectionId}/files/{fileId}` `?enrollmentId?` — Delete evidence file for a class section
-- 🔒 `POST /api/v1/users/{userId}/classes/{classId}/sections/{sectionId}/submit` `?enrollmentId?` — Submit a class section for validation
+- 🔒 `POST /api/v1/users/{userId}/classes/{classId}/sections/{moduleSectionId}/files` `?enrollmentId?` — Upload evidence file for a class section
+- 🔒 `DELETE /api/v1/users/{userId}/classes/{classId}/sections/{moduleSectionId}/files/{fileId}` `?enrollmentId?` — Delete evidence file for a class section
+- 🔒 `POST /api/v1/users/{userId}/classes/{classId}/sections/{moduleSectionId}/submit` `?enrollmentId?` — Submit a class section for validation
 - 🔒 `POST /api/v1/users/{userId}/classes/enroll` — Inscribir usuario en clase
 
 ---

@@ -7,7 +7,7 @@ module: database
 status: published
 owners:
   - "Auto-generated"
-lastReviewedAt: 2026-10-30
+lastReviewedAt: 2026-11-16
 generated: true
 ---
 
@@ -22,10 +22,10 @@ generated: true
 
 | Metrica | Valor |
 | --- | --- |
-| Total modelos | **265** |
-| Total enums | 79 |
-| Total campos | 4208 |
-| Generado | 2026-10-30 |
+| Total modelos | **267** |
+| Total enums | 83 |
+| Total campos | 4266 |
+| Generado | 2026-11-16 |
 | Fuente | `sacdia-backend/prisma/schema.prisma` |
 
 > Las paginas por dominio (`users-auth.mdx`, `clubs.mdx`, etc.) son prosa manual. Esta pagina es el listado plano y siempre fresco.
@@ -40,17 +40,17 @@ generated: true
 - [classes](#classes) — 11 modelos
 - [honors](#honors) — 6 modelos
 - [activities](#activities) — 6 modelos
-- [camporees](#camporees) — 36 modelos
+- [camporees](#camporees) — 37 modelos
 - [folders-evidencias](#folders-evidencias) — 11 modelos
 - [investidura](#investidura) — 8 modelos
-- [health](#health) — 9 modelos
+- [health](#health) — 8 modelos
 - [finanzas](#finanzas) — 3 modelos
 - [inventario](#inventario) — 5 modelos
 - [resources](#resources) — 2 modelos
 - [notifications](#notifications) — 3 modelos
 - [audit](#audit) — 1 modelos
 - [i18n](#i18n) — 3 modelos
-- [otros](#otros) — 125 modelos
+- [otros](#otros) — 127 modelos
 
 ---
 
@@ -63,6 +63,7 @@ generated: true
 | `fcm_token_id` | `String` | PK |
 | `user_id` | `String` | — |
 | `token` | `String` | UNIQUE |
+| `kind` | `String` | — |
 | `device_type` | `String` | optional |
 | `device_name` | `String` | optional |
 | `active` | `Boolean` | — |
@@ -154,8 +155,6 @@ generated: true
 - `investiture_validation_history` → `investiture_validation_history` (many)
 - `inventory_evidence_uploaded` → `inventory_evidence_files` (many)
 - `inventory_history_performed` → `inventory_history` (many)
-- `as_legal_representative` → `legal_representatives` (many)
-- `legal_representative` → `legal_representatives`
 - `member_insurances_created` → `member_insurances` (many)
 - `member_insurances_modified` → `member_insurances` (many)
 - `member_insurances` → `member_insurances` (many)
@@ -189,6 +188,7 @@ generated: true
 - `club_enrollments_as_secretary` → `club_enrollments` (many)
 - `club_enrollments_as_treasurer` → `club_enrollments` (many)
 - `club_enrollments_as_sec_treasurer` → `club_enrollments` (many)
+- `club_enrollments_reviewed` → `club_enrollments` (many)
 - `camporee_clubs_registered` → `camporee_clubs` (many)
 - `camporee_payments_registered` → `camporee_payments` (many)
 - `annual_folder_evidences` → `annual_folder_evidences` (many)
@@ -252,6 +252,7 @@ generated: true
 - `camporee_event_template_rubrics_modified` → `camporee_event_template_rubrics` (many)
 - `camporee_events_created` → `camporee_events` (many)
 - `camporee_events_modified` → `camporee_events` (many)
+- `camporee_event_attachments_created` → `camporee_event_attachments` (many)
 - `camporee_events_led` → `camporee_events` (many)
 - `camporee_staff_profiles` → `camporee_staff_members` (many)
 - `camporee_staff_created` → `camporee_staff_members` (many)
@@ -310,6 +311,8 @@ generated: true
 - `camporee_supply_payments_paid` → `camporee_supply_payment_docs` (many)
 - `camporee_supply_deliveries` → `camporee_supply_deliveries` (many)
 - `camporee_supply_plan_audits` → `camporee_supply_plan_audits` (many)
+- `service_credentials` → `service_credentials` (many)
+- `service_credentials_reviewed` → `service_credentials` (many)
 
 ### `users_allergies`
 
@@ -639,6 +642,7 @@ generated: true
 - `role_slot_limits` → `role_slot_limits`
 - `role_assignment_requests` → `role_assignment_requests` (many)
 - `certification_eligibility_rules` → `certification_eligibility_rules` (many)
+- `role_requirements` → `role_requirements` (many)
 
 ## clubs
 
@@ -774,6 +778,7 @@ generated: true
 - `club_annual_rankings` → `club_annual_rankings` (many)
 - `achievements` → `achievements` (many)
 - `ranking_weight_configs` → `ranking_weight_configs`
+- `role_requirements` → `role_requirements` (many)
 - `enrollment_ranking_weights` → `EnrollmentRankingWeight` (many)
 - `translations` → `club_types_translations` (many)
 - `material_products` → `MaterialProduct` (many)
@@ -867,6 +872,7 @@ generated: true
 - `class_sections_available_from` → `class_sections` (many)
 - `class_sections_available_until` → `class_sections` (many)
 - `enrollments_relation` → `enrollments` (many)
+- `enrollments_duration_start` → `enrollments` (many)
 - `folders` → `folders` (many)
 - `investiture_configs` → `investiture_config` (many)
 - `local_camporees_relation` → `local_camporees` (many)
@@ -1162,7 +1168,6 @@ generated: true
 
 **Relaciones**:
 - `emergency_contacts` → `emergency_contacts` (many)
-- `legal_representatives` → `legal_representatives` (many)
 - `guardianships` → `guardianships` (many)
 - `translations` → `relationship_types_translations` (many)
 
@@ -1907,6 +1912,29 @@ generated: true
 - `@@index([club_id], map: "idx_camporee_clubs_club_id")`
 - `@@index([status, active], map: "idx_camporee_clubs_status_active")`
 
+### `camporee_event_attachments`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `camporee_event_attachment_id` | `String` | PK |
+| `camporee_event_id` | `Int` | — |
+| `file_key` | `String` | — |
+| `file_name` | `String` | — |
+| `mime_type` | `String` | — |
+| `size_bytes` | `Int` | — |
+| `display_order` | `Int` | — |
+| `active` | `Boolean` | — |
+| `created_by` | `String` | optional |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Relaciones**:
+- `event` → `camporee_events`
+- `creator` → `users`
+
+**Bloque**:
+- `@@index([camporee_event_id, active, display_order], map: "idx_camporee_event_attachments_event")`
+
 ### `camporee_event_honors`
 
 | Campo | Tipo | Notas |
@@ -2324,6 +2352,7 @@ generated: true
 - `schedule_blocks` → `camporee_event_schedule_blocks` (many)
 - `staff_assignments` → `camporee_event_staff_assignments` (many)
 - `event_honors` → `camporee_event_honors` (many)
+- `attachments` → `camporee_event_attachments` (many)
 
 **Bloque**:
 - `@@index([local_camporee_id], map: "idx_camporee_events_local_camporee")`
@@ -3245,6 +3274,7 @@ generated: true
 - `certification_modules` → `certification_modules` (many)
 - `certification_section_progress` → `certification_section_progress` (many)
 - `users_certifications` → `users_certifications` (many)
+- `role_requirements` → `role_requirements` (many)
 
 ### `investiture_authorization_people`
 
@@ -3483,30 +3513,6 @@ generated: true
 **Bloque**:
 - `@@index([relationship_type_id], map: "idx_emergency_contacts_relationship_type_id")`
 - `@@index([owner_id, active], map: "idx_emergency_contacts_owner_active")`
-
-### `legal_representatives`
-
-| Campo | Tipo | Notas |
-| --- | --- | --- |
-| `id` | `String` | PK |
-| `user_id` | `String` | UNIQUE |
-| `representative_user_id` | `String` | optional |
-| `name` | `String` | optional |
-| `paternal_last_name` | `String` | optional |
-| `maternal_last_name` | `String` | optional |
-| `phone` | `String` | optional |
-| `relationship_type_id` | `String` | optional |
-| `created_at` | `DateTime` | — |
-| `modified_at` | `DateTime` | — |
-
-**Relaciones**:
-- `relationship_types` → `relationship_types`
-- `representative_user` → `users`
-- `users` → `users`
-
-**Bloque**:
-- `@@index([user_id], map: "idx_legal_reps_user")`
-- `@@index([representative_user_id], map: "idx_legal_reps_representative")`
 
 ### `medicines`
 
@@ -4926,6 +4932,11 @@ generated: true
 | `secretary_treasurer_id` | `String` | optional |
 | `created_by` | `String` | — |
 | `closed_at` | `DateTime` | optional |
+| `reviewed_by_id` | `String` | optional |
+| `reviewer_role` | `String` | optional |
+| `reviewed_at` | `DateTime` | optional |
+| `decision_reason` | `String` | optional |
+| `submitted_at` | `DateTime` | optional |
 | `created_at` | `DateTime` | — |
 | `modified_at` | `DateTime` | — |
 
@@ -4937,6 +4948,7 @@ generated: true
 - `secretary` → `users`
 - `treasurer` → `users`
 - `secretary_treasurer` → `users`
+- `reviewer` → `users`
 - `annual_folder` → `annual_folders`
 - `monthly_reports` → `monthly_reports` (many)
 - `club_annual_rankings` → `club_annual_rankings` (many)
@@ -5191,6 +5203,14 @@ generated: true
 | `purge_after` | `DateTime` | optional |
 | `purged_at` | `DateTime` | optional |
 | `teen_login_nudged_at` | `DateTime` | optional |
+| `majority_notice_sent_at` | `DateTime` | optional |
+| `released_at` | `DateTime` | optional |
+| `release_deadline_at` | `DateTime` | optional |
+| `release_source` | `String` | optional |
+| `release_accepted_at` | `DateTime` | optional |
+| `release_completed_at` | `DateTime` | optional |
+| `release_reminder_level` | `Int` | — |
+| `frozen_reason` | `String` | optional |
 
 **Relaciones**:
 - `user` → `users`
@@ -5412,6 +5432,7 @@ generated: true
 | `user_id` | `String` | — |
 | `class_id` | `Int` | — |
 | `ecclesiastical_year_id` | `Int` | — |
+| `duration_start_year_id` | `Int` | optional |
 | `enrollment_date` | `DateTime` | — |
 | `submitted_for_validation` | `Boolean` | — |
 | `submitted_at` | `DateTime` | optional |
@@ -5437,6 +5458,7 @@ generated: true
 - `enrollment_rankings` → `EnrollmentRanking` (many)
 - `classes` → `classes`
 - `ecclesiastical_year` → `ecclesiastical_years`
+- `duration_start_year` → `ecclesiastical_years`
 - `users` → `users`
 - `validator` → `users`
 - `investiture_history` → `investiture_validation_history` (many)
@@ -6308,7 +6330,6 @@ generated: true
 - `accepted_by` → `users`
 
 **Bloque**:
-- `@@unique([user_id, document_type, document_version], map: "uq_legal_acceptances_user_doc_version")`
 - `@@map("legal_acceptances")`
 
 ### `linked_devices`
@@ -7007,6 +7028,31 @@ generated: true
 - `@@index([role_id], map: "idx_assignment_requests_role")`
 - `@@index([status], map: "idx_assignment_requests_status")`
 
+### `role_requirements`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `requirement_id` | `Int` | PK |
+| `role_id` | `String` | — |
+| `club_type_id` | `Int` | optional |
+| `effective_from` | `DateTime` | optional |
+| `equivalent_certification_id` | `Int` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `requirement_type`: `role_requirement_type_enum`
+- `mode`: `role_requirement_mode_enum`
+
+**Relaciones**:
+- `roles` → `roles`
+- `club_types` → `club_types`
+- `certifications` → `certifications`
+
+**Bloque**:
+- `@@index([role_id, active], map: "idx_role_requirements_role_active")`
+
 ### `role_slot_limits`
 
 | Campo | Tipo | Notas |
@@ -7079,6 +7125,38 @@ generated: true
 - `@@index([hierarchy_context_id], map: "idx_section_rankings_hierarchy_context")`
 - `@@map("section_rankings")`
 
+### `service_credentials`
+
+| Campo | Tipo | Notas |
+| --- | --- | --- |
+| `credential_id` | `String` | PK |
+| `user_id` | `String` | — |
+| `completed_at` | `DateTime` | optional |
+| `object_key` | `String` | optional |
+| `original_filename` | `String` | optional |
+| `mime_type` | `String` | optional |
+| `size_bytes` | `BigInt` | optional |
+| `reviewed_by_id` | `String` | optional |
+| `reviewer_role` | `String` | optional |
+| `reviewed_at` | `DateTime` | optional |
+| `decision_reason` | `String` | optional |
+| `expires_at` | `DateTime` | optional |
+| `active` | `Boolean` | — |
+| `created_at` | `DateTime` | — |
+| `modified_at` | `DateTime` | — |
+
+**Enums**:
+- `credential_type`: `role_requirement_type_enum`
+- `upload_status`: `service_credential_upload_status_enum`
+- `status`: `service_credential_status_enum`
+
+**Relaciones**:
+- `owner` → `users`
+- `reviewer` → `users`
+
+**Bloque**:
+- `@@index([user_id, credential_type, status], map: "idx_service_credentials_user_type_status")`
+
 ### `session`
 
 | Campo | Tipo | Notas |
@@ -7086,6 +7164,8 @@ generated: true
 | `id` | `String` | PK |
 | `expiresAt` | `DateTime` | — |
 | `token` | `String` | UNIQUE |
+| `previousToken` | `String` | UNIQUE, optional |
+| `rotatedAt` | `DateTime` | optional |
 | `createdAt` | `DateTime` | — |
 | `updatedAt` | `DateTime` | — |
 | `ipAddress` | `String` | optional |
@@ -7903,10 +7983,31 @@ generated: true
 - `GLOBAL`
 - `CLUB`
 
+### `role_requirement_mode_enum`
+
+- `INFO`
+- `WARN`
+- `BLOCK`
+
+### `role_requirement_type_enum`
+
+- `COUNSELOR_TRAINING`
+
 ### `scoring_mode_enum`
 
 - `numeric`
 - `boolean_full`
+
+### `service_credential_status_enum`
+
+- `PENDING_REVIEW`
+- `APPROVED`
+- `REJECTED`
+
+### `service_credential_upload_status_enum`
+
+- `PENDING_UPLOAD`
+- `CONFIRMED`
 
 ### `severity_level`
 
